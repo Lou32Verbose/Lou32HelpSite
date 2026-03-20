@@ -1,0 +1,77 @@
+=====================================================================
+:: LOU32 HELP MODULE DOCUMENT 
+=====================================================================
+:: BROWSER BOOKMARKLETS LIST - HELPFUL BOOKMARKLETS
+=====================================================================
+
+:: Removes clutter for easier reading:
+javascript:(function(){document.body.style.fontFamily='Arial, sans-serif';document.body.style.fontSize='16px';document.body.style.lineHeight='1.6';document.body.style.maxWidth='800px';document.body.style.margin='0 auto';document.body.style.padding='20px';})();
+
+:: Counts words on current page:
+javascript:alert('Word count: '+document.body.innerText.split(/\s+/).length);
+
+:: Selects all text on page:
+javascript:document.execCommand('selectAll');
+
+:: Go Up One Directory - Moves up one level in URL:
+javascript:location.href=location.href.replace(/\/[^\/]*$/,'/');
+
+:: Copies page URL to clipboard:
+javascript:navigator.clipboard.writeText(location.href);alert('URL copied!');
+
+:: Cleans up messy URLs:
+javascript:location.href=location.origin+location.pathname;
+
+:: Lists all links on page:
+javascript:var links=document.links;var list='';for(var i=0;i<links.length;i++){list+=links[i].href+'\n';}alert(list);
+
+:: Counts images on page:
+javascript:alert('Images: '+document.images.length);
+
+:: Shows basic page statistics:
+javascript:alert('Title: '+document.title+'\nURL: '+location.href+'\nImages: '+document.images.length+'\nLinks: '+document.links.length);
+
+:: Inverts page colors:
+javascript:document.documentElement.style.filter=document.documentElement.style.filter?'':'invert(1) hue-rotate(180deg)';
+
+:: Highlight All Text:
+javascript:document.body.style.backgroundColor='yellow';
+
+:: Increases page zoom:
+javascript:document.body.style.zoom=parseFloat(document.body.style.zoom||1)+0.1;
+
+:: Makes page editable:
+javascript:document.body.contentEditable='true';document.designMode='on';alert('Page is now editable!');
+
+:: Removes unnecessary elements for printing:
+javascript:var style=document.createElement('style');style.innerHTML='*{background:white!important;color:black!important;}';document.head.appendChild(style);
+
+:: Creates QR code for current page:
+javascript:window.open('https://api.qrserver.com/v1/create-qr-code/?size=200x200&data='+encodeURIComponent(location.href));
+
+:: Show Page Source - Opens page source in new window:
+javascript:window.open('view-source:'+location.href);
+
+:: Checks HTML validity:
+javascript:window.open('https://validator.w3.org/check?uri='+encodeURIComponent(location.href));
+
+:: Lists all JavaScript files:
+javascript:var scripts=document.scripts;var list='';for(var i=0;i<scripts.length;i++){if(scripts[i].src)list+=scripts[i].src+'\n';}alert(list||'No external scripts found');
+
+:: Opens email client with page details:
+javascript:location.href='mailto:?subject='+encodeURIComponent(document.title)+'&body='+encodeURIComponent(location.href);
+
+:: Searches current site via Google:
+javascript:window.open('https://www.google.com/search?q=site:'+location.hostname);
+
+::Wayback Machine - Views page history:
+javascript:window.open('https://web.archive.org/web/*/'+location.href);
+
+:: Opens speed test in new tab:
+javascript:window.open('https://fast.com');
+
+:: Opens browser's Find dialog:
+javascript:window.find();
+
+===============================================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

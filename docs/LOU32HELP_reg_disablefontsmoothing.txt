@@ -1,0 +1,7 @@
+REGISTRY VALUES TO DISABLE FONT SMOOTHING IN WINDOWS
+
+# To Disable
+Set-ItemProperty 'HKCU:\Control Panel\Desktop\' -Name FontSmoothing -Value 0
+
+# To Re-Enable
+Set-ItemProperty 'HKCU:\Control Panel\Desktop\' -Name FontSmoothing -Value 2

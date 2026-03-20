@@ -1,0 +1,17 @@
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#    LOU32 HELP MODULE DOCUMENT - CIMCLASSES & POWERSHELL      #
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+#  List All CIM (Common Information Model) Classes In Windows  #
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+## Just run the Get-CIMClass cmdlet to get a list of all available classes in the default namespace in Windows:
+
+Get-CIMClass <-optionalparameter>
+
+##If you'd like to filter the list, you can use a wildcard. 
+## In the following example, the use of wildcards in the command will cause the output of the command to show all classes that begin with Win32 and have the word "Disk" in it. 
+
+Get-CimClass Win32*Disk*
+
+=================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

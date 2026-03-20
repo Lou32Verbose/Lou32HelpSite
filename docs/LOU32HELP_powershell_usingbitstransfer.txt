@@ -1,0 +1,145 @@
+=========================================
+::    LOU32 HELP MODULE DOCUMENT       ::
+=========================================
+:: USING BITS TRANSFER WITH POWERSHELL ::
+=========================================
+
+Have you had a file copy fail?  Does that drive you crazy or what?  How about when it is a REALLY big file and it takes a couple of hours and JUUUUUST before it finishes something happens to interrupt the transfer and you have to start all over again.  Does that make you want to shove a sharpened #2 pencil up your nose or what?
+
+I got to thinking about these things when I saw that the W7 and WS08/R2 beta bits were available and that the demand was so high that the servers were having a hard time keeping up.  Can you image how you would react if you downloaded a GB and then the transfer failed?  Can’t someone HELP?  Can’t someone give us the get semantics of Windows Update but for files that **I** care about?
+
+Funny you should mention that.
+
+Have I mentioned that PowerShell V2 rocks?  In CTP3, we are exposing a new set of Cmdlets that give you access to BITS.   BITS stands for Background Intelligent Transfer Service.  BITS is an awesome service.  It is the special sauce behind Windows Update.  Have you ever gone to WU and seen a couple hundred MB service pack and wondered, “how is every PC on the planet going to get a couple hundred MB without causing the Internet to melt?”  Well BITS is the answer to that question.  We think everyone should be using BITS.  That means both ISV products and end users.  Whenever you use BITS you get a better experience.  You get reliable transfers, adaptive network bandwidth usage to minimize the impact on your system and you get peer caching which minimizes traffic.  You can learn more about BITS by downloading a document HERE.
+
+BTW – It turns out that we have been shipping the ability to do this for quite a while through a WIN32 command called BITSADMIN but few  know about it and it is difficult to use.  We think we still have usability issues with these Cmdlets so we might change them before we ship.
+
+============================================================================
+
+[0]PS> # You need to import the FileTransfer Module to get BITS cmdlets
+[1]PS> # Notice that the NOUN is FileTransfer
+[2]PS> Import-Module FileTransfer -Verbose
+VERBOSE: Importing cmdlet ‘Add-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Clear-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Complete-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Get-FileTransfer’.
+VERBOSE: Importing cmdlet ‘New-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Resume-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Set-FileTransfer’.
+VERBOSE: Importing cmdlet ‘Suspend-FileTransfer’.
+
+
+
+[3]PS> # This is the HTTP file that I want to download.  I could have
+[4]PS> # also used an UNC Path
+[5]PS> $file = “http://download.microsoft.com/download/D/0/E/D0E6D2C1-2593-401
+7-B26D-7375BC9263D5/PowerShell_Setup_amd64.msi”
+
+[6]PS> # This creates a new BITS job running in the background.  After
+[7]PS> # this command the file will get transferred even if
+[8]PS> #    this process terminates
+[9]PS> #    this machine (or the server) reboots.
+[10]PS> #   the network goes down and comes back up.
+[11]PS> New-FileTransfer -ServerFileName $file -ClientFileNamePrefix c:\Kits –
+DisplayName PSAMD  -Asynchronous
+
+JobId           DisplayName     TransferType    JobState       OwnerAccount
+—–           ———–     ————    ——–       ————
+5652f872-c8d… PSAMD           Download        Connecting     RugratsVist…
+
+
+
+[12]PS> $job = Get-FileTransfer PSAMD
+
+[13]PS> # Let’s take a look at what we have
+[14]PS> $job |format-list *
+
+JobId                   : 5652f872-c8db-4423-a28f-70c10e1600f4
+DisplayName             : PSAMD
+Description             : This is a transfer using Background Intelligent Tra
+                          nsfer Service.
+TransferType            : Download
+JobState                : Transferring
+OwnerAccount            : RugratsVista\jsnover
+Priority                : Normal
+MinimumRetryDelay       : 600
+NoProgressTimeout       : 1209600
+TransientErrorCount     : 0
+ProxyUsage              : SystemDefault
+ErrorContext            : None
+ErrorCondition          : NoError
+InternalErrorCode       : 0
+ErrorDescription        :
+ErrorContextDescription :
+BytesTotal              : 10313216
+BytesTransferred        : 1063897
+FilesTotal              : 1
+FilesTransferred        : 0
+CreationTime            : 1/11/2009 9:03:06 AM
+ModificationTime        : 1/11/2009 9:03:11 AM
+TransferCompletionTime  : 1/1/0001 12:00:00 AM
+FileList                : {http://download.microsoft.com/download/D/0/E/D0E6D
+                          2C1-2593-4017-B26D-7375BC9263D5/PowerShell_Setup_am
+                          d64.msi}
+ProxyList               :
+ProxyBypassList         :
+
+
+
+[15]PS> # Notice that you don’t see anything until the job is complete
+[16]PS> # Actually, in -Asynchronous mode, you want see anything
+[17]PS> # until *YOU* complete the FileTransfer (with a Complete-FileTransfer)
+
+[18]PS> dir c:\Kits\power*
+
+[19]PS> # The transfer is smart about bandwidth utilization and will
+[20]PS> # scale back when it detects interactive use or competition for
+[21]PS> # the network.  You can control this with the -Priority flag
+[22]PS> # which takes values:
+[23]PS> #    Forground, High, Normal, Low
+[24]PS> # You can also manually suspend the job for any reason
+[25]PS> Suspend-FileTransfer $job
+
+JobId           DisplayName     TransferType    JobState       OwnerAccount
+—–           ———–     ————    ——–       ————
+5652f872-c8d… PSAMD           Download        Suspended      RugratsVist…
+
+[26]PS> $job
+
+JobId           DisplayName     TransferType    JobState       OwnerAccount
+—–           ———–     ————    ——–       ————
+5652f872-c8d… PSAMD           Download        Suspended      RugratsVist…
+
+
+
+
+[27]PS> # This is how you resume the FileTransfer.
+[28]PS> Resume-FileTransfer $job -Asynchronous
+
+JobId           DisplayName     TransferType    JobState       OwnerAccount
+—–           ———–     ————    ——–       ————
+5652f872-c8d… PSAMD           Download        Connecting     RugratsVist…
+
+[29]PS> $job
+
+JobId           DisplayName     TransferType    JobState       OwnerAccount
+—–           ———–     ————    ——–       ————
+5652f872-c8d… PSAMD           Download        Transferred    RugratsVist…
+
+
+
+[30]PS> # When the job is complete, you have to use this command to
+[31]PS> # make the files show up and to clean up the job
+[32]PS> Complete-FileTransfer $job
+
+[33]PS> dir c:\Kits\power*
+
+    Directory: C:\Kits
+
+Mode                LastWriteTime     Length Name
+—-                ————-     —— —-
+-a—        12/15/2008   5:08 AM   10313216 PowerShell_Setup_amd64.msi
+
+
+========================================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

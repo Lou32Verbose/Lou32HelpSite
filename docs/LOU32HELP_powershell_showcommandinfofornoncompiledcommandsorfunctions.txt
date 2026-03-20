@@ -1,0 +1,17 @@
+===================================================================
+:: LOU32 HELP MODULE DOCUMENT
+===================================================================
+:: POWERSHELL - SEE NON-COMPILED COMMAND OR FUNCTION INFORMATION ::
+===================================================================
+
+:: In PowerShell, run the following:
+
+Get-Command <YourCommandName> | Select-Object -ExpandProperty Definition 
+
+:: This lets you see what’s going on with a non-compiled command or function (usually external modules only). 
+
+:: If it’s pre compiled in a DLL like most built in commands, you’ll just get a method signature with a list of all parameters 
+:: (In that case, essentially, a less useful CLI version of the Show-Command)
+
+==================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

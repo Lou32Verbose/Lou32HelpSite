@@ -1,0 +1,37 @@
+=============================================================
+:: LOU32HELP MODULE DOCUMENT - CLI HELP REFERENCE
+=============================================================
+:: WGET2 FLAGS EXPLAINER - DOWNLOAD ENTIRE SITE RECURSIVELY
+=============================================================
+
+:: WGET2 ALLOWS YOU TO DOWNLOAD AN ENTIRE SITE RECURSIVELY,
+:: BY STARTING FROM A GIVEN URL, AND ALSO GET ALL RESOURCES OF SITE.
+
+-------------------------------------------------------------
+:: UNDERSTANDING THE WGET FLAGS:
+
+	-m 		:: This flag instructs wget to download recursively. It means wget will follow all links on the webpage and download the linked resources as well. This ensures you get the entire webpage with all its dependencies.
+	-p 		:: This flag tells wget to keep the directory structure of the downloaded website intact. The downloaded files will be placed in a directory structure that mirrors the website's organization.
+	-E 		:: This flag excludes certain file types from being downloaded. By default, wget downloads various file types. The -E flag allows you to specify extensions you don't want (e.g., .gif).
+	-k 		:: This flag tells wget to convert all relative links to absolute links. This ensures that the downloaded resources work correctly when accessed locally, even without an internet connection.
+	-np 	:: This flag prevents wget from creating parent directories. If the website's resources reside in subdirectories, wget will create those directories by default. This flag ensures the downloaded files are placed in the current working directory.
+
+:: COMMAND
+
+wget -m -p -E -k -np https://mywebsite.com 
+
+:: THE COMMAND INSTRUCTS WGET TO DO THE FOLLOWING:
+
+# 1 Download the webpage 'https://mywebsite.com' recursively (including all linked resources).
+# 2 Maintain the original directory structure of the website.
+# 3 Exclude specific file types (if you use the -E flag with extensions).
+# 4 Convert relative links to absolute links for offline functionality.
+# 5 Place the downloaded files in the current working directory (without creating parent directories).
+
+:: RUNNING THE COMMAND:
+
+	::Open a console window, navigate to your desired download location using the cd command. 
+	::Then, execute the wget command with the URL you want to download.
+
+==================================================================================================
+END OF LOU32HELP MODULE DOCUMENT.

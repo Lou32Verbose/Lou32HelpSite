@@ -1,0 +1,14 @@
+=====================================================
+            LOU32 HELP MODULE DOCUMENT
+=====================================================
+ ROBOCOPY FLAGS TO AVOID HIDDEN OR SYSTEM ATTRIB BUG
+=====================================================
+
+If you're clever and don't want to deal with the problem in the first place (as it's a known bug with Robocopy), when you write out your Robocopy line in cmd, include the minus attributes (/A-:SH) at the end of your command. This will stop the destination folder from being hidden and from being turned into a system file, thus preventing the problem ever happening in the first place:
+
+For example (in Command Prompt, may not work if in PowerShell):
+
+    ROBOCOPY I:\DATA\ K:\DATA\ DB_DataFile.bak /A-:SH
+
+=====================================================
+END OF LOU32 HELP MODULE DOCUMENT.

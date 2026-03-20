@@ -1,0 +1,26 @@
+﻿========================================================
+:: 	      LOU32 HELP MODULE DOCUMENT              :: 
+========================================================
+:: RCLONE COMMANDS FOR TASK SCHEDULER - ALL PROVIDERS ::
+========================================================
+
+============
+# OneDrive
+============
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& { $ts=(Get-Date -Format yyyyMMdd_HHmmss); $log='C:\WinMgmt\logs\OneDrive-copy-'+$ts+'.log'; if(-not (Test-Path 'C:\WinMgmt\logs')){New-Item -ItemType Directory -Path 'C:\WinMgmt\logs' | Out-Null}; rclone copy 'OneDrive:Louis32' 'C:\Louis32' --transfers 2 --checkers 4 --tpslimit 3 --tpslimit-burst 1 --OneDrive-chunk-size 64M --fast-list --retries 8 --low-level-retries 20 --timeout 1m --log-file $log --log-level INFO --stats 1m --stats-one-line }"
+
+================
+# Google Drive
+================
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& { $ts=(Get-Date -Format yyyyMMdd_HHmmss); $log='C:\WinMgmt\logs\Google-copy-'+$ts+'.log'; if(-not (Test-Path 'C:\WinMgmt\logs')){New-Item -ItemType Directory -Path 'C:\WinMgmt\logs' | Out-Null}; rclone copy 'Google:Louis32' 'C:\Louis32' --transfers 4 --checkers 8 --drive-chunk-size 256M --drive-pacer-min-sleep 100ms --drive-pacer-burst 5 --tpslimit 8 --tpslimit-burst 8 --fast-list --retries 6 --low-level-retries 20 --timeout 1m --log-file $log --log-level INFO --stats 1m --stats-one-line }"
+
+===========
+# Dropbox
+===========
+
+powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "& { $ts=(Get-Date -Format yyyyMMdd_HHmmss); $log='C:\WinMgmt\logs\Dropbox-copy-'+$ts+'.log'; if(-not (Test-Path 'C:\WinMgmt\logs')){New-Item -ItemType Directory -Path 'C:\WinMgmt\logs' | Out-Null}; rclone copy 'Dropbox:Louis32' 'C:\Louis32' --transfers 3 --checkers 4 --Dropbox-chunk-size 96M --Dropbox-batch-mode sync --Dropbox-batch-size 1000 --tpslimit 6 --tpslimit-burst 2 --fast-list --retries 8 --low-level-retries 20 --timeout 1m --log-file $log --log-level INFO --stats 1m --stats-one-line }"
+
+==========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

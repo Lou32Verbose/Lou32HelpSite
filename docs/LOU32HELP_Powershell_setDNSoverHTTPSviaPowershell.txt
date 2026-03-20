@@ -1,0 +1,17 @@
+=============================================
+:: 	  LOU32 HELP MODULE DOCUMENT       ::
+=============================================
+:: SET DNS OVER HTTPS [DoH] VIA POWERSHELL ::
+=============================================
+
+# See adapter names
+Get-NetAdapter | Where-Object Status -eq Up | Select Name, IfIndex, Status
+
+# Set IPv4 DNS to Cloudflare [Enter Your Specific Interface Alias]
+Set-DnsClientServerAddress -InterfaceAlias "Wi-Fi" -ServerAddresses 1.1.1.1,1.0.0.1
+
+# Optional: set IPv6 DNS [Enter Your Specific Interface Alias]
+Set-DnsClientServerAddress -InterfaceAlias "Wi-Fi" -ServerAddresses 2606:4700:4700::1111,2606:4700:4700::1001 -AddressFamily IPv6
+
+=============================================
+END OF LOU32 HELP MODULE DOCUMENT.
