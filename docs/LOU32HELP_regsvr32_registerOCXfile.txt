@@ -1,0 +1,4 @@
+## REGISTERING AN OCX FILE WITH REGSVR32 
+# CMD command to fix issues with msflxgrd.ocx
+
+regsvr32 /i:install "msflxgrd.ocx"

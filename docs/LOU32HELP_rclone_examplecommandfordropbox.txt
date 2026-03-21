@@ -1,0 +1,10 @@
+===============================================
+:: LOU32 HELP MODULE DOCUMENT 
+===============================================
+:: OPTIMIZED RCLONE COPY COMMAND FOR DROPBOX ::
+===============================================
+
+rclone copy Dropbox:\<insert-path> C:\<insert-path> --progress --fast-list --transfers=8 --checkers=16 --tpslimit=12 --dropbox-batch-mode=async --dropbox-batch-size=1000 --dropbox-batch-timeout=10s --use-mmap --progress
+
+===============================================
+END OF LOU32 HELP MODULE DOCUMENT.

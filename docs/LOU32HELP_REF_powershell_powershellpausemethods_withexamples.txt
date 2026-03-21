@@ -1,0 +1,95 @@
+======================================================
+::           LOU32 HELP MODULE DOCUMENT             ::
+======================================================
+:: PowerShell Pause Methods - Examples and Overview ::
+======================================================
+
+1. $Host.UI.RawUI.ReadKey()
+
+Write-Host -NoNewLine 'Press any key to exit...'
+$null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
+
+
+Pros
+- Captures any key press, including function keys and arrows.
+- Supports fine-grained control via flags like NoEcho, IncludeKeyDown, AllowCtrlC.
+- Works well in console hosts (like powershell.exe or pwsh.exe).
+
+Cons
+- Not supported in PowerShell ISE or GUI-based hosts.
+- Slightly verbose syntax.
+
+Best for:
+When you want full control over key input and are running in a true console environment.
+
+---
+
+2. [System.Console]::ReadKey($true)
+Write-Host -NoNewLine 'Press any key to exit...'
+[void][System.Console]::ReadKey($true)
+
+
+Pros
+- Simple and cross-platform (works in PowerShell Core).
+- $true suppresses key echo; $false shows it.
+- Returns a ConsoleKeyInfo object for advanced handling.
+
+Cons
+- Like RawUI.ReadKey(), it won’t work in ISE.
+- Slightly less customizable than RawUI.
+
+Best for:
+Scripts that need to pause for any key in a cross-platform console environment.
+
+---
+
+3. Read-Host -Prompt
+
+Read-Host -Prompt 'Press ENTER to exit'
+
+Pros
+- Works everywhere: console, ISE, VS Code, GUI hosts.
+- Great for interactive prompts or collecting input.
+- Simple and readable.
+
+Cons
+- Only waits for ENTER, not any key.
+- Echoes input unless used with -AsSecureString.
+
+Best for:
+Universal compatibility and when you want the user to confirm with ENTER.
+
+---
+
+Extra: pause (CMD-style)
+
+cmd /c pause
+
+Pros
+- Mimics classic CMD behavior: “Press any key to continue...”
+- Works in PowerShell console.
+
+Cons
+- Not cross-platform.
+- Doesn’t respond to modifier keys (e.g., Ctrl, Shift).
+- Feels a bit hacky in modern scripts.
+
+Best for:
+Quick-and-dirty scripts or when mimicking legacy batch behavior.
+
+---
+
+Summary Table
+
+| Method | Any Key | ENTER Only | Works in ISE | Customizable | Cross-Platform | 
+| $Host.UI.RawUI.ReadKey() | ✅ | ❌ | ❌ | ✅ | ❌ | 
+| [Console]::ReadKey() | ✅ | ❌ | ❌ | ⚠️ Limited | ✅ | 
+| Read-Host -Prompt | ❌ | ✅ | ✅ | ⚠️ Minimal | ✅ | 
+| cmd /c pause | ✅ | ❌ | ❌ | ❌ | ❌ | 
+
+
+For something running in both ISE and console, Read-Host is best. 
+For clean console UX, RawUI.ReadKey() is usually best.
+
+=======================================================
+END OF LOU32 HELP MODULE DOCUMENT.

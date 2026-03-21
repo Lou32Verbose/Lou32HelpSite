@@ -1,0 +1,33 @@
+=========================================
+        LOU32HELP MODULE DOCUMENT
+	 POWERSHELL HELP SERIES
+=========================================
+  Writing Folder Contents To Text File
+=========================================
+
+# Set the $directory variable to the path of the directory you want to list files from.
+
+$directory = "C:\path\to\your\directory" # Replace with the actual directory path
+
+# Set the $outputFile variable to the path where you want to save the list of files.
+
+$outputFile = "C:\path\to\output\file.txt" # Replace with the desired output file path
+
+# Use Get-ChildItem to retrieve all items (files and subdirectories) within the specified directory.
+# Pipe the output of Get-ChildItem to Out-File (which writes the list of items to the specified output file).
+
+Get-ChildItem -Path $directory | Out-File -FilePath $outputFile
+
+==========================================
+  LOU32 HELP EXTENSION - FURTHER OPTIONS
+==========================================
+
+# To list only files (excluding subdirectories), use the -File parameter with Get-ChildItem.
+
+Get-ChildItem -Path $directory -File | Out-File -FilePath $outputFile
+
+# To include subdirectories in the list, use the -Recurse parameter:
+
+Get-ChildItem -Path $directory -Recurse -File | Out-File -FilePath $outputFile
+
+

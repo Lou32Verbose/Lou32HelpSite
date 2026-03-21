@@ -1,0 +1,6 @@
+===============================================
+  Windows Update Error Ox80070005 - SOLUTION
+===============================================
+IN AN ELEVATED POWERSHELL WINDOW: 
+
+Get-AppXPackage -allusers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}

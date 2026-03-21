@@ -1,0 +1,5 @@
+DISABLE SERVICE RESPONSIBLE FOR TABLET MODE ON LENOVO LAPTOP
+
+Disable "Sensor Monitoring Service" 
+PROVEN TO WORK ON LENOVO S1 YOGA 12 
+- Not tested on Lenovo Flex 5 - log results after testing this

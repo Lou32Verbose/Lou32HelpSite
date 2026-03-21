@@ -1,0 +1,46 @@
+===================================================
+::           LOU32HELP MODULE DOCUMENT           ::
+===================================================
+:: PowerShell Write-Host: Custom Text Formatting ::
+===================================================
+:: Write-Host Custom Text Formatting Overview
+
+:: Common Parameters:
+  -ForegroundColor <ConsoleColor>  : Sets the text (foreground) color.
+  -BackgroundColor <ConsoleColor>  : Sets the background color.
+  -NoNewline                       : Outputs text without a trailing newline.
+  -Separator <string>              : Custom separator when writing multiple objects.
+
+:: Supported ConsoleColor Values:
+  Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta,
+  DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White
+
+:: Examples:
+
+  # Basic colored warning message
+  Write-Host 'Warning: Disk space low!' `
+    -ForegroundColor Yellow `
+    -BackgroundColor DarkRed
+
+  # Label and value with custom separator
+  Write-Host 'User:' $env:USERNAME `
+    -ForegroundColor Cyan `
+    -Separator ' '
+
+  # Progress indicator without newline
+  for ($i = 1; $i -le 5; $i++) {
+    Write-Host '.' -NoNewline -ForegroundColor Green
+    Start-Sleep -Milliseconds 200
+  }
+  Write-Host ' Done.' -ForegroundColor Green
+
+:: Advanced: ANSI Escape Sequences for True RGB
+# (Requires host support, e.g. Windows Terminal)
+$esc = [char]27
+Write-Host "${esc}[38;2;255;165;0mCustom Orange Text${esc}[0m"
+
+# Reset to default after ANSI colored output
+Write-Host 'Back to normal colors'
+
+===========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

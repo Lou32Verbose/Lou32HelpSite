@@ -1,0 +1,16 @@
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+#        LOU32 HELP DOCUMENT - POWERSHELL REFERENCE
+================================================================
+#    PowerShell Command To List All .MSC Files [System32]
+
+================================================================
+
+## List all MMC (.msc) files available on current Windows:
+
+Get-ChildItem -Path C:\Windows\system32\* -Include *.msc | Sort-Object -Property Extension | Select-Object -Property Name | Format-Wide -Column 1
+
+## *Note that this only searches within System32, if for some reason there may be others in different folders on your system, you will have to change accordingly
+
+================================================================
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+# END OF LOU32 HELP MODULE DOCUMENT [powershell_listallmscfiles]

@@ -1,0 +1,9 @@
+<>FINDING THE SPECIFIC VERSION OF A MODULE AND THEN UNINSTALLING IT<>
+
+   <>this is specifically for earlier versions of PowerShellGet, but should work with other modules as well
+   <>it seems that PowerShellGet cannot be uninstalled as a module through other methods
+
+$ModuleName = 'YourModuleName';
+$Latest = Get-InstalledModule $ModuleName; 
+Get-InstalledModule $ModuleName -AllVersions | Sort-Object -Descending {[Version]$_.Version} | Select-Object -Skip 1 | Uninstall-Module -WhatIf
+

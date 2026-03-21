@@ -1,0 +1,30 @@
+======================================
+::    LOU32 HELP MODULE DOCUMENT    ::
+======================================
+:: DISM COMPONENT CLEANUP SAFE MODE ::
+======================================
+:: NOTE - The DISM cleanup commands are best run in Safe Mode to avoid open/locked components preventing completion.
+
+:: This command can be run to determine if the Component Store needs a cleanup.
+
+Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
+
+:: Then, the best series of commands, run in Safe Mode, is:
+
+fsutil resource setautoreset true c:\&fsutil usn deletejournal /d /n c: 
+
+:: (the above coommand cleans up the NTFS file system)
+
+:: then:
+
+Dism.exe /online /Cleanup-Image /StartComponentCleanup
+
+Dism.exe /Online /Cleanup-Image /RestoreHealth
+
+Dism.exe /Online /Cleanup-Image /StartComponentCleanup /ResetBase
+
+:: When all done, reboot back to Normal Mode.
+
+:: POSTNOTE: Optionally, a SFC /SCANNOW run first before anything ensures the component store system files are correct.
+============================================
+END OF LOU32 HELP MODULE DOCUMENT.

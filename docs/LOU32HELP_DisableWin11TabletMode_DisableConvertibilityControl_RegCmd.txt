@@ -1,0 +1,14 @@
+==============================================
+	  LOU32 HELP MODULE DOCUMENT
+	  --------------------------
+ "A Robust Help File System For The LS SHELL"
+==============================================
+  MODULE= DisableWin11TabletMode_RegCommand
+==============================================
+# In an elevated command prompt, run the following command:
+
+reg add “HKLM\System\CurrentControlSet\Control\PriorityControl” /v ConvertibilityEnabled /t REG_DWORD /d 0 
+
+
+
+

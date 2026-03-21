@@ -1,0 +1,3 @@
+GET ALL FLAG KEYS FOR A CMDLET AND DISAPLY VALUES OF THE VARIABLES
+
+(Get-Command -Name $PSCommandPath).Parameters | Format-Table -AutoSize @{ Label = "Key"; Expression={$_.Key}; }, @{ Label = "Value"; Expression={(Get-Variable -Name $_.Key -EA SilentlyContinue).Value}; }

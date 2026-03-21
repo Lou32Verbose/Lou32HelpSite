@@ -1,0 +1,165 @@
+# FFmpeg Frame Extraction PowerShell Script
+# Extracts every single frame from a video as high-quality PNG images
+# Requires ffmpeg.exe to be installed and accessible in PATH
+
+param(
+    [Parameter(Mandatory=$true, Position=0)]
+    [string]$InputVideo,
+    
+    [Parameter(Mandatory=$false, Position=1)]
+    [string]$OutputDirectory = "frames"
+)
+
+# Function to check if ffmpeg is available in the system PATH
+function Test-FFmpegAvailable {
+    try {
+        $null = Get-Command ffmpeg -ErrorAction Stop
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+# Function to format file sizes in human-readable format
+function Format-FileSize {
+    param([long]$Size)
+    
+    $units = @("B", "KB", "MB", "GB", "TB")
+    $index = 0
+    $sizeFloat = [double]$Size
+    
+    while ($sizeFloat -ge 1024 -and $index -lt $units.Length - 1) {
+        $sizeFloat /= 1024
+        $index++
+    }
+    
+    return "{0:N2} {1}" -f $sizeFloat, $units[$index]
+}
+
+# Display usage information if no parameters provided
+if (-not $InputVideo) {
+    Write-Host "Usage: .\extract-frames.ps1 <input_video_file> [output_directory]" -ForegroundColor Yellow
+    Write-Host "Example: .\extract-frames.ps1 video.mp4 frames" -ForegroundColor Yellow
+    exit 1
+}
+
+# Check if ffmpeg is installed and accessible
+Write-Host "Checking for ffmpeg installation..." -ForegroundColor Cyan
+if (-not (Test-FFmpegAvailable)) {
+    Write-Host "Error: ffmpeg is not found in your system PATH." -ForegroundColor Red
+    Write-Host "Please install ffmpeg and ensure it's accessible from PowerShell." -ForegroundColor Red
+    Write-Host "Download from: https://ffmpeg.org/download.html" -ForegroundColor Yellow
+    exit 1
+}
+Write-Host "ffmpeg found successfully." -ForegroundColor Green
+
+# Validate input file exists
+if (-not (Test-Path $InputVideo)) {
+    Write-Host "Error: Input file '$InputVideo' does not exist." -ForegroundColor Red
+    exit 1
+}
+
+# Get absolute paths to avoid any relative path issues
+$InputVideoPath = Resolve-Path $InputVideo
+$OutputDirectoryPath = Join-Path (Get-Location) $OutputDirectory
+
+# Create output directory if it doesn't exist
+if (-not (Test-Path $OutputDirectoryPath)) {
+    Write-Host "Creating output directory: $OutputDirectoryPath" -ForegroundColor Cyan
+    New-Item -ItemType Directory -Path $OutputDirectoryPath -Force | Out-Null
+}
+
+Write-Host ""
+Write-Host "=== Frame Extraction Configuration ===" -ForegroundColor Green
+Write-Host "Input Video: $InputVideoPath" -ForegroundColor White
+Write-Host "Output Directory: $OutputDirectoryPath" -ForegroundColor White
+
+# Get video information before processing
+Write-Host ""
+Write-Host "Analyzing video properties..." -ForegroundColor Cyan
+try {
+    # Use ffprobe to get video information (frame count, duration, fps)
+    $videoInfo = & ffprobe -v quiet -print_format json -show_format -show_streams "$InputVideoPath" | ConvertFrom-Json
+    $videoStream = $videoInfo.streams | Where-Object { $_.codec_type -eq "video" } | Select-Object -First 1
+    
+    if ($videoStream) {
+        $duration = [math]::Round([double]$videoStream.duration, 2)
+        $fps = if ($videoStream.r_frame_rate -match "(\d+)/(\d+)") { 
+            [math]::Round([double]$matches[1] / [double]$matches[2], 2) 
+        } else { "Unknown" }
+        $resolution = "$($videoStream.width)x$($videoStream.height)"
+        $estimatedFrames = if ($fps -ne "Unknown") { [math]::Ceiling($duration * $fps) } else { "Unknown" }
+        
+        Write-Host "Video Duration: $duration seconds" -ForegroundColor White
+        Write-Host "Frame Rate: $fps fps" -ForegroundColor White  
+        Write-Host "Resolution: $resolution" -ForegroundColor White
+        Write-Host "Estimated Frame Count: $estimatedFrames" -ForegroundColor White
+    }
+}
+catch {
+    Write-Host "Could not analyze video properties, but proceeding with extraction..." -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "Starting frame extraction..." -ForegroundColor Green
+Write-Host "Note: This process may take several minutes depending on video length and resolution." -ForegroundColor Yellow
+
+# Build the output path pattern for ffmpeg
+$outputPattern = Join-Path $OutputDirectoryPath "frame_%08d.png"
+
+# Execute ffmpeg with maximum quality settings
+# -i: specifies input file
+# -vf "scale=iw:ih": maintains original resolution without any scaling artifacts
+# -pix_fmt rgba: uses RGBA pixel format for maximum color depth and alpha support
+# -compression_level 0: disables PNG compression for absolute maximum quality
+# -pred mixed: uses mixed prediction method for optimal lossless encoding
+try {
+    $ffmpegArgs = @(
+        "-i", "`"$InputVideoPath`""
+        "-vf", "scale=iw:ih"
+        "-pix_fmt", "rgba"
+        "-compression_level", "0"
+        "-pred", "mixed"
+        "-y"  # Overwrite output files without asking
+        "`"$outputPattern`""
+    )
+    
+    # Start ffmpeg process and capture output
+    $process = Start-Process -FilePath "ffmpeg" -ArgumentList $ffmpegArgs -NoNewWindow -Wait -PassThru
+    
+    if ($process.ExitCode -eq 0) {
+        Write-Host ""
+        Write-Host "Frame extraction completed successfully!" -ForegroundColor Green
+        
+        # Count extracted frames and calculate total size
+        $extractedFrames = Get-ChildItem "$OutputDirectoryPath\*.png" -ErrorAction SilentlyContinue
+        $frameCount = $extractedFrames.Count
+        
+        if ($frameCount -gt 0) {
+            $totalSize = ($extractedFrames | Measure-Object -Property Length -Sum).Sum
+            $formattedSize = Format-FileSize $totalSize
+            
+            Write-Host ""
+            Write-Host "=== Extraction Results ===" -ForegroundColor Green
+            Write-Host "Frames Extracted: $frameCount" -ForegroundColor White
+            Write-Host "Total Size: $formattedSize" -ForegroundColor White
+            Write-Host "Average Size per Frame: $(Format-FileSize ($totalSize / $frameCount))" -ForegroundColor White
+            Write-Host "Output Location: $OutputDirectoryPath" -ForegroundColor White
+        }
+        else {
+            Write-Host "Warning: No PNG files found in output directory." -ForegroundColor Yellow
+        }
+    }
+    else {
+        Write-Host "Error: ffmpeg process failed with exit code $($process.ExitCode)" -ForegroundColor Red
+        exit 1
+    }
+}
+catch {
+    Write-Host "Error executing ffmpeg: $($_.Exception.Message)" -ForegroundColor Red
+    exit 1
+}
+
+Write-Host ""
+Write-Host "Frame extraction process complete." -ForegroundColor Cyan

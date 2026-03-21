@@ -1,0 +1,12 @@
+@echo off & title WINDOWS 11 22557+ HOME or PRO setup account without internet connection
+:: when the setup halts at OOBE, run via Shift + F10 > D:\user
+:: replace D with the media drive letter, or just try E:\user F:\user until you get at it
+
+set /p "name=Enter your account name: "
+net user "%name%" /add
+net localgroup Administrators "%name%" /add
+reg delete "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE" /va /f
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /f /v AutoLogonSID
+reg delete "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /f /v DefaultUserName
+net user defaultuser0 /delete
+shutdown /l

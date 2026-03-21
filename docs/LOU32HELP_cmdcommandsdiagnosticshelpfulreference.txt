@@ -1,0 +1,77 @@
+======================================
+::    LOU32 HELP MODULE DOCUMENT    ::
+======================================
+:: CMD HELPFUL DIAGNOSTIC REFERENCE ::
+======================================
+# Gathering IP Address information: 
+
+ipconfig /all
+
+---
+
+# Display all active TCP connections: 
+
+netstat -a
+
+---
+
+# Display routing table: 
+
+netstat -r
+
+---
+
+# Windows 7 Cleanup Winsxs folder: 
+
+dism /online /cleanup-image /spsuperseded
+
+---
+
+# Force client to update NTP (Windows Time):
+
+?w32tm /config /syncfromflags:domhier /update
+
+net stop w32time
+
+net start w32time
+
+---
+
+# Force workstation to WSUS update:
+
+wuauclt /detectnow
+wuauclt /reportnow
+
+---
+
+# List installed windows updates: 
+
+wmic qfe list
+
+---
+
+# Set specific Network Card IP address settings to DHCP enabled: 
+
+?netsh interface ip set address “Local Area Connection” dhcp?
+
+?**Set specific Network Card DNS settings to DHCP enabled:**
+
+netsh interface ip set dns “Local Area Connection” dhcp
+
+---
+
+# Reset NetBIOS:
+
+nbtstat -R
+nbtstat -RR
+ipconfig /flushdns
+
+---
+
+# Reset Winsock:
+
+netsh winsock reset catalog 2
+netsh int ip reset reset.log
+
+=========================================
+END OF LOU32 HELP MODULE DOCUMENT.

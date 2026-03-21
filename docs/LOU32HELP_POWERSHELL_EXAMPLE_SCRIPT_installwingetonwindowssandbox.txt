@@ -1,0 +1,18 @@
+===============================================================================================
+                LOU32 HELP MODULE DOCUMENT -- POWERSHELL FUNCTIONAL EXAMPLE SERIES
+===============================================================================================
+        Installing Winget On Windows Sandbox -- PSSCRIPT Confirmed Working 3-18-2025
+===============================================================================================
+
+# To install the stable release of WinGet on Windows Sandbox, follow these steps from a Windows PowerShell command prompt:
+
+$progressPreference = 'silentlyContinue'
+Write-Host "Installing WinGet PowerShell module from PSGallery..."
+Install-PackageProvider -Name NuGet -Force | Out-Null
+Install-Module -Name Microsoft.WinGet.Client -Force -Repository PSGallery | Out-Null
+Write-Host "Using Repair-WinGetPackageManager cmdlet to bootstrap WinGet..."
+Repair-WinGetPackageManager
+Write-Host "Done."
+
+===============================================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

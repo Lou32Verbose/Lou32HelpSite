@@ -1,0 +1,18 @@
+==============================================
+:: LOU32 HELP MODULE DOCUMENT 
+==============================================
+:: TROUBLESHOTTING GIT PUSH HANGING
+==============================================
+
+# Set a timeout so it doesn't hang forever
+
+git -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=10 push
+
+# Also, in PowerShell, use the following to see verbose output to diagnose issues:
+
+$env:GIT_TRACE = "1"
+$env:GIT_CURL_VERBOSE = "1"
+git push
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

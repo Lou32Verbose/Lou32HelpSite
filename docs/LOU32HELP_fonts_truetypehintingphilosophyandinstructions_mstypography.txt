@@ -1,0 +1,45 @@
+=====================================
+::   LOU32 HELP MODULE DOCUMENT    ::
+=====================================
+:: TRUETYPE FONT HINTING REFERENCE ::
+=====================================
+
+# Basic hinting philosophies and TrueType instructions
+
+## Basic global tables
+
+Basic TrueType hinting involves three tables3 that are global to the entire font: the Control Value Table, the Preprogram Table and the Font Program Table.
+
+## Control Value Table ('cvt')
+
+TrueType allows control over the regularity of features through the use of values stored in the 'cvt' table. Control values are measurements of features, such as lowercase stems widths. These stems, although similar to one another, may have slightly different outline distances. With cvts the distances can be controlled so they are the same pixel width at a low resolution. At a higher resolution the control value won't be used but the natural distance will display in the stems. The Control Value table doesn't require these values to be glyph5 feature distances. The values are an integer and can be accessed from many TrueType instructions. The table also can be written to as well as read from other tables.
+
+Other examples of glyph and font features that can be stored in the control value table are: cap heights, x-heights, overshoot6 distances, ascender heights, baselines, figure heights, serif lengths and heights, italic angle, group (uppercase, lowercase, etc.) stem distances, group round distances. Other features might be: smaller group distances such as a math sign stem distance, braces, brackets, or parentheses distances.
+
+## Preprogram ('prep')
+
+In every font there are certain conditions that will always apply. In TrueType we control these conditions through code placed in the preprogram. The 'prep' table is executed each time a glyph size or resolution is changed and before the glyph's local instruction are executed. This is a good place to control global conditions for all glyphs. Some examples of what to put in a 'prep' are...
+
+Controlling when hinting instructions are used and when they are not. In Microsoft fonts we turn off hints below 8ppem7 and above 2048ppem. We feel it unnecessary to use hints below 8ppem or above 2048ppem. This also prevents some technical issues from arising.
+Turning on control to check for missing pixels in continuous strokes. In some cases the outline may pass between pixel centers and would result in holes in the bitmap8. This control checks for these conditions and adds pixel/s where these 'dropouts' occur.
+Altering values in the 'cvt' used to control group features such as uppercase stems and rounds. Here you can control the size at which a stem breaks from one pixel to two, etc. It is common to force round and straight features to be equal until a desired size.
+Setting the 'cvt' cut-in limit. This is a threshold (or thresholds) which are used to determine if a 'cvt' value will be used or the actual distance will be used. I use three threshold settings: one for small ppem sizes set so the 'cvt' will most always be used; one for medium ppem sizes where a more reasonable threshold is set; and a high ppem threshold set to always use the actual distance and not the 'cvt' value. You'll see below how some instructions are set to look at this 'cvt' cut-in limit.
+Setting minimum distance. Sometimes it is necessary to maintain a minimum of one pixel between one outline point and another (in the case of hinting across the stem of a glyph, for example). I always set the minimum distance to be one pixel. If I then hint across a stem and the actual distance is less than a half a pixel, the stem width is always forced to be one pixel.
+
+## Font Program ('fpgm')
+
+This table stores functions9 that can be called from the 'prep' or from the glyph's instructions. Functions are used to eliminate repetitive code from being used in multiple glyphs. A common example is to control the placement of a diacritic10 over a base glyph. TrueType supports composite glyphs (glyphs made up of other glyphs). In composite glyphs the bitmaps of these already hinted glyphs may not be placed in the same way as the original unhinted outline position in the horizontal and vertical direction. A function is often used to insure the diacritic centers over a base glyph and the diacritic does not touch the top of the base glyph.
+
+### Footnotes
+
+3. TrueType font files are separated into sections of similar data called tables.
+4. These can be heights of the letter groups, stems or rounds of a group, and serifs.
+5. An image in a font file. For comparison a lowercase 'a' is a character. In the latest font file technologies (TrueType Open and TrueType GX) there can be several glyphs that are a lowercase 'a' in a font file.
+6. The difference between the round and flat glyph heights and baselines in a group. Round characters need to project higher and lower to give the appearance of equal height.
+7. An acronym for pixel per em. Pixels per em are a non resolution dependent unit of measure. PPEM are calculated by the equation: PPEM = pt size * resolution/72
+8. An image made of pixels. In this document a bitmap refers to the displayed characters after the glyph's hints are processed. This is not to be confused with a 'bitmap font file' .
+9. A general term for a particular kind of subroutine.
+10. A mark normally used in conjunction with another glyph. In Latin fonts these are sometimes called 'accents'. In Hebrew and Arabic these are marks that denote vowels.
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

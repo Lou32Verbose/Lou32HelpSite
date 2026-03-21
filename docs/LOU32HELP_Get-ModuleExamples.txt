@@ -1,0 +1,49 @@
+﻿# Group All Modules by Name w/ Get-Module cmdlet
+
+Get-Module -ListAvailable -All | Format-Table -Property Name, Moduletype, Path -Groupby Name
+
+# Get properties of a module
+
+Get-Module | Get-Member -MemberType Property | Format-Table Name
+
+Name
+----
+AccessMode
+Author
+ClrVersion
+CompanyName
+Copyright
+Definition
+Description
+DotNetFrameworkVersion
+ExportedAliases
+ExportedCmdlets
+ExportedCommands
+ExportedFormatFiles
+ExportedFunctions
+ExportedTypeFiles
+ExportedVariables
+ExportedWorkflows
+FileList
+Guid
+HelpInfoUri
+LogPipelineExecutionDetails
+ModuleBase
+ModuleList
+ModuleType
+Name
+NestedModules
+OnRemove
+Path
+PowerShellHostName
+PowerShellHostVersion
+PowerShellVersion
+PrivateData
+ProcessorArchitecture
+RequiredAssemblies
+RequiredModules
+RootModule
+Scripts
+SessionState
+Version
+

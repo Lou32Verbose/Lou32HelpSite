@@ -1,0 +1,42 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: POWERSHELL - DIAGNOSTIC DATA VIEWER      ::
+==============================================
+
+:: To install the newest version of the Diagnostic Data Viewer PowerShell module, run the following command within an elevated PowerShell session:
+
+Install-Module -Name Microsoft.DiagnosticDataViewer
+
+---
+
+:: To turn on data viewing through PowerShell, run the following command within an elevated PowerShell session:
+
+Enable-DiagnosticDataViewing
+
+---
+
+:: To start viewing diagnostic data, from an elevated PowerShell session, run the following command:
+
+Get-DiagnosticData
+
+---
+
+:: To view the diagnostic category represented by each numeric identifier and what the category means, you can run the command:
+
+Get-DiagnosticDataTypes
+
+---
+
+:: Filter events by when they were sent:
+
+Get-DiagnosticData -StartTime (Get-Date).AddHours(-12) -EndTime (Get-Date).AddHours(-6)
+
+---
+
+:: Export the results of each command:
+
+Get-DiagnosticData | Export-Csv 'mydata.csv'
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,171 @@
+# Downloading Windows 10 Enterprise
+Download [Windows Media Creation Tool](https://www.microsoft.com/software-download/windows10)
+
+Open Powershell and use it to launch the tool with these options. You can either use a relative or absolute path for the exe file. An easy way to get the path of a file is to hold in shift and right click, then select "Copy as path" in File Explorer. 
+```powershell
+# Make sure to change the language code to your liking, I have selected en-US. If you are on 32-bit you can use x84.
+C:\Users\Felix\Downloads\MediaCreationTool_22H2.exe /Eula Accept /Retail /MediaLangCode en-US /MediaArch x64 /MediaEdition Enterprise
+```
+
+Select the "Create USB" option if you want a stock Windows 10 Enterprise USB installer. Select the ISO option if you want to create a customized ISO & installer with preinstalled drivers using a CAB package.
+
+When asked for a key, you can use an official [KMS key](https://docs.microsoft.com/sl-si/windows-server/get-started/kmsclientkeys) from Microsoft. The current one as of writing for Windows 10 Enterprise is `NPPR9-FWDCX-D2C8J-H872K-2YT43`.
+
+**That's it!** You can now install Windows as usual.
+> Remember that we used a generic KMS key in the installer. This means that Windows will complain that it is not activated with a small text in the corner of the screen. To fix this, you can provide your own license key or use Microsoft Activation Scripts (MAS) that you can find on GitHub. Enjoy!
+
+# Mount the ISO
+> ❗️ If you only want a stock bootable Windows 10 Enterprise installer you do not need to continue from this point! This is only if you want to create a customized ISO & USB installer with a CAB package. ❗️
+
+`install.esd` is a compressed install image which contains various versions of the operating system. To customize our image we need to export it to `.wim`. It will contain the specific image(s) that we are looking to utilize.
+
+Mount the ISO by clicking on it. This should mount the image to a drive letter which you can access. To get information about which Windows versions your ISO contains, use
+```powershell
+# Use your own path here, simply change out the drive letter to the one your mount was assigned to. Check File Explorer -> "This PC".
+dism.exe /Get-WimInfo /WimFile:D:\sources\install.esd
+```
+
+<details>
+<summary>The command should return an indexed list like this.</summary>
+    
+```powershell
+Details for image : D:\sources\install.esd
+
+Index : 1
+Name : Windows 10 Education
+Description : Windows 10 Education
+Size : 15,736,130,486 bytes
+
+Index : 2
+Name : Windows 10 Education N
+Description : Windows 10 Education N
+Size : 14,956,748,370 bytes
+
+Index : 3
+Name : Windows 10 Enterprise
+Description : Windows 10 Enterprise
+Size : 15,736,284,481 bytes
+
+Index : 4
+Name : Windows 10 Enterprise N
+Description : Windows 10 Enterprise N
+Size : 14,956,654,647 bytes
+
+Index : 5
+Name : Windows 10 Pro
+Description : Windows 10 Pro
+Size : 15,734,489,825 bytes
+
+Index : 6
+Name : Windows 10 Pro N
+Description : Windows 10 Pro N
+Size : 14,959,031,814 bytes
+```
+</details>
+
+Note down the index of the version you want to use. I want to use Enterprise so my index is 3.
+
+# Export install.wim from install.esd
+Next we convert install.esd to install.win so we can modify it. 
+
+<details>
+<summary>Background</summary>
+ 
+`.esd` is a highly compressed format that usually contains a collection of various images as shown above. This format is ideal when installing due to its small size but makes it hard to manipulate using current tooling, so we will convert the image we want to use to `.wim.`
+</details>
+
+```powershell
+# Make sure to switch out SourceIndex to the index you want to use. Same goes for paths
+ dism.exe /Export-Image /SourceImageFile:D:\sources\install.esd /SourceIndex:3 /DestinationImageFile:"C:\BigWork\install.wim" /Compress:max /CheckIntegrity
+```
+
+We should now have an `install.wim` file exported at our specified path, now we can add our packages or drivers to this image before making it bootable.
+
+You can verify that the exported `install.wim` contains the the correct image version.
+```powershell
+ Dism /Get-ImageInfo /ImageFile:C:\BigWork\install.wim
+```
+
+<details>
+<summary>Output example</summary>
+    
+```powershell
+Details for image : C:\install.wim
+
+Index : 1
+Name : Windows 10 Enterprise
+Description : Windows 10 Enterprise
+Size : 15,736,284,481 bytes
+```
+</details>
+
+We can now mount this image to a folder. Create a folder and mount `install.wim` to it.
+```powershell
+# Use the exact name from previous check or use /Index:1
+ Dism /Mount-Image /ImageFile:C:\BigWork\install.wim /Name:"Windows 10 Enterprise" /MountDir:C:\BigWork\Mount
+ OR
+ Dism /Mount-Image /ImageFile:C:\BigWork\install.wim /Index:1 /MountDir:C:\BigWork\Mount
+```
+
+My Dell XPS comes with a CAB driver pack, so I will [use that](https://www.dell.com/support/kbdoc/en-us/000124139/dell-command-deploy-driver-packs-for-enterprise-client-os-deployment?lang=en). CAB is a compressed archive used for drivers and firmware.
+
+# Adding a package (CAB)
+```powershell
+ Dism /Image:C:\BigWork\Mount /Add-Package /PackagePath:"C:\BigWork\Packages\9700-WIN10-A04-H0D74.CAB"
+```
+<details>
+<summary>If you face issues with CAB</summary>
+For some reason adding my package returns error 0x80070002 for me, stating that it cannot find the file specified despite being correct path. To resolve, you can simply extract the archive and use the extracted folder in the "Adding Drivers" section below.
+
+Extracting CAB folders
+```powershell
+# -F option is files, the option below will extract the folder and all files recursively.
+Expand "C:\BigWork\Packages\9700-WIN10-A04-H0D74.CAB" -F:* "C:\BigWork\Drivers"
+```
+</details>
+
+# Adding drivers (Individual, folder or extracted CAB)
+```powershell
+# /Recurse allows driver path to be a folder full of files, like a decompressed CAB file. If you would like to add a singular driver you can, just remove recurse and specify the extension used (usually .inf). You can use /ForceUnsigned option if you want to install an unsigned driver, but it's not recommended, you can sign your own drivers too but that's outside the scope of this guide.
+Dism /Image:C:\BigWork\Mount /Add-Driver /Driver:c:\BigWork\Drivers\9700 /Recurse
+```
+
+When adding multiple drivers, you should get verbose feedback on the install process, such as
+`Installing 139 of 139`
+
+Your drivers should now be installed and ready! :tada:
+
+# Verify
+To verify installed 3rd party drivers.
+```powershell
+Dism /Image:C:\BigWork\Mount /Get-Drivers
+```
+This will return a list of all of them, do note that the names will be generic and fail to match the original.
+
+# Save your changes
+Unmount and commit your changes. Give it time to save your changes and dismount the image.
+```powershell
+# You can use /Discard instead of /Commit if you made an error.
+Dism /Unmount-Image /MountDir:C:\BigWork\Mount /Commit
+```
+
+# Creating a bootable USB
+It's now ready, now all that is left is to create a bootable USB with your new custom image! You need to have an USB drive formatted as FAT32 that is marked as active, for that follow Step 1 in [this guide](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/install-windows-from-a-usb-flash-drive#step-1---format-the-drive-and-set-the-primary-partition-as-active). 
+
+When that is done. Open/mount your original ISO and drag all files EXCEPT install.esd to the newly formatted USB. The reason that we do not want to transfer install.esd is because our newly generated file will replace it, and it's large so it takes time to  
+
+# If your install.wim exceeds 4GB.
+It is likely that your `install.wim` file exceeds 4GB, which means that you will have to split it into multiple smaller files as FAT32 format does not support files over 4GB. This is easily fixed however. Microsoft docs offer an excellent solution [here](https://docs.microsoft.com/en-us/windows-hardware/manufacture/desktop/install-windows-from-a-usb-flash-drive#if-your-windows-image-is-larger-than-4gb).
+
+To split your .wim file to multiple smaller files, you can use this command
+```powershell
+Dism /Split-Image /ImageFile:C:\BigWork\install.wim /SWMFile:E:\sources\install.swm /FileSize:3800
+````
+NOTE: This command is quite slow and lacks any visual indication of working, do be patient. (You can confirm that it works by checking USB disk usage in Task Manager)
+
+When complete you should have two or more `install.swm` files.
+
+# Completion
+Now all you have to do is drag your newly split `install.swm` files to your USB \sources\ folder. If you did not need to split the file you use `install.wim`.
+
+Your USB is now ready, all that is left is to boot it and install Windows like usual! Your drivers should automatically be detected within Windows update on your newly installed OS.

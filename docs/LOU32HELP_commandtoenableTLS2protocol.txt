@@ -1,0 +1,1 @@
+PS C:\Users\Administrator>  '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12'

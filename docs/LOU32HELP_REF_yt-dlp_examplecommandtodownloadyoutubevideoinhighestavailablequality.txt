@@ -1,0 +1,13 @@
+==============================================================
+::              LOU32 HELP MODULE DOCUMENT		    ::
+==============================================================
+:: YT-DLP DOWNLOAD VIDEO HIGHEST QUALITY :: EXAMPLE COMMAND ::
+==============================================================
+
+:: Example yt-dlp command to download a youtube video in the highest quality format available 
+:: (in this case .mkv format is specified)
+
+yt-dlp -f "bv*+ba/b" -S "res:1080,fps,vcodec:avc" --merge-output-format mkv -o "%(title)s.%(ext)s" --paths <desired-download-dir> <insert-video-url>
+
+==============================================================
+END OF LOU32 HELP MODULE DOCUMENT.

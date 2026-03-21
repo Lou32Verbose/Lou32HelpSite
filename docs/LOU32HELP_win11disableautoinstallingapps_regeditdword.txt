@@ -1,0 +1,23 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: Module=  				    ::
+==============================================
+:: DISABLE AUTOMATIC INSTALLATION OF APPS IN WINDOWS 11
+
+:: STEPS -- (validity last checked by Louis as of 4/8/2025)
+
+:: Open regedit
+
+:: Open the following key: 
+
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager.
+
+:: Create or modify the 32-bit DWORD value:
+
+SilentInstalledAppsEnabled.
+
+:: Set DWORD value to 0.
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,50 @@
+============================================================================
+=		  METHODS TO DISABLE COMPATTELRUNNER 			   =
+=		(aka Microsoft Compatibility Appraiser)			   =
+============================================================================
+
+# 1. Delete Microsoft Compatibility Appraiser Task
+
+# From Command Prompt:
+
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+
+=============================================================================================================
+
+# 2. Registry Method Option
+
+reg add "HKLM\Software\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
+
+=============================================================================================================
+
+# 3A. FULL DISABLE INSTRUCTIONS
+
+## The compattelrunner function task folder does not only include "Microsoft Compatibility Appraiser", there are four tasks in the task folder: 
+## PcaPatchDbTask, ProgramDataUpdater and StartupAppTask, also I had found tasks responsible for running SettinSyncHost.exe. Disable all of them if desired. 
+## To disable "Microsoft Compatibility Telemetry" and "Host Process for Setting Synchronization", run the below commands in an elevated Command Prompt:
+
+reg add HKLM\Software\Policies\Microsoft\Windows\DataCollection /v "AllowTelemetry" /t REG_DWORD /d 0 /f
+reg add HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync /v "DisableSettingSync" /t REG_DWORD /d 2 /f
+reg add HKLM\SOFTWARE\Policies\Microsoft\Windows\SettingSync /v "DisableSettingSyncUserOverride" /t REG_DWORD /d 1 /f
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\PcaPatchDbTask"
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\ProgramDataUpdater"
+schtasks /change /disable /tn "\Microsoft\Windows\Application Experience\StartupAppTask"
+schtasks /change /disable /tn "\Microsoft\Windows\SettingSync\BackgroundUploadTask"
+schtasks /change /disable /tn "\Microsoft\Windows\SettingSync\NetworkStateChangeTask"
+
+# 3B. ADDENDUM TO THE ABOVE: 
+
+## Using psexec, run the commands as TRUSTEDINSTALLER to get rid of access denied error that may be received when trying to run the above commands. 
+## To do this: 
+## Put psexec.exe into System32. Then, run the following command BEFORE the ones above:
+
+psexec -S cmd
+
+=============================================================================================================
+
+# 4. ONE OTHER POSSIBLE METHOD IF ALL ELSE FAILS
+
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\CompatTelRunner.exe" /v Debugger /t REG_SZ /d "%windir%\System32\taskkill.exe" /f
+
+=============================================================================================================

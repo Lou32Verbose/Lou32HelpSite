@@ -1,0 +1,12 @@
+===========================================================
+::             LOU32 HELP MODULE DOCUMENT                ::
+===========================================================
+:: DOWNLOADING LIST OF URLS FROM OPENDIRECTORYDOWNLOADER ::
+===========================================================
+
+:: USING WGET2 FROM THE TERMINAL:
+
+wget2 -x -i "my_url_list_file.txt"
+
+===========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

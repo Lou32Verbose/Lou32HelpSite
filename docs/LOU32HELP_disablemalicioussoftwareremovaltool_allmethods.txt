@@ -1,0 +1,35 @@
+#       LOU32HELP -- Lou32 Help Module Document
+========================================================
+# DISABLE MALICIOUS SOFTWARE REMOVAL TOOL IN REGISTRY 
+========================================================
+## METHOD 1: Navigate To This Key in RegEdit (If Already Exists) or Create This Key (If It Doesn't Exist):
+
+Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT
+
+## Add D-Word:
+
+DontOfferThroughWUAU
+
+## Set Value of D-Word:
+
+1
+
+========================================================
+
+## METHOD 2: To Disable MRT via Group Policy:
+
+## In Group Policy Editor, this policy can be found here:
+
+Computer Configuration\Administrative Templates\Windows Components\Microsoft Malicious Software Removal Tool
+
+## Follow instructions in Group Policy Editor to enable or disable this group policy
+
+========================================================
+
+## METHOD 3: Delete MRT.EXE From System32
+
+This is not recommended, but you can also manually delete the file MRT.exe from %windir%/System32/, however it may still reappear after updates if the above methods are not also used to disable it.
+
+========================================================
+### End Of Lou32 Help Module Document -- Lou32Help Apparatus
+========================================================

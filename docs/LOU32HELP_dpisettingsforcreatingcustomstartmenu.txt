@@ -1,0 +1,14 @@
+==========================================================
+::LOU32 HELP MODULE DOCUMENT
+==========================================================
+::DPI Settings Reference For Custom Start Button Creation
+==========================================================
+
+Checking your app scaling in Settings, use the following values based on your current setting:
+
+100% DPI - use 54 x 162px
+125% DPI - use 66 x 198px
+150% DPI - use 81 x 243px
+
+==========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

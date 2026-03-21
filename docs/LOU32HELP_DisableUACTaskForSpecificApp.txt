@@ -1,0 +1,27 @@
+Disable UAC for a Specific App
+
+Windows: User Account Control can be obnoxious when it prompts you for approval on certain apps every time.
+
+Tips and tricks blog MakeUseOf suggests adding frequent offenders to Task Scheduler to avoid this annoyance.
+
+The process is a little tedious, but easy enough if you're familiar with Task Scheduler:
+
+In Task Scheduler, right-click "Task Scheduler Library" and select "New Folder" Name it whatever you would like.
+
+Select the new folder and click "Create Task" (not "Create Basic Task")
+
+Name the task something descriptive. Enable "Run with highest privileges," and select your OS under "Configure for."
+
+Under the Actions tab, select "Start a program" in the Action dropdown if it isn't already. Click Browse and find your app's .exe file (usually under Program Files on your C: drive).
+
+(Laptops) Under Conditions tab, deselect "Start the task only if the computer is on AC power."
+
+On your desktop, right click and select New > Shortcut. Paste 'C:\Windows\System32\schtasks.exe /RUN /TN "Name of folder\Name of task" into the text box.
+
+This will create a link to your program that will automatically skip the prompt asking for permission to make changes to your computer.
+
+The app's icon won't transfer over, but this can be easily fixed.
+
+This solution can be used to start programs from Startup folder, if UAC intercept them (non-system programs). Otherwise, UAC will block program (without prompt or any clue what happened) and it will never start.
+
+The above worked for me when I replaced spaces with underscores from the Scheduler Folder and Task name

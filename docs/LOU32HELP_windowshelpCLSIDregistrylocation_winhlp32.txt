@@ -1,0 +1,15 @@
+=========================================
+::LOU32 HELP MODULE DOCUMENT
+=========================================
+::CLSID for Windows Help ActiveX Control
+=========================================
+
+You can look for the CLSID of Hhctrl.ocx in HKEY_CLASSES_ROOT\CLSID. 
+
+The CLSID is: 
+52A2AAAE-085D-4187-97EA-8C30DB990436. 
+
+This key is registered by the system during setup.
+
+=========================================
+End of Lou32 Help Module Document.

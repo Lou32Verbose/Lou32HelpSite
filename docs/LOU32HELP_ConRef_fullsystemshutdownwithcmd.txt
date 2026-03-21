@@ -1,0 +1,7 @@
+===============================================
+         LOU32 HELP MODULE DOCUMENT
+  ConsoleReference= CMD Full System Shutdown
+===============================================
+# CMD FULL SYSTEM SHUTDOWN (run in elevated command prompt):
+
+shutdown /s /f /t 0

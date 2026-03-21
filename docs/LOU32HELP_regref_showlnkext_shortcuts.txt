@@ -1,0 +1,23 @@
+========================================================
+       LOU32 HELP - REGISTRY REFERENCE DOCUMENT
+========================================================
+ REGKEY= HKEY_CLASSES_ROOT\Lnkfile\shellex\IconHandler
+========================================================
+
+# KEY:
+
+## HKEY_CLASSES_ROOT\Lnkfile\shellex\IconHandler
+---
+# NeverShowExt Value:
+
+##This value (as REG_SZ entry, not a D-Word) determines whether file extensions are shown for shortcuts (.lnk extension).
+##If it is deleted, then the system will show the .lnk extension on shortcuts.
+
+##Add "NeverShowExt" back to the registry as a REG_SZ entry to restore the default behavior.
+---
+# CLSID Value:
+
+## The CLSID associated with shortcuts is {00021401-0000-0000-C000-000000000046}.
+
+==========================================================================================================================
+END OF LOU32 HELP DOCUMENT REGISTRY REFERENCE (Moniker=LSRegRef, or L32HELPRegRef).

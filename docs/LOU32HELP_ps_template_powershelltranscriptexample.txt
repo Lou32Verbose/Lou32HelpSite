@@ -1,0 +1,25 @@
+==========================================
+::      LOU32 HELP MODULE DOCUMENT      ::
+==========================================
+:: EXAMPLE POWERSHELL TRANSCRIPT SCRIPT ::
+==========================================
+
+## Example: Starting a transcript
+
+Start-Transcript -Path "C:\transcript.txt"
+
+
+
+## Your commands here
+
+Get-Process
+
+Get-Service
+
+
+## Example: Stopping the transcript
+
+Stop-Transcript
+
+=====================================================
+END OF LOU32 HELP MODULE DOCUMENT.

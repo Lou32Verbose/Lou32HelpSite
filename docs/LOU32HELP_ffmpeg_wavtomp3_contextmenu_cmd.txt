@@ -1,0 +1,4 @@
+CMD COMMAND USE FFMPEG TO CONVERT WAV TO MP3 <><> CAN BE ADDED TO CONTEXT MENU
+============================================================================================================
+# settings here are for 44100hz Sample Rate and 256k Bitrate MP3:
+cmd /q /c for %%I in ("%1") do ffmpeg -i %%I -acodec libmp3lame -vn -ar 44100 -ac 2 -ab 256k "%%~nI.mp3"

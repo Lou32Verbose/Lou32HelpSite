@@ -1,0 +1,22 @@
+=========================================
+::     LOU32 HELP MODULE DOCUMENT      ::
+=========================================
+:: YT-DLP MP3 DOWNLOAD COMMAND EXAMPLE ::
+=========================================
+
+:: Example command to download a youtube video as audio:
+
+yt-dlp -o "~/Downloads/%(title)s.%(ext)s" --no-mtime --no-playlist --extract-audio --audio-format mp3 --format "bestvideo[height=1080]+bestaudio/best[height<=1080]/best" --merge-output-format mp4 <INSERT-URL-HERE>
+
+:: Some comments about the command options used above:
+
+--no-mtime 
+
+:: This means that the "modified date" of the file on Windows will be the date when you downloaded the file, as opposed to the default behavior, which would be to keep the upload date.
+
+-o "~/Downloads/%(title)s.%(ext)s" 
+
+:: This means that the output file will be the video title only before the extension (mp3), and will be placed in the default Downloads folder.
+
+============================================================
+END OF LOU32 HELP MODULE DOCUMENT.

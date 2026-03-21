@@ -1,0 +1,60 @@
+﻿=========================================
+:: LOU32HELP MODULE DOCUMENT
+=========================================
+:: MAKING TRUETYPE BITMAP FONTS
+=========================================
+
+# Making TrueType bitmap fonts
+# Vincent Connare, Microsoft Typography.
+
+This document outlines the steps required to make a TrueType font that only includes bitmap data.
+
+
+# The process
+
+The advance widths of the glyphs, that the bitmaps will reside in, should scale to ~ the same advance width as the bitmaps. The reason this is a requirement is that text engines use outline metrics to do page layout. Once the bitmap is laid down, the text engine needs to redraw the window when changes are made and uses these metrics to calculate where to put the bits. If these numbers are off then the cursor will be in illogical positions and odd displays happen.
+
+I created an outline font with one glyph (a bullet) and made glyphs for all my bitmaps in the .ttf.
+
+I made composites of the bullet to the glyphs.
+
+I did not have an outline font for this bitmap. So I had to calculate the metrics for the 2048 units per em Advance widths. To do this you divide 2048 by the ppem size then multiple by the bitmaps advance width.
+
+Example if at 13ppem the lower case 'a' is 7pixels width then 2048/13=157.53 157.53*7=1102.7 so an advance width of 1103 would be 7pixels wide at 13ppem. For multiple sizes if the font scales logically and linearly there should be no problem with finding an advance width that creates the correct pixel widths at the sizes. If the bitmaps don't scale linearly then you need to do an average and find the best width.
+
+After all the glyphs are on advance widths that will match the bitmaps:
+
+Use Mac Fontographer and import bitmaps for the correct Windows point sizes. A Mac 10 point bitmap is not the same image as a Windows 10 point image. You need to create a Mac 11point (or 11ppem in a .ttf) that would be equivalent to a VGA 8 point image. (formula for point size to ppem is "ptsize*resolution/72=ppem") Windows is either at 96dpi or 120dpi.
+On a Macintosh the pixel per em value is all ways equal to the point size.
+
+8 point image is: VGA(96dpi) is 11ppem SVGA(120dpi) is 13ppem
+10 point image is VGA(96dpi) is 13ppem SVGA(120dpi) is 17ppem
+12 point image is VGA(96dpi) is 16ppem SVGA(120dpi) is 20ppem
+14 point image is VGA(96dpi) is 19ppem SVGA(120dpi) is 23ppem
+
+To support both possible resolutions that Windows runs on you would need to make: 11,13,16,17,19,20,23 for 8,10,12,and 14 point display.
+
+The unknown or variable resolution of PC monitors makes this a difficult task. This is the reason scalable type is the better solution. The Macintosh is always the same resolution and only one image per point size is necessary.
+
+
+When all bitmaps are made for all resolutions needed and the 'outlines' are ready the next step can be started.
+
+Generate a .ttf file for PC with Fontographer.
+
+Generate a .bdf bitmap format (Macintosh encoding, this creates a proper .bdf)
+
+Copy both the .bdf file and .ttf file to a PC disk and copy onto Win95.
+
+Using the NotePad in Windows edit the text .bdf file. Remove entries for the 'space' or any other entries that do not have an image. the space causes problems and the .ttf space glyph is used anyway.
+
+Using sbit32.exe a Windows Console tool you can import this .bdf file into the .ttf file
+With embedded bitmaps, the vertical metrics are also obtained from the .tff. In a .ttf the values in the 'OS/2' table WinAscent and WinDescent control the vertical font heights.
+
+If the metrics are not set properly (as they were with my test font output through Mac fog) then the newest TrueEdit (Mac) can edit these values. They should be calculated from the tallest and lowest characters of the set in either the outlines or the bitmaps. In my case I have only bitmaps so I need to use the largest bitmap size and use the same calculation as doing horizontal escapements.
+
+If the metrics are short the bitmaps get clipped. This was the case when I used a bullet as my outline glyph in all characters.
+
+This font should appear without fail in the menus of all apps and show bullets when a bitmaps is not present or bitmaps at sizes that there are images for. It will print bullets.
+
+==========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

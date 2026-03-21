@@ -1,0 +1,42 @@
+==================================================
+::        LOU32 HELP MODULE DOCUMENT            ::
+==================================================
+:: QUERYING DEVICES AND DRIVERS WITH POWERSHELL ::
+==================================================
+::Method 1: Get all devices and their driver status
+
+Get-PnpDevice | Where-Object {$_.Status -ne "OK"} | Format-Table
+
+=====================================================================
+:: Method 2: Get all installed driver information
+
+Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, DriverDate | Format-Table -AutoSize
+
+:: To export the list to a CSV file on your desktop, run this command instead:
+
+Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, DriverDate | Export-Csv -Path "$env:USERPROFILE\Desktop\DriverLog.csv" -NoTypeInformation
+
+=====================================================================
+:: Method 3: Filter for a specific device
+
+:: For audio devices, run:
+
+Get-PnpDevice | Where-Object {$_.FriendlyName -like "*Audio*" -or $_.Class -eq "MEDIA"} | Format-Table
+
+:: For graphics drivers, run:
+
+Get-CimInstance Win32_PnPSignedDriver | Where-Object {$_.DeviceName -like "*Graphics*" -or $_.DeviceName -like "*Display*"} | Select-Object DeviceName, Manufacturer, DriverVersion, DriverDate | Format-Table -AutoSize
+
+=====================================================================
+:: Method 4: List hardware IDs for missing devices
+
+:: If a device isn't recognized at all, its hardware ID can be used to search for the correct driver online.
+:: Run the following command:
+
+Get-PnpDevice -PresentOnly | Where-Object {$_.Class -eq "Unknown"} | Select-Object FriendlyName, InstanceId
+
+:: The output will show any "Unknown devices." Copy the InstanceId value for the missing device.
+:: Paste the InstanceId into a search engine (e.g., PCI\VEN_8086&DEV_15D7) to find the manufacturer and driver for that component. 
+
+=====================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

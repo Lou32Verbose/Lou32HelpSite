@@ -1,0 +1,8 @@
+LOU32HELP=WinThumbsPreloader_help
+
+Winthumbspreloader.exe [-r] <path>
+
+Options
+
+-r recursive
+-s silent

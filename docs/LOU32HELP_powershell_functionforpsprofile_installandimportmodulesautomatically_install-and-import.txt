@@ -1,0 +1,37 @@
+﻿==============================================
+::      LOU32 HELP MODULE DOCUMENT          :: 
+==============================================
+:: POWERSHELL FUNCTION - INSTALL-AND-IMPORT ::
+==============================================
+
+## USEFUL FUNCTION FOR A POWERSHELL PROFILE:
+
+function install-and-import {
+    Param(
+        [Parameter(Mandatory=$true)]
+        [string]$moduleName,
+        [string]$Scope = 'CurrentUser'
+    )
+    $oldErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Stop"
+
+    Write-Host "Importing $moduleName"
+    if ( -not $( Get-Module -Name $moduleName -ListAvailable ) ) {
+        Write-Host "`tModule $moduleName is not installed. Installing now with scope ${Scope}..."
+        Install-Module -Force -AllowClobber -Scope $Scope $moduleName
+    }
+
+    Import-Module $moduleName
+    $ErrorActionPreference = $oldErrorActionPreference
+}
+
+## THEN, YOU CAN ADD SOMETHING LIKE THE FOLLOWING TO YOUR PROFILE BELOW THE FUNCTION TO CALL YOUR MODULES:
+
+install-and-import PSWindowsUpdate
+install-and-import ComputerCleanup
+install-and-import pswinglue
+install-and-import AudioDeviceCmdlets
+install-and-import -Scope AllUsers Microsoft.Winget.Client
+ 
+==================================================
+END OF LOU32 HELP MODULE DOCUMENT.

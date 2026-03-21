@@ -1,0 +1,14 @@
+===========================================
+:: LOU32 HELP MODULE DOCUMENT
+===========================================
+:: EXTRACT SYSTEM FILE REPAIR DETAILS FROM CBS.LOG
+===========================================
+
+:: Use the following command in an elevated command prompt to extract only the System File details from the CBS.log file:
+
+findstr /c:"[SR]" %windir%\Logs\CBS\CBS.log >"%userprofile%\Desktop\sfcdetails.txt"
+
+:: This will place a file called "sfcdetails.txt" on your desktop with the relevant info pulled from the log
+
+===========================================
+END OF LOU32 HELP MODULE DOCUMENT.

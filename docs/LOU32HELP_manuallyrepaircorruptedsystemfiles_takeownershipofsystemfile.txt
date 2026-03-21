@@ -1,0 +1,41 @@
+=============================================================================
+:: LOU32 HELP MODULE DOCUMENT
+=============================================================================
+:: MANUALLY REPAIR A CORRUPTED SYSTEM FILE / TAKE OWNERSHIP OF SYSTEM FILE
+=============================================================================
+:: 1. TAKE ADMINISTRATIVE OWNERSHIP OF THE CORRUPTED SYSTEM FILE.
+
+:: Type the following command in the elevated command prompt and press enter:
+
+takeown /f <Path_And_File_Name>​​​​​​​
+
+:: Example:
+
+takeown /f C:\windows\system32\jscript.dll. 
+
+=============================================================================
+:: 2. GRANT ADMINISTRATORS FULL ACCESS TO THE CORRUPTED SYSTEM FILE.
+
+:: Type the following command, and then press ENTER:
+
+icacls <Path_And_File_Name> /grant administrators:F 
+
+:: Example:
+
+icacls C:\windows\system32\jscript.dll /grant administrators:F 
+
+=============================================================================
+:: 3. REPLACE THE CORRUPTED SYSTEM FILE WITH A KNOWN GOOD COPY OF THE FILE.
+
+:: Type the following command, and then press ENTER:
+
+copy <Source_File> <Destination>
+
+:: In the above command, replace the <Source_File> placeholder with the path and file name of the known good copy of the file on your computer, and replace the <Destination> placeholder with the path and file name of the corrupted file.
+
+Example:
+
+copy E:\temp\jscript.dll C:\windows\system32\jscript.dll 
+
+=============================================================================
+END OF LOU32 HELP MODULE DOCUMEMT.

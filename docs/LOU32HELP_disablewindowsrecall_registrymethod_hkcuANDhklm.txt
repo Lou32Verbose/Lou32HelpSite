@@ -1,0 +1,43 @@
+==============================================
+::       LOU32 HELP MODULE DOCUMENT         :: 
+==============================================
+:: DISABLE WINDOWS RECALL [REGISTRY METHOD] ::
+==============================================
+
+You can also disable Windows Recall through the Registry by modifying the “WindowsAI” key.
+
+To disable Windows Recall through the Registry:
+
+# CURRENT USER REGISTRY SETTINGS 
+
+:: 1. Open REGEDIT
+
+:: 2. Browse to the following path:
+
+HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\WindowsAI
+
+:: 3. Right-click the WindowsAI key, select the New menu, and choose the “DWORD (32-bit) Value” option.
+
+:: 4. Name the key DisableAIDataAnalysis and press Enter.
+
+:: 5. Double-click the newly created key and change its value from 0 to 1.
+
+-------------------------------------------------------------------------------------------------------
+# LOCAL MACHINE REGISTRY SETTINGS
+
+:: 6. Browse to the following path:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsAI
+
+:: 7. Right-click the WindowsAI key, select the New menu, and choose the “DWORD (32-bit) Value” option.
+
+:: 8. Name the DWORD DisableAIDataAnalysis and press Enter.
+
+:: 9. Double-click the newly created key and change its value from 0 to 1.
+
+:: 10. Click the OK button.
+
+:: 11. Restart the computer.
+
+================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

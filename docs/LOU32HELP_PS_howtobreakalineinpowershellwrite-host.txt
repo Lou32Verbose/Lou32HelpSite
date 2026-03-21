@@ -1,0 +1,11 @@
+# HOW TO MAKE A LINE BREAK IN WRITE-HOST IN POWERSHELL #
+
+Write-Host "This is the first line.`r`nThis is the second line."
+
+`r  is first part
+`n  is second part
+
+# No spaces between any of these characters or the lines they end or start.
+
+<`r`n>
+

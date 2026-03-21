@@ -1,0 +1,37 @@
+========================================
+::     LOU32HELP MODULE DOCUMENT      ::
+========================================
+:: HOW TO FIND ID FOR A DEVICE DRIVER ::
+========================================
+
+:: The hardware id for a device in Windows can be found in the Windows Device Manager. 
+
+:: To check the hardware id for a device, follow these steps: 
+	
+	1. Open the Device Manager from the Control Panel. 
+	   *Alternatively, run "devmgmt.msc" from the Run menu to launch Device Manager.]		
+	2. In Device Manager, right-click the device, and select Properties in the window.
+	3. Select the Details tab.
+	4. Select the Hardware Ids in the dropdown list.
+
+:: There can be multiple hardware ids for a device. 
+:: The top listing is the most specific hardware device identifier, and going down, the identifiers are more generic. 
+:: The reason this is done is to allow a device driver identifier to be selected based on a match to any of these hardware identifiers.
+
+:: For example, if your audio driver manufacturer is Realtek, it gives us the Vendor ID [VEN_10EC], 
+:: Now, we know that any driver on the machine identified by VEN_10EC must also be Realtek.
+
+::A hardware ID is typically in the form of 
+	
+	<BUS>\<VENDOR ID>&<Device ID>&<Additional IDs>.
+
+:: The Vendor ID is indicated by:
+:: The four characters after VEN_
+
+:: The Device ID is indicated by:
+:: The four characters after DEV_
+
+The hardware ID is available for devices in which drivers were already installed, for unknown devices and not recognized devices.
+
+======================================================================
+END OF LOU32HELP MODULE DOCUMENT.

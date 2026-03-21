@@ -1,0 +1,21 @@
+===================================================================
+:: 				   LOU32 HELP MODULE DOCUMENT 			         ::
+===================================================================
+:: POWERSHELL - CONVERT TAB DELIMITED CSV TO COMMA DELIMITED CSV ::
+===================================================================
+## NOTE: If you are using Windows PowerShell (not PowerShell Core), then do the following: 
+## change "utf8BOM" to "UTF8" AND add "-NoTypeInformation"
+
+---
+
+## Here's the powershell command:
+
+Import-Csv -Path yourfile.csv -Delimiter "`t" -Encoding unicode | Export-Csv -Path yourfileoutput.csv -Delimiter ',' -Encoding utf8BOM
+
+---
+
+## This command can output files using other delimiters, just change the delimiter character to you desired one where the comma in quotes is.
+## Try it out using the '|' character as the delimiter. It should work right off the bat.
+
+======================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

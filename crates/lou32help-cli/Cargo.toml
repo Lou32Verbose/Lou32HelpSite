@@ -1,0 +1,31 @@
+[package]
+name = "lou32help-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+clap.workspace = true
+tiny_http.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+lou32help-core = { path = "../lou32help-core" }
+lou32help-site = { path = "../lou32help-site" }
+
+[dependencies.sha2]
+workspace = true
+
+[dependencies.base64]
+workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+lou32help-test-fixtures = { path = "../lou32help-test-fixtures" }
+
+[[bin]]
+name = "lou32help"
+path = "src/main.rs"

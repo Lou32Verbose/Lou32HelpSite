@@ -1,0 +1,40 @@
+﻿# GM Drum Sounds
+
+This chart shows what drum sounds are assigned to each MIDI note for a GM module (ie, that has a drum part).
+
+MIDI    Drum Sound          MIDI    Drum Sound
+Note #                      Note #
+ 35   Acoustic Bass Drum     59   Ride Cymbal 2
+ 36   Bass Drum 1            60   Hi Bongo
+ 37   Side Stick             61   Low Bongo
+ 38   Acoustic Snare         62   Mute Hi Conga
+ 39   Hand Clap              63   Open Hi Conga
+ 40   Electric Snare         64   Low Conga
+ 41   Low Floor Tom          65   High Timbale
+ 42   Closed Hi-Hat          66   Low Timbale
+ 43   High Floor Tom         67   High Agogo
+ 44   Pedal Hi-Hat           68   Low Agogo
+ 45   Low Tom                69   Cabasa
+ 46   Open Hi-Hat            70   Maracas
+ 47   Low-Mid Tom            71   Short Whistle
+ 48   Hi-Mid Tom             72   Long Whistle
+ 49   Crash Cymbal 1         73   Short Guiro
+ 50   High Tom               74   Long Guiro
+ 51   Ride Cymbal 1          75   Claves
+ 52   Chinese Cymbal         76   Hi Wood Block
+ 53   Ride Bell              77   Low Wood Block
+ 54   Tambourine             78   Mute Cuica
+ 55   Splash Cymbal          79   Open Cuica
+ 56   Cowbell                80   Mute Triangle
+ 57   Crash Cymbal 2         81   Open Triangle
+ 58   Vibraslap
+
+---
+
+A note-on with note number 42 will trigger a Closed Hi-Hat. This should cut off any Open Hi-Hat or Pedal Hi-Hat sound that may be sustaining. So too, a Pedal Hi-Hat should cut off a sustaining Open Hi-Hat or Closed Hi-Hat. In other words, only one of these three drum sounds can be sounding at any given time.
+
+Similiarly, a Short Whistle should cut off a Long Whistle. A Short Guiro should cut off a Long Guiro. An Mute Triangle should cut off an Open Triangle. A Mute Cuica should cut off an Open Cuica.
+
+Normally, all the above drum sounds have a fixed duration. Regardless of the time between when a Note-On is received and when a matching Note-Off is received, the drum sound always plays for a given duration. For example, assume that a device has a "Crash Cymbal 1" sound that plays for 4 seconds. If a Note-On for note number 49 is received, that cymbal sound starts playing. If a Note-Off for note number 49 is received only 1 second later, that should not cut off the remaining 3 seconds of the sound. The exceptions may be Long Whistle and Long Guiro, which may use the duration between the Note-On and Note-off to determine how "long" the sound plays.
+
+If a drum is still sounding when another one of its Note-Ons is received, typically, another voice "stacks" another instance of that sound playing. 

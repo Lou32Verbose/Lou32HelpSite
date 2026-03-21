@@ -1,0 +1,20 @@
+====================================
+::   LOU32 HELP MODULE DOCUMENT   ::
+====================================
+::  EXAMPLE RCLONE COPY COMMANDS  ::
+====================================
+:: EXAMPLE COMMAND:
+
+rclone copy C:\Louis32 OneDrive:\Louis32 -P --transfers=8 --checkers=16
+
+====================================
+::FLAGS EXPLANATION ::
+======================
+:: "show progress":
+-P 
+
+:: Setting parallelism:
+--transfers=8 and --checkers=16 
+
+=======================================
+END OF LOU32 HELP MODULE DOCUMENT.

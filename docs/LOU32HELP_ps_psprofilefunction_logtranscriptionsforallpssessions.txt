@@ -1,0 +1,11 @@
+(notepad $profile.CurrentUserAllHosts):
+
+Function StartTranscript {
+Trap {
+Continue
+}
+$TranScriptFolder = $($(Split-Path $profile) + '\TranscriptLog\')
+if (!(Test-Path -Path $TranScriptFolder )) { New-Item -ItemType directory -Path $TranScriptFolder }
+Start-Transcript -Append ($($TranScriptFolder + $(get-date -format 'yyyyMMdd-HHmmss') + '.txt')) -ErrorVariable Transcript -ErrorAction stop
+}
+StartTranscript

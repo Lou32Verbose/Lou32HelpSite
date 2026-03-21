@@ -1,0 +1,14 @@
+=======================================================
+::           LOU32 HELP MODULE DOCUMENT              ::
+=======================================================
+:: HOW TO MOUNT AN IMAGE FOR MODIFICATION USING DISM ::
+=======================================================
+
+:: To mount a Windows image for modification using DISM, use the following command syntax in an Administrator Command Prompt or Administrator Powershell console:
+
+DISM /Mount-image /imagefile:<path_to_Image_file> {/Index:<image_index> | /Name:<image_name>} /MountDir:<target_mount_directory> [/readonly] /[optimize]}
+
+:: Note that the path to image file is to a .wim file, you will have to extract the .wim image from an ISO if you are starting with that, you cannot modify the ISO directly.
+
+=======================================================
+END OF LOU32 HELP MODULE DOCUMENT.

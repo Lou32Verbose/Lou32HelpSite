@@ -1,0 +1,45 @@
+================================================
+BLOCK NEW OUTLOOK FROM WIN11 and WIN10
+================================================
+# Windows 11
+
+## Windows 11 builds after 23H2 have the new Outlook app preinstalled for all users. Currently, there isn't a way to block the new Outlook from being installed - if you prefer not to have new Outlook show up on your organization's devices, you can remove it after it's installed as part of the update.
+
+## To remove the app package, use the Remove-AppxProvisionedPackage cmdlet with the PackageName parameter value Microsoft.OutlookForWindows. After removal, Windows updates won't reinstall new Outlook.
+
+## Use the following command in Windows PowerShell:
+
+Remove-AppxProvisionedPackage -AllUsers -Online -PackageName (Get-AppxPackage Microsoft.OutlookForWindows).PackageFullName
+
+## Additionally, remove this Windows orchestrator registry value:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate
+
+## For any device that installed the March 2024 Non-Security Preview release (or later cumulative update) for Windows 11 Version 23H2, Windows Orchestrator respects the deprovisioning cmdlet and it's not necessary to remove this registry value.
+
+# Windows 10
+
+## The new Outlook for Windows will be automatically installed on Windows 10 devices as part of the optional Windows 10 release on January 28, 2025, and more broadly released as part of the monthly security update release for Windows 10 on February 11, 2025.
+
+## To prevent the install of new Outlook on your organization's devices, add this reg value:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe
+
+## Then add a REG_SZ registry setting, named BlockedOobeUpdaters, with a value of ["MS_Outlook"].
+
+## To remove the app package after it's installed, use the Remove-AppxProvisionedPackage cmdlet with the PackageName parameter value Microsoft.OutlookForWindows.
+
+## Use the following command in Windows PowerShell:
+
+Remove-AppxProvisionedPackage -AllUsers -Online -PackageName (Get-AppxPackage Microsoft.OutlookForWindows).PackageFullName
+
+## After removal, Windows updates won't reinstall new Outlook.
+
+# User Installs
+
+## In cases of user installs, for example, if users used the toggle to install the new Outlook for Windows, use Remove-AppxPackage. The AppxPackage cmdlets are used for managing applications for current users, while AppxProvisionedPackage cmdlets are used for managing default applications for both current and future users of the system.
+
+## Use this Windows PowerShell command to remove the new Outlook for Windows for all users:
+PowerShell
+
+Remove-AppxPackage -AllUsers -Package (Get-AppxPackage Microsoft.OutlookForWindows).PackageFullName

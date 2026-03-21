@@ -1,0 +1,27 @@
+EXAMPLE LAUNCH COMMAND FOR CODEX (FROM WSL ON WINDOWS):
+
+```bash
+codex --full-auto --search --add-dir "/mnt/c/LouTemp32/pyimgtest/"
+```
+
+What each option does:
+
+- `--full-auto`: Enables low-friction sandboxed automatic execution (equivalent to `-a on-request --sandbox workspace-write`)
+- `--search`: Enables web search functionality 
+- `--add-dir "/mnt/c/LouTemp32/pyimgtest/"`: Adds that Windows directory as writable alongside your current workspace
+
+---
+
+The path is converted to WSL format (`/mnt/c/...`) for compatibility. Since you didn't specify wanting to change the working directory, this will keep your current directory as the primary workspace while giving access to the additional `C:\LouTemp32\pyimgtest\` directory.
+
+---
+
+If you wanted to explicitly set the current directory as your working root instead, you could use:
+
+```bash
+codex --full-auto --search -C . --add-dir "/mnt/c/LouTemp32/pyimgtest/"
+```
+
+But the `-C .` is redundant since codex uses the current directory by default.
+
+---

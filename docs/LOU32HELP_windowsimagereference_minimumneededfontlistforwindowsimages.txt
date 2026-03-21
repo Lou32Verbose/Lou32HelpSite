@@ -1,0 +1,26 @@
+MINIMUM NEEDED FONTS LIST - WINDOWS IMAGES
+Arial
+Arial Black
+Calibri
+Cambria
+ComicSansMS
+Consolas
+Courier
+CourierNew
+Georgia
+Lucida Console
+Lucida Sans Unicode
+Malgun Gothic
+Marlett
+Microsoft Sans Serif
+MS Sans Serif
+MS Serif
+MS Gothic & MS UI Gothic
+Segoe UI
+Segoe UI
+Symbol
+System
+Tahoma
+Terminal
+TimesNewRoman
+TrebuchetMS

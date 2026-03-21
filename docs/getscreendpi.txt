@@ -1,0 +1,6 @@
+Add-Type -AssemblyName System.Windows.Forms
+$screen = [System.Windows.Forms.Screen]::PrimaryScreen
+$dpiX = $screen.Bounds.Width / ($screen.Bounds.Width - $screen.WorkingArea.Width + $screen.Bounds.Width)
+$dpiY = $screen.Bounds.Height / ($screen.Bounds.Height - $screen.WorkingArea.Height + $screen.Bounds.Height)
+Write-Host "DPI-X: $($dpiX)"
+Write-Host "DPI-Y: $($dpiY)"

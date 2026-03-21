@@ -1,0 +1,13 @@
+# DISABLE MALICIOUS SOFTWARE REMOVAL TOOL IN REGISTRY 
+
+## Create Key or Navigate To This Key If Already Exists:
+
+Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\MRT
+
+## Add D-Word:
+
+DontOfferThroughWUAU
+
+## Set Value of D-Word:
+
+1

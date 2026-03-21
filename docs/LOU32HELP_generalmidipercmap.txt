@@ -1,0 +1,56 @@
+============================
+  LOU32 HELP - GM PERC MAP  
+============================
+
+GENERAL MIDI PERCUSSION MAPPING CHART
+	- MIDI CHANNEL 10 - 
+
+NOTE#  Description        Note/Octave
+------ ------------------ -----------
+35     Acoustic Bass Drum   B  0
+36     Bass Drum 1          C  1
+37     Side Stick           C# 1
+38     Acoustic Snare       D  1
+39     Hand Clap            D# 1
+40     Electric Snare       E  1
+41     Low Floor Tom        F  1
+42     Closed Hi Hat        F# 1
+43     High Floor Tom       G  1
+44     Pedal Hi-Hat         G# 1
+45     Low Tom              A  1
+46     Open Hi-Hat          A# 1
+47     Low-Mid Tom          B  1
+48     Hi Mid Tom           C  2
+49     Crash Cymbal 1       C# 2
+50     High Tom             D  2
+51     Ride Cymbal 1        D# 2
+52     Chinese Cymbal       E  2
+53     Ride Bell            F  2
+54     Tambourine           F# 2
+55     Splash Cymbal        G  2
+56     Cowbell              G# 2
+57     Crash Cymbal 2       A  2
+58     Vibraslap            A# 2
+59     Ride Cymbal 2        B  2
+60     Hi Bongo             C  3
+61     Low Bongo            C# 3
+62     Mute Hi Conga        D  3
+63     Open HI Conga        D# 3
+64     Low Conga            E  3
+65     High Timbale         F  3
+66     Low Timbale          F# 3
+67     High Agogo           G  3
+68     Low Agogo            G# 3
+69     Cabasa               A  3
+70     Maracas              A# 3
+71     Short Whistle        B  3
+72     Long Shistle         C  4
+73     Short Guiro          C# 4
+74     Long Guiro           D  4
+75     Claves               D# 4
+76     Hi Wood Block        E  4
+77     Low Wood Block       F  4
+78     Mute Cuica           F# 4
+79     Open Cuica           G  4
+80     Mute Triangle        G# 4
+81     Open Triangle        A  4

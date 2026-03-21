@@ -1,0 +1,59 @@
+# Purpose
+
+Most computer monitors use an ["RGB" subpixel layout](https://www.google.com/search?q=rgb+subpixel+layout), so most computer software (including Windows itself) optimizes its text rendering to look good on this kind of display.  However this kind of optimization starts to become undesirable in many situations, where it causes color fringing to appear around text.
+
+# Changing font rendering settings in Windows
+
+## Method 1: ClearType Tuner
+Use the ClearType tuner:
+Windows > Settings > search: Cleartype
+
+This lets you change several font rendering settings, but it isn't always clear what you are changing when you use it.  Works well for displays that use standard RGB or BGR subpixel layouts.
+
+## Method 2: Better ClearType Tuner (3rd-party open source app)
+
+https://github.com/bp2008/BetterCleartypeTuner
+
+Simpler interface for the ClearType settings which helps you understand what is going on.  Works well for displays that use standard RGB or BGR subpixel layouts.
+
+## Method 3: MacType
+
+https://www.mactype.net/
+
+This program digs deep into font rendering and offers many advanced customizations.  An excellent choice if you have a panel with unusual pixel structure and want to make grayscale antialiased text look better.
+
+# Font rendering in Chrome
+
+Chrome has excellent grayscale rendering capability via the command line flag `--disable-lcd-text`.  The [ColorControl](https://github.com/Maassoft/ColorControl) program makes it easy to use this behavior via a checkbox in its Options tab.
+
+# Font rendering in Firefox and Thunderbird
+
+Font rendering can be tweaked in Firefox (web browser) and Thunderbird (email client) by editing some advanced configuration options which are found in both apps.
+
+### Accessing the advanced configuration
+
+To access these options in firefox, enter `about:config` in the address bar.  To access them in Thunderbird, go to Tools > Preferences > `Config Editor` (search for it in the search box).
+
+Search the configuration editor for `font_rendering` to find the relevant settings.  I'm not sure the same settings are available on Linux or Mac.
+
+### Setting Grayscale Antialiasing mode
+
+Edit the setting `gfx.font_rendering.cleartype_params.cleartype_level` to `0` to use Grayscale antialiasing mode.
+
+### Setting BGR Antialiasing mode
+
+Edit the setting `gfx.font_rendering.cleartype_params.pixel_structure` to `2` to use BGR antialiasing mode (`-1` yields RGB antialiasing).
+
+# Setting advice
+
+This table lists several common pixel structures or display technologies and advises on how text is best rendered on those displays:
+
+| Display Type    | Found in      | Best Text Rendering Method       | Explanation       |
+|-----------------|---------------|----------------------------------|-------------------|
+| "RGB" subpixels | Most LCD computer monitors | "RGB" subpixel antialiasing  | RGB subpixel antialiasing is the default in most operating systems and software. It takes advantage of the known subpixel layout to render text with higher apparent horizontal resolution. |
+| "BGR" subpixels | Many LCD televisions | "BGR" subpixel antialiasing  | BGR subpixel antialiasing is commonly available in operating systems because BGR is simply the reversed form of RGB. |
+| CRT    | CRT monitors or televisions  | Grayscale antialiasing or no antialiasing | CRTs don't use a very predictable arrangement of colors to represent pixels, so knowledge of the subpixel structure can't be used to optimize text rendering |
+| Any monitor that has been rotated | Any display technology  | Grayscale antialiasing | Any monitor that has been rotated 90 or 270 degrees is likely to have a vertical subpixel arrangement in that orentation, and this is rarely supported in software |
+| DLP (Digital Light Processing)  | DLP projectors  | Grayscale antialiasing  |  DLP technology does not use subpixels.  Whole pixels are the same color throughout.  |
+| OLED (2022 and earlier) | OLED TVs/monitors with LG Display panels  | Grayscale antialiasing |  No software I'm aware of offers effective subpixel antialiasing for this subpixel arrangement.  |
+| QD-OLED (2022)  | QD-OLED TVs/monitors with Samsung Display panels  | RGB or Grayscale antialiasing | Current QD-OLED displays use an RGB layout but it is in a triangular arrangement where green is above red and blue, which causes some color fringing. |

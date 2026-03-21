@@ -1,0 +1,50 @@
+==========================================
+:: 		LOU32 HELP MODULE DOCUMENT      ::
+==========================================
+:: WIN32 Windowing APIs - Learning Tips ::
+==========================================
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+:: Window creation functions are usually quite complex. 
+:: To get used to the docs, begin with simpler functions like "MessageBox".
+
+------------------------------------------------------------------------------
+
+:: Read Documentation on these API classes and try out:
+
+1. Run another process - (ShellExecuteExW)
+2. Register a window class - (RegisterClassExW)
+3. Create a window - (CreateWindowExW)
+4. Write a message loop - (GetMessageW + TranslateMessage + DispatchMessage)
+5. Send/Post window messages - (SendMessageW, PostMessageW, PostQuitMessage)
+6. Move and show windows - (SetWindowPos,DeferWindow functions, ShowWindow)
+7. Change window attributes and styles - (SetWindowLongPtrW, DwmSetWindowAttribute, SetLayeredWindowAttributes)
+8. Focus and mouse related - (SetFocus/GetFocus, SetCapture, SetForegroundWindow/GetForegroundWindow)
+9. Polling for object events - (WaitForSingleObject, WaitForMultipleObjects, MsgWaitForMultipleObjects)
+10. Message box, dialogs and pop ups - (MessageBoxW, TrackPopUpMenu, ChooseColorW, ChooseFont, GetSaveFileNameW, GetOpenFileNameW)
+11. Searching for specific windows - (EnumChildWindows, EnumThreadWindows, FindWindowExW)
+
+------------------------------------------------------------------------------
+
+:: Things to try with Win32 APIs:
+
+1. Create a custom titlebar (DwmExtendFrameIntoClientArea + WM_NCCALCSIZE and WM_NCHITTEST handling)
+2. Add transparency to your window or make it round (WS_EX_LAYERED + SetLayeredWindowAttributes)
+3. Do hardware accelerated 2D rendering in a easy way (Direct2D)
+4. Integrate image and font rendering on 3. (DirectWrite + WIC)
+5. Embed a window inside another (SetParent)
+6. Build your own "Wallpaper engine" (Theres a hack to do this : Sending 0x052C to a specific system window with the "Progman" window class + SetParent your window on a window with "WorkerW" window class, any window you place there will basically be your desktop wallpaper)
+
+------------------------------------------------------------------------------
+
+:: 2 Helpful Tools To Help With Learning:
+ 
+[1] Spy++ 
+:: (Included with Visual Studio. Tool to find windows, processes and threads.)
+ 
+[2] API Monitor 
+:: (Tool for reverse engineering that enables you to monitor Windows API function calls.)
+
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+====================================
+END OF LOU32 HELP MODULE DOCUMENT.

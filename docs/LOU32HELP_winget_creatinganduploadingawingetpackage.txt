@@ -1,0 +1,113 @@
+A WinGet “package” in the community repository is **a set of YAML manifest files** (not the installer itself). Your installer stays hosted on your site/GitHub Releases/etc.; the repo stores metadata + download URL + SHA256 so WinGet can fetch and install it. ([Microsoft Learn][1])
+
+## 1) Prereqs (what you need before you start)
+
+* A **stable, direct HTTPS download URL** to your installer (MSI/EXE/MSIX are commonly used). ([Microsoft Learn][2])
+* A **GitHub account** (submissions are done via PR to `microsoft/winget-pkgs`). ([Microsoft Learn][3])
+* WinGet installed (App Installer on Windows) and Git installed.
+
+## 2) Create the manifest (recommended: `wingetcreate`)
+
+Install the manifest creator tool: ([GitHub][4])
+
+```powershell
+winget install wingetcreate
+```
+
+Generate a new manifest (interactive):
+
+```powershell
+wingetcreate new
+```
+
+Or seed it from an installer URL (often easiest):
+
+```powershell
+wingetcreate new "https://example.com/downloads/MyApp-1.2.3-x64.msi"
+```
+
+This produces YAML manifests (typically a multi-file set: **version**, **installer**, and **locale**). ([Microsoft Learn][1])
+
+During the prompts you can choose to **submit the PR automatically** (wingetcreate can do this). ([Microsoft Learn][1])
+
+## 3) Validate the manifest locally
+
+Run WinGet’s validator on the manifest folder: ([Microsoft Learn][5])
+
+```powershell
+winget validate <path-to-your-manifest-folder>
+```
+
+## 4) Test install from your local manifest (strongly recommended)
+
+Enable local manifests (admin) and test install using the manifest path. ([Microsoft Learn][6])
+
+```powershell
+winget settings --enable LocalManifestFiles
+winget install --manifest <path-to-your-manifest-folder>
+```
+
+## 5) Submit to the community repository (`microsoft/winget-pkgs`)
+
+You have two standard paths:
+
+### Option A (easiest): submit using `wingetcreate`
+
+Either:
+
+* Say **Yes** when `wingetcreate new` offers to submit, or ([Microsoft Learn][1])
+* Use the submit flow (requires a GitHub token configured in the tool):
+
+```powershell
+wingetcreate submit <path-to-your-manifest-folder>
+```
+
+This opens/creates a PR against `microsoft/winget-pkgs`. ([Microsoft Learn][3])
+
+### Option B (manual): fork + PR
+
+Follow Microsoft’s repo submission steps: validate, fork/clone, add files, commit, push, PR. ([Microsoft Learn][3])
+
+The required folder structure is: ([Microsoft Learn][3])
+
+```
+manifests/<letter>/<Publisher>/<Application>/<Version>/
+```
+
+Example:
+
+```
+manifests/m/Microsoft/VSCode/1.96.0/
+```
+
+Your manifest’s `PackageIdentifier` and `PackageVersion` must match the folder path. ([Microsoft Learn][3])
+
+## 6) Pass CI + respond to review
+
+When you open the PR, the repo runs automated validation/safety checks; maintainers may request fixes. ([Microsoft Learn][3])
+You may also be prompted to sign Microsoft’s CLA the first time you contribute. ([GitHub][7])
+
+## 7) Updating your package later (new versions)
+
+For subsequent releases, use `wingetcreate update` to update URL/hash/version and optionally auto-submit a PR (works well in CI/CD). ([GitHub][8])
+
+```powershell
+wingetcreate update -s -v 1.2.4 -u "https://example.com/downloads/MyApp-1.2.4-x64.msi" <Publisher.App>
+```
+
+## Common “gotchas” that cause PR failures
+
+* Installer URL must be a **direct file download** (no HTML landing page / click-through).
+* `InstallerSha256` must match the downloaded installer exactly (regenerate if you re-upload).
+* Silent install behavior/switches must be correct for unattended installs (especially EXE).
+
+If you share your app’s installer URL + intended `PackageIdentifier` (Publisher.AppName) + installer type (MSI/EXE/MSIX), I can draft a manifest layout that matches the repo conventions and typical WinGet expectations.
+
+[1]: https://learn.microsoft.com/en-us/windows/package-manager/package/manifest?utm_source=chatgpt.com "Create your package manifest"
+[2]: https://learn.microsoft.com/en-us/windows/package-manager/package/?utm_source=chatgpt.com "Submit packages to Windows Package Manager"
+[3]: https://learn.microsoft.com/en-us/windows/package-manager/package/repository?utm_source=chatgpt.com "Submit your manifest to the repository"
+[4]: https://github.com/microsoft/winget-create?utm_source=chatgpt.com "microsoft/winget-create: The Windows Package Manager ..."
+[5]: https://learn.microsoft.com/en-us/windows/package-manager/winget/validate?utm_source=chatgpt.com "validate command (winget)"
+[6]: https://learn.microsoft.com/en-us/windows/package-manager/winget/install?utm_source=chatgpt.com "install command (winget)"
+[7]: https://github.com/microsoft/winget-pkgs?utm_source=chatgpt.com "microsoft/winget-pkgs"
+[8]: https://raw.githubusercontent.com/microsoft/winget-create/main/doc/update.md?utm_source=chatgpt.com "Update - GitHub"

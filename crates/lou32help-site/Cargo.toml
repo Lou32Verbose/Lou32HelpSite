@@ -1,0 +1,20 @@
+[package]
+name = "lou32help-site"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+chrono.workspace = true
+maud.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+lou32help-core = { path = "../lou32help-core" }
+
+[dev-dependencies]
+insta.workspace = true
+tempfile.workspace = true
+lou32help-test-fixtures = { path = "../lou32help-test-fixtures" }

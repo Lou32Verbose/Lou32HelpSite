@@ -1,0 +1,19 @@
+==========================================================
+::            LOU32 HELP MODULE DOCUMENT                ::
+==========================================================
+:: ROBOCOPY TEMPLATE                                    ::
+:: BACKUP C:\LOUIS32 TO D:\DIR32BACK\LOUIS32            ::
+:: NO PURGE OR MIRROR, PRESERVE SYSTEM AND HIDDEN FLAGS ::
+==========================================================
+
+::ROBOCOPY COMMAND TEXT BELOW:
+
+robocopy "C:\Louis32" "D:\DIR32BACK\Louis32" `
+    /E `                             # copy all subfolders, including empty ones
+    /COPY:DAT `                      # copy Data, Attributes and Timestamps (preserves system & hidden flags)
+    /DCOPY:T `                       # copy directory Timestamps as well
+    /R:3 /W:5                        # retry 3 times, wait 5 seconds between retries
+
+:: NOTE: "/B" FLAG (BACKUP MODE) IS NOT USED, 
+===========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,25 @@
+=============================================================
+||	    LOU32 HELP - MICROSOFT NTTTCP TOOL		   ||
+=============================================================
+<><> TROUBLESHOOTING USING MICROSOFT NTTTCP NETWORK TOOL <><>
+=============================================================
+
+# This command runs the tool asynchronously for 30 s, using four threads across all cores, two I/O buffers, and a 64K buffer size:
+
+ntttcp.exe -r -m 4,*,192.168.242.5 -l 64k -a 2 -t 30
+
+# This is the corresponding command on the sender:
+
+ntttcp.exe -s -m 4,*,192.168.242.5 -l 64k -a 2 -t 30
+
+=============================================================
+# Both commands include the same IP address: the address of the receiver.
+
+# The output of the tool, which can be saved as an XML file, gives detailed information about the total amount of data transferred, CPU usage, and total throughput during the test.
+# This information can help determine whether a performance bottleneck causes the network or another component of the system in question.
+
+# There are a couple of important things to remember when using NTTTCP:
+
+# It must be run on both sides of a connection (a client and server, for example).
+# In the previous version, it was necessary to rename the executable to specify whether it was to be run as a sender or receiver. This is no longer necessary in the new version, which uses the -s and -r switches for this purpose.
+# More information about NTTTCP can be found here. An active Azure subscription is not required to use the tool.

@@ -1,0 +1,12 @@
+﻿===================================================================
+:: LOU32 HELP MODULE DOCUMENT
+===================================================================
+:: AUTOMATICALLY MAKE FAVICON FROM SOURCE IMAGE WITH IMAGEMAGICK ::
+===================================================================
+
+This command combines the best options to produce a high-quality, multi-size, transparent favicon from a source PNG: 
+
+magick "source_image.png" -background transparent -define icon:auto-resize=16,32,48,64,128,256 -type TrueColorAlpha "favicon.ico"
+
+===================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

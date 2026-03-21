@@ -1,0 +1,12 @@
+=============================
+::LOU32 HELP MODULE DOCUMENT
+=============================
+::Rufus UEFI and MBR Mode
+=============================
+
+If you press ALT+E key while Rufus is running, it will activate a mode that creates a flash drive that will work in both UEFI and MBR modes.  
+
+It will remain in that mode until you press ALT+ E again to disable it.
+
+===================================
+END OF LOU32 HELP MODULE DOCUMENT.

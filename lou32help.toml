@@ -1,0 +1,78 @@
+[site]
+title = "LOU32HELP"
+tagline = "Lou32 Help Module Document Library"
+description = "Dense, searchable reference pages for repeatable computing tasks, tools, and troubleshooting."
+base_url = "https://lou32help.example.com"
+copyright = "Copyright 2026 Louis"
+
+[paths]
+content_dir = "content"
+site_dir = "dist/site"
+assets_dir = "assets"
+
+[search]
+min_query_length = 2
+max_results = 25
+related_limit = 4
+featured_limit = 8
+wasm_module = "lou32help_web_search"
+
+[[topics]]
+key = "powershell"
+title = "PowerShell"
+description = "PowerShell commands, automation recipes, and administrative references."
+order = 10
+
+[[topics]]
+key = "windows"
+title = "Windows"
+description = "Windows configuration, troubleshooting, and operating system behaviors."
+order = 20
+
+[[topics]]
+key = "midi"
+title = "MIDI"
+description = "MIDI devices, routing, recording, and troubleshooting notes."
+order = 30
+
+[[topics]]
+key = "cli-tools"
+title = "CLI Tools"
+description = "Command-line references for utilities that solve recurring tasks."
+order = 40
+
+[[topics]]
+key = "networking"
+title = "Networking"
+description = "Network diagnostics, services, transfers, and connectivity notes."
+order = 50
+
+[[topics]]
+key = "backup-sync"
+title = "Backup & Sync"
+description = "Sync workflows, backup recipes, and transfer templates."
+order = 60
+
+[[topics]]
+key = "browser-web"
+title = "Browser & Web"
+description = "Browser tooling, bookmarklets, and web-centric helpers."
+order = 70
+
+[[topics]]
+key = "media"
+title = "Media"
+description = "Audio, video, encoding, and playback tooling."
+order = 80
+
+[[topics]]
+key = "developer-tools"
+title = "Developer Tools"
+description = "Developer-facing references, APIs, debugging notes, and data tables."
+order = 90
+
+[[topics]]
+key = "security"
+title = "Security"
+description = "Defensive search patterns, monitoring guidance, and security-focused references."
+order = 100

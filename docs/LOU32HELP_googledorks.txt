@@ -1,0 +1,67 @@
+Replace 'X' with the domain name of your choice
+
+# Back link
+link:X -site:X
+
+# Sub domain
+site:X -site:www.X
+
+# Url
+inurl:X -site:X
+
+# email
+"*@X" -www.X
+
+# Keywords in text
+intext:X intext:(username||password||passwd||pwd||uname||paswd||passw0rd||pass||log||login||admin||user||pw)
+
+# Key sentence in text 
+site:X  intext:"sentence 1" | intext:"sentence 2"
+
+# Keywords in url
+site:X inurl:admin||administrator||administrateur||login||l0gin||log||user||id||back||wso
+
+# Misc / other keywords in url
+site:X inurl:history||access||acces||log||license||readme||meta||root||sql||source||include||private||src||cgi||conf||account||asset||attach||audit||upload||auth||backup||bkup||build||cmd||demo||sample||default||defaut||mail||bin||etc||shadow||passwd||boot
+
+# Documents / Key / Cert
+site:X filetype:crt || filetype:pem || filetype:der || filetype:cert || filetype:pdf || filetype:doc || filetype:xml || filetype:txt ||  filetype:xls || filetype:ppt || filetype:pps || filetype:docx || filetype:wps || filetype:rtf || filetype:csv || filetype:pptx || filetype:xlsx || filetype:xlr || filetype:sxw || filetype:psw
+
+# Configuration files
+site:X filetype:pwl || filetype:pol || filetype:pl || filetype:sh ||filetype:ini || filetype:ht || filetype:exe || filetype:cgi || filetype:api || filetype:pdb || filetype:sql || filetype:ins || filetype:cfg || filetype:keychain || filetype:prf
+
+# Configuration files by extention
+site:X ext:xml | ext:conf | ext:cnf | ext:reg | ext:inf | ext:rdp | ext:cfg | ext:txt | ext:ora | ext:ini | ext:log | ext:sql | ext:dbf | ext:mdb | ext:bkf | ext:bkp | ext:bak | ext:old | ext:backup
+
+# Archives
+site:X filetype:zip || filetype:rar || filetype:jar || filetype:tar.gz || filetype:7z || filetype:tar.b2z || filetype:tar.7z || filetype:tar
+
+# Backup files
+site:X filetype:ost || filetype:bak || filetype:eml || filetype:bck || filetype:bac || filetype:tmp
+
+# Error / SQL
+site:X intext:"sql syntax" | intext:"syntax error" | intext:"incorrect syntax" | intext:"unexpected end" | intext:"Warning: "
+
+# Error / SQL / Complete
+site:X inurl:"id=" intext:"sql syntax near" | intext:"syntax error has occurred" | intext:"incorrect syntax near" | intext:"unexpected end of SQL command" | intext:"Warning: mysql_connect()" | intext:"Warning: mysql_query()" | intext:"Warning: pg_connect()" | intext:"Warning: mysql_num_rows()" | intext:"Warning: ilesize()" | intext:"Warning: filesize()" | intext:"Warning: require()" | intext:"Warning: mysql_fetch_assoc()" | intext:"Warning: mysql_fetch_array()" | intext:"Warning: session_start()" | intext:"Warning: Unknown()" | intext:"Warning: getimagesize()" | intext:"Warning: is_writable()" | intext:"Warning: session_start()" | intext:"Warning: mysql_result()" | intext:"Warning: Warning: pg_exec()"
+
+# ID
+site:X inurl:"id="
+site:X inurl:"php?id="
+
+# Index of
+site:X intitle:index.of
+
+# Misc 
+site:pastebin.com X
+site:linkedin.com X
+...
+
+
+# Some resources for specific research / exploits / systems
+https://cxsecurity.com/dorks/
+https://www.exploit-db.com/google-hacking-database/
+
+# Addons
+https://addons.mozilla.org/en-US/firefox/addon/hacksearch/
+https://addons.mozilla.org/en-US/firefox/addon/passiverecon/

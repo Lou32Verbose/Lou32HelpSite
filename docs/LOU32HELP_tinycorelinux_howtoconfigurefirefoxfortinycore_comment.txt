@@ -1,0 +1,5 @@
+Use the "firefox_getLatest" extension to, you know, get the latest firefox, then use /etc/firefox/policies/policies.json so it doesn't nag you about updates ('cause ff's update will not rebuild your firefox.tcz). Don't forget to explicitly add that json file to your backup (and actually -make- a backup). Throw in your favorite ad blockers etc for firefox.
+
+With only 2 GB of RAM, you'll want to set up a swap file, since modern browsers and web sites like facebook are absolute -pigs- with RAM. This is true regardless of what distro you choose.
+
+The Celeron N3050 supposedly supports up to 8 GB of RAM so, if the laptop itself will take it, adding more RAM wouldn't hurt (though I wouldn't spend much money on it). If you go over 3GB, you'll need the 64 bit Tiny Core (TinyCorePure64) to use it all.

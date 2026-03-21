@@ -1,0 +1,18 @@
+==============================================================================
+:: 			LOU32 HELP MODULE DOCUMENT                          ::
+==============================================================================
+:: YT-DLP EXAMPLE COMMAND - DOWNLOAD ENTIRE ALBUM FROM YOUTUBE MUSIC AS MP3 ::
+==============================================================================
+
+:: example yt-dlp command:
+
+yt-dlp -x --audio-format mp3 --audio-quality 0 -o "%(playlist_title)s/%(playlist_index)s - %(title)s.%(ext)s" <insert-ytmusic-album-url>
+
+:: Explanation of command components
+:: 1. download entire album from youtube music
+:: 2. as mp3 files
+:: 3. in highest available quality
+:: 4. name files with album and song title
+
+===============================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,12 @@
+# Store aliases together in a separate file and call Import-Alias in the profile.
+
+$profileDir = Split-Path $PROFILE -Parent
+$profileFile = Join-Path $profileDir profile.ps1
+$aliasFile = Join-Path $profileDir aliases.csv
+New-Alias -Name npp -Value "C:\Program Files\Notepad++\notepad++.exe" -Description "Notepad++"
+Export-Alias -Name npp -Path $aliasFile -Append
+ise $profileFile
+
+# Then in the ISE, put this line in your profile.ps1
+
+Import-Alias -Path (Join-Path $PSScriptRoot aliases.csv)

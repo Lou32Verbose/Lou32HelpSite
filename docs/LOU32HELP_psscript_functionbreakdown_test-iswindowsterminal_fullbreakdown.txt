@@ -1,0 +1,118 @@
+Overview
+Test-IsWindowsTerminal is a PowerShell function designed to determine if the current session is running inside Windows Terminal. Windows Terminal is a modern, feature-rich terminal application for users of command-line tools and shells like PowerShell, WSL, and the Command Prompt. The function employs a hierarchical parent process test to determine if Windows Terminal is part of the process tree.
+
+Details
+The code for the Test-IsWindowsTerminal function is shown in the following example.
+
+function Test-IsWindowsTerminal {
+    [CmdletBinding()]
+    param ()
+
+    # Check if PowerShell version is 5.1 or below, or if running on Windows
+    if ($PSVersionTable.PSVersion.Major -le 5 -or $IsWindows -eq $true) {
+        $currentPid = $PID
+
+        # Loop through parent processes to check if Windows Terminal is in the hierarchy
+        while ($currentPid) {
+            try {
+                $process = Get-CimInstance Win32_Process -Filter "ProcessId = $currentPid" -ErrorAction Stop -Verbose:$false
+            } catch {
+                # Return false if unable to get process information
+                return $false
+            }
+
+            Write-Verbose -Message "ProcessName: $($process.Name), Id: $($process.ProcessId), ParentId: $($process.ParentProcessId)"
+
+            # Check if the current process is Windows Terminal
+            if ($process.Name -eq 'WindowsTerminal.exe') {
+                return $true
+            } else {
+                # Move to the parent process
+                $currentPid = $process.ParentProcessId
+            }
+        }
+
+        # Return false if Windows Terminal is not found in the hierarchy
+        return $false
+    } else {
+        Write-Verbose -Message 'Exiting due to non-Windows environment'
+        return $false
+    }
+}
+
+---
+
+:: Components
+
+	# CmdletBinding attribute: This attribute allows the function to use cmdlet features like parameter validation and verbose output.
+
+	# Parameters: The function takes no parameters except the common parameters provided by CmdletBinding. The param() declaration must be present to use the CmdletBinding attribute.
+
+---
+
+	# Version and environment:
+
+if ($PSVersionTable.PSVersion.Major -le 5 -or $IsWindows -eq $true) {
+
+	# This condition checks if you're running Windows PowerShell or PowerShell on a Windows system. The $IsWindows automatic variable is only available on PowerShell version 6 and higher by default. The function returns $false 	for non Windows environments since Windows Terminal is Windows only.
+
+---
+
+	# Process hierarchy loop:
+
+while ($currentPid) {
+
+	# The function uses the current process ID and iterates through its parent processes to determine if any are WindowsTerminal.exe. The loop checks every process in the hierarchy unless it finds WindowsTerminal.exe because 	Windows Terminal may not be the immediate parent.
+
+---
+
+	# Process retrieval:
+
+$process = Get-CimInstance Win32_Process -Filter "ProcessId = $currentPid" -ErrorAction Stop -Verbose:$false
+
+	# This command retrieves the process information based on the process ID. Get-CimInstance is used because Get-Process in Windows PowerShell doesn't include information about the parent process. Using -ErrorAction Stop 	ensures that any error fetching the process information stops the function. -Verbose:$false suppresses verbose output for this command to prevent extra noise from being added to the output when verbose logging is enabled.
+
+---
+
+	# Verbose logging:
+
+Write-Verbose -Message "ProcessName: $($process.Name), Id: $($process.ProcessId), ParentId: $($process.ParentProcessId)"
+
+	# Verbose logging provides detailed output for debugging purposes, showing the name, ID, and parent ID of each process.
+
+---
+
+	# Terminal detection:
+
+if ($process.Name -eq 'WindowsTerminal.exe') {
+    return $true
+}
+
+	# If a process named WindowsTerminal.exe is found, the function returns $true, indicating that PowerShell is running within Windows Terminal.
+
+---
+
+	# Parent process traversal:
+
+$currentPid = $process.ParentProcessId
+
+	# If the current process isn't Windows Terminal, the function moves to the parent process and continues the test.
+
+---
+
+	# Default return:
+
+return $false
+
+	# If the loop completes without finding Windows Terminal, the function returns $false.
+
+----
+
+:: Usage
+
+To use the Test-IsWindowsTerminal function, define it in your PowerShell session and call it when needed.
+
+This function is helpful for scenarios where specific behaviors or configurations are needed when running inside Windows Terminal. It allows for a more tailored and efficient command-line experience.
+
+====================================
+END OF LOU32 HELP MODULE DOCUMENT.

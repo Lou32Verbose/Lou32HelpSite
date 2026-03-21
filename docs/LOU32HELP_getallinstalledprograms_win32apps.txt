@@ -1,0 +1,10 @@
+GET ALL INSTALLED WIN32 APPLICATIONS
+
+# use this first method by default, only use the second one if necessary
+# this one is more secure and encrypted by default
+
+Get-CimInstance -ClassName Win32_InstalledWin32Program | select Name, Version, ProgramId
+
+# alternative (less secure) method 
+
+Get-WMIObject Win32_InstalledWin32Program | select Name, Version, ProgramId  

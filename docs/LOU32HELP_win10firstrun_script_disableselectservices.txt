@@ -1,0 +1,29 @@
+=====================================
+:: LOU32 HELP MODULE DOCUMENT | PS1
+=====================================
+:: SCRIPT TO DISABLE SELECT SERVICES 
+:: WINDOWS 10 FIRST RUN
+=====================================
+
+:: Script for Win 10 1709
+
+"CDPSvc",
+"DiagTrack",
+"diagnosticshub.standardcollector.service",
+"dmwappushservice",
+"DusmSvc",
+"lfsvc",
+"MapsBroker",
+"NcbService",
+"SSDPSRV",
+"tiledatamodelsvc",
+"wcncsvc")
+Foreach ($service In $services)
+{
+Get-Service $service | Stop-Service -ErrorAction SilentlyContinue
+Get-Service $service | Set-Service -StartupType Disabled -ErrorAction SilentlyContinue
+}
+Remove-Variable services
+
+====================================
+END OF LOU32 HELP MODULE DOCUMENT.

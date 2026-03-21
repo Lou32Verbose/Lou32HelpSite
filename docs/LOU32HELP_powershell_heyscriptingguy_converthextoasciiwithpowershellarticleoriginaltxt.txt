@@ -1,0 +1,122 @@
+﻿===========================================================
+:: HEY SCRIPTING GUY! [COPIED FROM ORIGINAL]
+===========================================================
+:: Convert Hexadecimal to ASCII Using PowerShell
+=========================================================== 
+
+In Today’s Episode, BATCHman Encounters HEXTOR the Encyptor!
+
+Panic grips the city! A beacon cuts through the night! It’s the BATCHsignal!
+
+“Beep! Beep! beep! Beep!” Cmdlet rolls over and executes the Get-Snooze script. It is naptime in the BATCHcave.
+
+But not for BATCHman. He deftly grabs Cmdlet’s blanket and flips him into the air like a flapjack. “No time to waste! Evil is afoot! Quick! To the Winmobile!”
+
+Cmdlet looks inside the BATCHbay and sees an empty parking spot.
+
+“Uhhhh, BATCHman, where’s the Winmobile?” gesturing to a large empty rectangle of pavement.
+
+BATCHman smacks his head . “D’oh! I forgot I shipped it out for a Mango upgrade! Whatever shall we do?”
+
+“Holy, Big Ben! What horrible timing! Then to the BATCHsubway! Quick, grab the tokens!”
+
+They disappear into the local mass transit system.
+
+***Meanwhile in another part of the city***
+
+“BAA FAA FAA FAA!” the evil villain cackles “BAA FAA FAA!”
+
+Dressed in nothing but dark purple with a large hexagon for a symbol, the evil genius Hextor looks down upon the chaos that has become the local Redmond post office, smiling.
+
+“BAA FAA FAA! All your passwords are belong to me! The systems are locked away. None of you will ever retrieve them! For I have encrypted everything in….HEXADECIMAL! BAA FAA FAAAA!”
+
+The administrator looks shaken. Decoding hexadecimal! What a foul turn of events! “Oh if only BATCHman were here!”
+
+As if by sheer luck, our fearless heroes stumble onto the scene, smelling vaguely of the subway.
+
+Hextor looks at our heroes with disdain. “Nothing can save them. Not you or your silly bad acting sidekick! Everything is written in pure hexadecimal! BAA FAAA FAAA FAAAA!” he giggled madly
+
+Cmdlet stares at Hextor’s copy of the user password list. Now written in hexadecimal, it seems impossible to decrypt. “Holy magic hexes, BATCHman! He wasn’t kidding!”
+
+50 6f 73 74 61 6c 41 63 63 65 73 73 31 09 55 62 65 72 4c 33 33 74 50 40 73 73 77 30 72 64 0d 0a 53 75 70 65 72 76 69 73 6f 72 09 42 40 74 63 68 4d 40 6e 77 31 6c 6e 76 72 47 33 74 74 68 31 73 21 0d 0a 41 64 6d 69 6e 69 73 74 72 61 74 6f 72 09 21 4b 72 40 35 68 4e 62 75 52 4e 3f 0d 0a 50 6f 73 74 61 6c 41 63 63 65 73 73 32 09 42 75 61 68 21 48 41 3f 68 61 21 48 41 41 41 41 21 3f 21 0d 0a
+
+“Why, foul villian, I believe you’re right. Nothing can solve this easily. Nothing that is,” BATCHman pauses dramatically with a finger in the air, “except Windows PowerShell!”
+
+Hextor’s eyes open like flying saucers! “EEEEEEEEEEEEEEEEEEEEE! AAAAAAAAAA! BAAAAA! ” is all that escapes his mouth as he runs off hands in the air, immediately sensing defeat.
+
+BATCHman looks over at Cmdlet. “In Windows PowerShell, we can easily convert binary, octal, decimal, and even hexadecimal. It is a native feature. We just need to leverage [CONVERT]. To quickly convert a number to hexadecimal, I would type this.
+
+[convert]::tostring(12345,16)
+
+“This will produce the following hexadecimal output.
+
+3039
+
+“To convert back to decimal, we specify that we’re converting to an integer and specify the base we’re converting from.”
+
+[convert]::toint16(“3039”,16)
+
+Which produces
+
+12345
+
+Cmdlet looked on. “Wow, BATCHman! But that doesn't help us. We need to convert those hexadecimal numbers to decimal and then convert them back to a real ASCII character! I don’t think we can convert a number to an ASCII character. That’s just lu…”
+
+“Hold there, chum. We can do that as well in Windows PowerShell. We just need to type it as a [char]. When [char] is followed by any decimal number less than 256, it converts it to an ASCII character. We can even find the ASCII value of characters using the [BYTE] type like this.
+
+[BYTE][CHAR]’a’
+
+97
+
+“To convert back, all we do is reverse the process.”
+
+[CHAR][BYTE]97
+
+a
+
+Cmdlet looked at the string of hexadecimal numbers. “So if we convert these to decimal, we can just preface the result of each one with [CHAR][BYTE] and see its ASCII character? That sounds too easy.”
+
+“You’ve got it on the nose, oh sidekick of mine! Now, the challenge is we need as easy way to split up those hexadecimal pairs to convert them. Any thoughts?”
+
+The eager one claps his hands together “Split! Holy chopping board, BATCHman! We can take this data, drop it into a string, and run a split method based upon the spaces separating them!”
+
+Cmdlet quickly sets up a simple variable in Windows PowerShell:
+
+$HEXDATA=”50 6f 73 74 61 6c 41 63 63 65 73 73 31 09 55 62 65 72 4c 33 33 74 50 40 73 73 77 30 72 64 0d 0a 53 75 70 65 72 76 69 73 6f 72 09 42 40 74 63 68 4d 40 6e 77 31 6c 6e 76 72 47 33 74 74 68 31 73 21 0d 0a 41 64 6d 69 6e 69 73 74 72 61 74 6f 72 09 21 4b 72 40 35 68 4e 62 75 52 4e 3f 0d 0a 50 6f 73 74 61 6c 41 63 63 65 73 73 32 09 42 75 61 68 21 48 41 3f 68 61 21 48 41 41 41 41 21 3f 21 0d 0a”
+
+$HEXDATA.Split(“ “)
+
+“What next? I think you have the idea right!”
+
+“Well, we could pipe this into ForEach and apply the [convert]::toint16() against each like this.”
+
+$HEXDATA.Split(“ “) | FOREACH{ [CONVERT]::toint16($_,16)}
+
+BATCHman rubs his hands together with glee as the decimal numbers pour down the screen. “Excellent, Cmdlet! Now with all the decimal numbers, you can just convert them to ASCII, right?”
+
+The other half of the terrible twosome added the [CHAR][BYTE] to the output.
+
+$HEXDATA.Split(“ “) | FOREACH {[BYTE][CHAR]([CONVERT]::toint16($_,16))}
+
+His jaw dropped. “Oh, no, it’s just a long unreadable column of letters. I need to write it in a row.”
+
+“Soooooo, what if we could write to the host with no new line? We can pass your data to the Write-Host cmdlet without dumping a line feed between each out like so.”
+
+$HEXDATA.Split(“ “) | FOREACH {WRITE-HOST –object ( [BYTE][CHAR]([CONVERT]::toint16($_,16))) –nonewline }
+
+Cmdlet stared in awe as the message on the screen converted back to ASCII.
+
+PostalAccess1 UberL33tP@ssw0rd
+Supervisor B@tchM@nw1lnvrG3tth1s!
+Administrator !Kr@5hNbuRN?
+PostalAccess2 Buah!HA?ha!HAAAA!?!
+
+“Now, quickly get the credentials reset before Hextor strikes again!”
+
+Quickly the credentials were reset and the Redmond post office was back online. The postmaster stepped out to shake their hands.
+
+“Oh, BATCHman, thank you! How can we ever repay you now that you’ve returned our passwords to us?”
+
+“No thanks necessary, but any chance you have a stamp? I have to mail this to my mother for her birthday.”
+===================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

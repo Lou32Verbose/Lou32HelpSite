@@ -1,0 +1,23 @@
+=====================================================================
+:: LOU32 HELP MODULE DOCUMENT
+=====================================================================
+:: How To Restore Classic Alt+Tab Interface On Windows 11 w/ RegEdit
+=====================================================================
+:: STEPS 
+
+1. Open Regedit.exe
+
+2. Navigate  to:
+   HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer
+
+3.In this Registry Key, add a DWord:
+   "AltTabSettings"
+
+4. Set DWord Value:
+   Value Data=1
+
+5. Restart Explorer
+
+5b. If restarting Explorer doesn't show the change, reboot machine.
+=====================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

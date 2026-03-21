@@ -1,0 +1,8 @@
+FIND/SEARCH FOR CIM CLASSES IN POWERSHELL
+
+# How can I find a list of Common Information Model (CIM) classes in Windows so that I can ask my computer useful questions?
+
+# Just run the Get-CIMClass cmdlet to get a list of all available classes in the default namespace in Windows. If you’d like to filter on the list, you can use a wildcard. In the following example, we show all classes that begin with Win32 and have the word, Disk, in it.
+
+Get-CimClass Win32*Disk*
+

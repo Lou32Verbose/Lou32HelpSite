@@ -1,0 +1,18 @@
+=====================================
+:: LOU32 HELP MODULE DOCUMENT ::
+=====================================
+:: COPY URLS OF ALL TABS IN CHROME ::
+=====================================
+
+:: IN CHROME (OR ANY CHROMIUM BASED BROWSER), GO TO:
+
+chrome://inspect/#pages
+
+:: ON THIS PAGE, OPEN DEVTOOLS (F12), AND WRITE THIS IN THE CONSOLE:
+
+Array.from(document.querySelectorAll('#pages-list .row .url')).map(a => a.innerText).join(' \n')
+
+:: DUE TO SECURITY SETTINGS, IT MAY ASK YOU TO TYPE "ALLOW PASTING" INTO THE CONSOLE BEFORE IT WILL ALLOW YOU TO PASTE TEXT INTO THE CONSOLE
+
+==================================================
+END OF LOU32 HELP MODULE DOCUMENT.

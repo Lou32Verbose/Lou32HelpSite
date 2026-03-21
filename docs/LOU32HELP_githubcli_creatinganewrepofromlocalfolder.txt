@@ -1,0 +1,17 @@
+﻿:: LOU32 HELP MODULE DOCUMENT
+:: CREATING A NEW GITHUB REPO FROM THE TERMINAL
+
+# One-time setup: authenticate
+gh auth login
+
+# From your project folder, create repo and push in one go
+cd /path/to/your/folder
+git init
+git add .
+git commit -m "Initial commit"
+gh repo create your-repo-name --source=. --push --private
+
+# or set --public if you want it public
+
+===================================================
+END OF LOU32 HELP MODULE DOCUMENT.

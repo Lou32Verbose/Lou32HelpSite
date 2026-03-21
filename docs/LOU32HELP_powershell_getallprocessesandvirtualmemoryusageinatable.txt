@@ -1,0 +1,12 @@
+==================================================================
+//	 	//	//	//	//	//	//	//
+<>	Lou32 Powershell Helper <> Common, Helpful Commands	<>	
+//	//	//	//	//	//	//	//	//	
+==================================================================
+<> GET ALL RUNNING PROCESSES AND VIRTUAL MEMORY USAGE IN A TABLE
+==================================================================
+
+get-process | format-table name,@{n='VIRTUAL MEMORY';e={$_.vm/1mb};formatstring='n2'} -autosize 
+
+==================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

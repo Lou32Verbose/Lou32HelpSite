@@ -1,0 +1,23 @@
+==========================================
+::      LOU32 HELP MODULE DOCUMENT      ::
+==========================================
+:: HOW TO CREATE SETTINGS APP SHORTCUTS ::
+==========================================
+
+How to create a Settings app shortcut using ms-settings commands:
+
+1. Right-click on the desktop and select New item -> Shortcut;
+
+2. Find the ms-settings command you want (LISTS CAN BE FOUND ONLINE);
+
+3. Enter the command in the format explorer.exe <ms-settings command> as the location. 
+	For example, 
+
+explorer.exe ms-settings:colors 
+
+4. Name the shortcut and change an icon if you want.
+
+Done.
+
+================================================
+END OF LOU32 HELP MODULE DOCUMENT.

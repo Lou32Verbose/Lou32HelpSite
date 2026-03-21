@@ -1,0 +1,14 @@
+ADD LOCAL GROUP POLICY EDITOR TO WINDOWS 11 HOME
+
+
+1.
+$pkg = (gci $env:SystemRoot\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientExtensions-Package~3*.mum)
+
+2.
+$pkg += (gci $env:SystemRoot\servicing\Packages\Microsoft-Windows-GroupPolicy-ClientTools-Package~3*.mum)
+
+3.
+foreach ($p in $pkg) {dism /online /norestart /add-package:"$p"}
+
+
+THEN, A DISM FUNCTION WILL ADD THE CORRECT PACKAGES TO YOUR SYSTEM (OR AT LEAST ENABLE THEM FROM THE DISABLED STATE BY DEFAULT ON WIN11)

@@ -1,0 +1,24 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: Module= Add Google as Search Engine 	    ::
+==============================================
+:: Open Ungoogled Chromium and go to chrome://settings/searchEngines.
+
+:: Click the Add button next to "Other search engines."
+
+:: In the Search engine input box, enter "Google."
+
+:: In the Keyword input box, enter google.com.
+
+:: In the URL with %s in place of query input box, enter https://www.google.com/search?q=%s&{google:RLZ}{google:originalQueryForSuggestion}{google:assistedQueryStats}{google:searchFieldtrialParameter}{google:iOSSearchLanguage}{google:prefetchSource}{google:searchClient}{google:sourceId}{google:contextualSearchVersion}ie={inputEncoding}
+
+:: In the Suggestions URL with %s in place of query input box, enter https://www.google.com/complete/search?client=chrome&q=%s.
+
+:: Click the Save button.
+
+:: Make it Default.
+
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

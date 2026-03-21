@@ -1,0 +1,242 @@
+==================================================================
+::                 LOU32 HELP MODULE DOCUMENT                   ::
+==================================================================
+::                  MIDI INTRO - MIDI BASICS                    ::                                     
+==================================================================
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+==================================================================
+::     MIDI - [M]usical [I]nstrument [D]igital [I]nterface      ::
+==================================================================
+
+:: MIDI Basics ::
+
+     Think of MIDI as an easily connected network between
+     multiple devices. (They dont't even need to be computers
+     or instruments!) In MIDI there are thousands of electronic
+     Messages, but three: Note On, System Exclusive, Program
+     Change are used by 99% of all MIDI applications.
+
+     The most basic MIDI function, Note On, tells the
+     instruments what notes to play. In this regard, MIDI is
+     similar to an electronic form of an old-style player piano,
+     where a hole punched in a sheet of paper forced a key
+     down on the piano큦 keyboard. MIDI performs this task
+     electronically.
+
+     The designers of MIDI had a good bit of forethought and
+     made the standard extensible through the use of System
+     Exclusive commands. These commands are sent with an
+     introductory special code that is ignored by all but the
+     desired reciver.
+
+     Since synthesizers have the ability to alter the sounds of
+     their musical output, a command called Program Change
+     instructs them to change their program.
+
+:: About MIDI ::
+
+     MIDI is a acronym for Musical Instrument Digtal
+     Interface, a standard method for electronic musical
+     equipment to pass Messages to each other. These Messages
+     can be as simple as play middle C until i tell you to stop
+     or more complex like adjust the VCA bias on oscillator 6
+     to match oscillator 1.
+
+     MIDI was developed in the early 1980s and proceeded to
+     completely change the musical instrument market and the
+     course of music. Its growth exceeded the wildest dreams of
+     its inventors, and today, MIDI is entrenched to the point
+     that you cannot buy a proffesional electric instrument
+     without MIDI capabilities. 
+
+     Unless you are a musician, you might have ignored this
+     startling growth. But today, with multimedia computer as it
+     driving force, the MIDI revolution is on the verge of taking
+     over the mainstream personal computing market.
+
+:: How MIDI Works :: 
+
+     Roland was the first company to produce a MIDI
+     processing unit, the MPU-401. This made possible the
+     productive relationship between computers, electronic
+     musical instruments, and musicians. Although some
+     keyboards have hardware sequencers built in, software
+     sequencers combined with a MIDI interface greatly expand
+     the flexibility and memory capacities of MIDI sequencing.
+
+     MIDI specifies 16 separate MIDI Channels. Therefore,
+     with one MIDI cable you can control up to 16 different
+     instruments at once. The concept of MIDI Channels is
+     similar to the idea of television channels. Each television
+     station sends a signal within a particular frequency range.
+     Your television set receives many different ranges (or
+     channels) at once. You then tune your television set to a
+     particular frequency range. You may change ranges
+     (channels) and the program displayed on your picture tube
+     changes accordingly.
+
+     To relate this to MIDI, imagine you have a keyboard that
+     sends out on MIDI Channel 7. You record a part into your
+     sequencer. As you play back the sequence, you decide that
+     you want to have the MIDI information control a
+     synthesizer set to a trumpet sound. You would then set the
+     synthesizer to receive on Channel 7, and the MIDI data
+     from the sequencer would cause the synthesizer to play.
+     Another method available on many sequencers is to change
+     the Channel assignment on the recorded part to match the
+     synthesizer's MIDI receive Channel.
+
+     Regardless of which device does the Channel tuning or
+     changing, the point to remember is that both the sending
+     device (e.g., the sequencer) and the receiving device (e.g.
+     the synthesizer) must be set to the same MIDI Channel, or
+     no sound will result. Drums are usually set on Channel 16
+     for base level and Channel 10 for extended level. Many
+     different percussion sounds are on one Program Change
+     Number (usually Number 0). To choose a particular
+     percussion sound use the Percussion Key Map to see
+     which notes represent which percussion sounds, then enter
+     those notes in the Drum Track in MIDI List View or Score
+     View.
+
+     This is somewhat confusing, because the notes in the drum
+     track look like they indicate the pitch of a percussion
+     sound, but they do not. They only indicate the type of
+     percussion sound, such as Bass Drum, Splash Cymbal, or
+     Maracas. Entering a middle C (C4) note in the drum track
+     plays a Hi Bongo, while entering an F above middle C (F4)
+     plays a Low Conga, not a higher pitched Hi Bongo. Unlike
+     other tracks in the score the location of the note on the
+     Drum Track does not correlate to higher or lower pitched
+     instrument sounds. It is only a way of defining which
+     percussion sound you want.
+
+     There are two MIDI Message types: Channel Messages and
+     System Messages. A Channel Message includes a Channel
+     number within the Message. It is received and understood
+     by any device which is set to that particular Channel, and
+     ignored by any device set to a different Channel. The most
+     basic Channel Message is a Note On Message. When you
+     press a key on a synthesizer keyboard, a Note On Message
+     is sent out with the specific key number encoded within it.
+     When you release the key, a corresponding Note Off
+     Message is sent. Other information can be carried by a
+     Channel Message, such as Velocity, Volume, Pitch Bend,
+     and Aftertouch.
+
+     A System Message is meant to be received and understood
+     by all devices that are connected, regardless of their
+     Channel setting. These Messages control synchronization
+     between devices, as well as special manufacturer-specific
+     modes of operation.
+
+     A Program Change Message causes any devices tuned to
+     the same Channel to change internal settings corresponding
+     to the number sent. On many synthesizers, this causes a
+     change in patch (or instrument sound). MIDI specifies a
+     possible range of 128 Program Change numbers. Most
+     manufacturers have organized patches in different
+     sequences; for example, Program Change 45 may call up a
+     trumpet on one synthesizer and a harpsichord on another.
+     As of this writing, there is a new standard for Program
+     Change assignments between different synthesizers called
+     General MIDI, but instruments following this standard are
+     just beginning to appear.
+
+     Tracks are not really part of MIDI, but most sequencers
+     use the concept of tracks on which MIDI data is recorded.
+     We mention it here to distinguish tracks from MIDI
+     Channels. In a professional recording studio, a multi-track
+     tape recorder is one that records on multiple sections of the
+     tape. Each section is a discrete area called a track. Even
+     though you can record an entire orchestra on one track,
+     you gain much more flexibility by recording each instrument
+     on its own track. This way, if you find that an instrument
+     was too soft or loud, you can adjust that instrument without
+     affecting any others.
+
+     The same holds true for MIDI sequencers. You can record
+     each instrument on its own track, and later go back and
+     adjust or edit only the MIDI data on that particular track. It
+     is easy to get confused when you look at the number of
+     MIDI Channels (16) compared with the number of
+     sequencer tracks (often many more). Why have more than
+     16 tracks? A look at traditional music recording can help to
+     answer this question. In most multi-track studios, even if
+     you are recording a small group (with 4 instruments), you
+     will use many tracks for partial or alternate takes. Possibly
+     you will put the guitar playing verse 1 and chorus 1 on track
+     five, and then put the guitar playing the second verse and
+     chorus on track six. Or you may record ten versions of the
+     sax solo, and choose between them, or put together a final
+     solo that incorporates pieces from many of the takes.
+
+     With only 4 tracks to record the above 4 instruments, you
+     lose the ability to experiment. In a MIDI sequencer, you
+     can make a copy of a track before going off the deep end
+     with editing features, knowing there is an untouched version
+     to revert to if you decide that you have gone too far. A
+     common technique is to place Program Change Messages,
+     MIDI Volume Messages, various Controller Messages, or
+     Pitch Bend Messages on individual tracks. This way, you
+     can mute or disable the effect of these Messages selectively.
+
+:: Connecting A MIDI Instrument ::
+
+     Imagine that you have a Synth Module (a synth with only
+     sounds, there큦 no keyboard), A synthesizer with
+     keyboard and a Computer with a MIDI interface.
+     With this equipment you can have the Computer to control
+     both the Synth Module and the Synth via the MIDI
+     Interface. You can also record the lovely melodies you
+     play on the keyboard, with your Sequencing program.
+
+     There are basically three MIDI cables: MIDI IN, MIDI
+     OUT and MIDI THRU.
+     MIDI IN, recieves Messages from the synth keyboard,
+     MIDI OUT, sends Messages to the devices connected and
+     MIDI THRU sends a copy of the MIDI Messages to all
+     other devices connected via MIDI.
+     In my example the connection should look something like
+     this:
+          The MIDI OUT on the computer is connected to the
+          keyboard큦 MIDI IN. 
+          The MIDI IN on the computer is connected to the
+          keyboards MIDI OUT. 
+          The Keyboard큦 MIDI THRU is connected to the
+          Synth Module큦 MIDI IN. 
+          The Synth Modules MIDI THRU is connected to
+          the Drum machines MIDI IN. 
+          And so it goes on..... 
+
+:: What Do You Need? ::
+
+     A MIDI computer doesn't have to cost a fortune, but it i
+     better to have a fast machine these days if possible
+     You can play your sequences using a 486 DX2 with 
+     Soundblaster soundcard, though it큦 even better if you got 
+     Turtle Beach Tropez Card with a Wavetable synthesis
+     Most of the soundcards these days has got a MID
+     Interfac
+     The Tropez supports General MIDI and has got sampling
+     of real instruments. This means that you can play 
+     MIDI-file with your sequencer and hear it play high qualit
+     music with your soundcard. (you don큧 need a synth, it큦 i
+     the computer
+
+     To record a song you need something that can give input t
+     the sequencer
+     Either you got a MIDI compatible keyboard or you ca
+     buy a special keyboard with only keys. (no sounds) Yo
+     can also edit the notes in your sequencing program, but tha
+     takes a long time and is very hard to do
+
+     To play and record music you'll need a Seqencing
+     Program, such as Cubase.
+     With a sequencer you can record and play your own songs. As well,
+     it will allow you to edit notes played wrong during recording.
+
+=======================================================================
+END OF LOU32 HELP MODULE DOCUMENT.
+
+

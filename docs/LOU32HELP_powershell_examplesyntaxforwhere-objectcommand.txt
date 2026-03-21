@@ -1,0 +1,22 @@
+=========================================================
+::             LOU32 HELP MODULE DOCUMENT              ::
+=========================================================
+:: POWERSHELL - BASIC USE OF WHERE-OBJECT WITH EXAMPLE ::
+=========================================================
+
+:: In The following command example, we are querying the system (using the Get-AppxProvisionedPackage cmdlet) for all installed AppX Provisioned Packages (the preinstalled Microsoft Apps on the original installation image) that have a display name that begins with "Microsoft."
+
+Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -like 'Microsoft.*' } | Format-Table DisplayName, PackageName
+
+:: Note the syntax for Where-Object:
+
+:: 1. The entire thing is wrapped in curly brackets
+:: 2. Then, the property we want to specify (in this case "DisplayName") is formatted with "$_." before it (which gives us "$_.DisplayName")
+:: 3. The specified search string ends with a wildcard, but note that the wildcard is contained within the single quotations around the whole thing, so we get 'Microsoft.*'
+:: 4. Remember the curly bracket at the end since we started with that.
+
+:: NOTE: This command pipes that Where-Object output to a Format-Table cmdlet command, although this is not necessary, but it gives an example of piping the output of our Where-Object and simultaneously specifying the output format to include related properties of what is found.
+:: This makes our Where-Object output much more useful and dynamic.
+
+=========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

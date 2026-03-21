@@ -1,0 +1,10 @@
+=========================================================
+REFERENCE ALIAS FUNCTION POWERSHELL EXAMPLES 
+=========================================================
+	Set-Alias -Name notepad -Value C:\Windows\notepad.exe
+	notepad
+	
+	Function CD32 {Set-Location -Path C:\Windows\System32}
+	Set-Alias -Name Go -Value CD32
+
+

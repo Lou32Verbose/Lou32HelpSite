@@ -1,0 +1,23 @@
+=============================================================
+::           LOU32 HELP MODULE DOCUMENT                    ::
+=============================================================
+::  POWERSHELL EXAMPLE FUNCTION TO DECODE HEX FROM REGKEY  ::
+=============================================================
+
+:: To decode the hex string in a registry key, try something like this:
+
+---
+$key = "HKCU:\SOFTWARE\EXAMPLE\EXAMPLE\EXAMPLE"
+Get-Item $key | select -Expand property | % {
+  $value = (Get-ItemProperty -Path $key -Name $_).$_
+  [System.Text.Encoding]::Default.GetString($value)
+}
+---
+=============================================================
+:: NOTE: The values probably contain non-printable characters, so that alone won't suffice. 
+:: You'll have to do some additional cleanup, e.g. by appending the following to the GetString() call: 
+
+-replace '[\x01-\x1F]' 
+
+=============================================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# FFmpeg Frame Extraction Script
+# Extracts every single frame from a video as high-quality PNG images
+
+# Check if input file is provided
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <input_video_file> [output_directory]"
+    echo "Example: $0 video.mp4 frames/"
+    exit 1
+fi
+
+INPUT_VIDEO="$1"
+OUTPUT_DIR="${2:-frames}"  # Default to 'frames' directory if not specified
+
+# Check if input file exists
+if [ ! -f "$INPUT_VIDEO" ]; then
+    echo "Error: Input file '$INPUT_VIDEO' does not exist."
+    exit 1
+fi
+
+# Create output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+echo "Extracting frames from: $INPUT_VIDEO"
+echo "Output directory: $OUTPUT_DIR"
+echo "Starting extraction..."
+
+# FFmpeg command to extract all frames
+# -i: input file
+# -vf: video filter (scale ensures we maintain original resolution)
+# -pix_fmt: pixel format (rgba for maximum quality with transparency support)
+# -compression_level: PNG compression (0 = no compression, fastest, largest files)
+# -pred: PNG prediction method (mixed gives best compression without quality loss)
+ffmpeg -i "$INPUT_VIDEO" \
+       -vf "scale=iw:ih" \
+       -pix_fmt rgba \
+       -compression_level 0 \
+       -pred mixed \
+       "$OUTPUT_DIR/frame_%08d.png"
+
+# Check if extraction was successful
+if [ $? -eq 0 ]; then
+    FRAME_COUNT=$(ls -1 "$OUTPUT_DIR"/*.png 2>/dev/null | wc -l)
+    echo "Success! Extracted $FRAME_COUNT frames to $OUTPUT_DIR/"
+    
+    # Display file size information
+    TOTAL_SIZE=$(du -sh "$OUTPUT_DIR" | cut -f1)
+    echo "Total size of extracted frames: $TOTAL_SIZE"
+else
+    echo "Error: Frame extraction failed."
+    exit 1
+fi

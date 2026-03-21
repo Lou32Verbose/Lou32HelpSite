@@ -1,0 +1,13 @@
+==============================
+:: LOU32 HELP MODULE DOCUMENT
+==============================
+:: BYPASS NRO NEW ALTERNATE
+==============================
+
+:: MICROSOFT AS OF APRIL 2025 HAS NOW DISABLED BYPASSNRO COMMAND TO STOP NON MICROSOFT ACCOUNT START COMMANDS
+:: The following command is an alternative command that will achieve the same:
+
+start ms-cxh:localonly
+
+===========================================
+END OF LOU32 HELP MODULE DOCUMENT.

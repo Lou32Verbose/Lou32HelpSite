@@ -1,0 +1,31 @@
+﻿============================================
+::       LOU32 HELP MODULE DOCUMENT       ::
+============================================
+:: MANAGE SYSTEM SERVICES WITH POWERSHELL ::
+============================================
+
+# With the Get-Service cmdlet, you can create a list of the services that are running (or the services that are currently stopped). 
+# To do so, you will need to use the Where command and examine the service status. 
+# Suppose, for instance, that you wanted to see all of the running services. 
+# You could do so by using this command:
+
+Get-Service | Where {$_.status –eq 'running'}
+
+---
+
+# You can check a service and start it if necessary by using a single line of code.  
+# Suppose that I wanted to check to see if the Wsearch service was running, and start the service if it is not already running. 
+# The code used for doing so would be:
+
+Get-Service Wsearch | Where {$_.status –eq 'Stopped'} |  Start-Service
+
+---
+
+# One last thing about services is that the information that PowerShell displays when you enter the Get-Service cmdlet is not the only information that is available. 
+# If you would like to see more detail about a particular service, you can use the Select-Object cmdlet, followed by an asterisks. 
+# For instance, if you wanted to know all about the BITS service, you could use this command:
+
+Get-Service BITS | Select-Object *
+
+==========================================================
+END OF LOU32 HELP MODULE DOCUMENT.

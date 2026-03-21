@@ -1,0 +1,15 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: Module=  				    ::
+==============================================
+
+:: To call the Window Switcher via Run or Console command, use the following shell command:
+
+C:\WINDOWS\explorer.exe shell:::{3080F90E-D7AD-11D9-BD98-0000947B0257}
+
+:: To create a shortcut (.lnk) that will trigger this command, set the "target" of the shortcut as the above command.
+:: This will create a clickable shortcut that summons the window switcher.
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,96 @@
+Shell location	Command
+Action Center	shell:::{BB64F8A7-BEE7-4E1A-AB8D-7D8273F7FDB6}
+Add Network Place	shell:::{D4480A50-BA28-11d1-8E75-00C04FA31A86}
+Administrative Tools	shell:::{D20EA4E1-3957-11d2-A40B-0C5020524153}
+All Control Panel Items	shell:::{21EC2020-3AEA-1069-A2DD-08002B30309D}
+All Settings	shell:::{F90C627B-7280-45DB-BC26-CCE7BDD620A4}
+All Tasks	shell:::{ED7BA470-8E54-465E-825C-99712043E01C}
+Applications	shell:::{4234d49b-0245-4df3-b780-3893943456e1}
+AppSuggestedLocations	shell:::{c57a6066-66a3-4d91-9eb9-41532179f0a5}
+AutoPlay	shell:::{9C60DE1E-E5FC-40f4-A487-460851A8D915}
+Biometric Devices	shell:::{0142e4d0-fb7a-11dc-ba4a-000ffe7ab428}
+BitLocker Drive Encryption	shell:::{D9EF8727-CAC2-4e60-809E-86F80A666C91}
+Bluetooth Devices	shell:::{28803F59-3A75-4058-995F-4EE5503B023C}
+Briefcase	shell:::{85BBD920-42A0-1069-A2E4-08002B30309D}
+CLSID_SearchHome	shell:::{9343812e-1c37-4a49-a12e-4b2d810d956b}
+Command Folder	shell:::{437ff9c0-a07f-4fa0-af80-84b6c6440a16}
+Common Places FS Folder	shell:::{d34a6ca6-62c2-4c34-8a7c-14709c1ad938}
+Computer	shell:::{20D04FE0-3AEA-1069-A2D8-08002B30309D}
+Connect To	shell:::{38A98528-6CBF-4CA9-8DC0-B1E1D10F7B1B}
+Control Panel	shell:::{26EE0668-A00A-44D7-9371-BEB064C98683}
+Control Panel	shell:::{5399E694-6CE5-4D6C-8FCE-1D8870FDCBA0}
+Credential Manager	shell:::{1206F5F1-0569-412C-8FEC-3204630DFB70}
+Default Programs	shell:::{17cd9488-1228-4b2f-88ce-4298e93e0966}
+delegate folder that appears in Computer	shell:::{b155bdf8-02f0-451e-9a26-ae317cfd7779}
+Devices and Printers	shell:::{A8A91A66-3A7D-4424-8D24-04E180695C7A}
+Display	shell:::{C555438B-3C23-4769-A71F-B6D3D9B6053A}
+Ease of Access Center	shell:::{D555645E-D4F8-4c29-A827-D93C859C4F2A}
+Family Safety	shell:::{96AE8D84-A250-4520-95A5-A47A7E3C548B}
+Favorites	shell:::{323CA680-C24D-4099-B94D-446DD2D7249E}
+File History	shell:::{F6B6E965-E9B2-444B-9286-10C9152EDBC5}
+Folder Options	shell:::{6DFD7C5C-2451-11d3-A299-00C04F8EF6AF}
+Folder Shortcut	shell:::{0AFACED1-E828-11D1-9187-B532F1E9575D}
+Font settings	shell:::{93412589-74D4-4E4E-AD0E-E0CB621440FD}
+Games	shell:::{ED228FDF-9EA8-4870-83b1-96b02CFE0D52}
+Get Programs	shell:::{15eae92e-f17a-4431-9f28-805e482dafd4}
+Help and Support	shell:::{2559a1f1-21d7-11d4-bdaf-00c04f60b9f0}
+Homegroup	shell:::{6785BFAC-9D2D-4be5-B7E2-59937E8FB80A}
+HomeGroup	shell:::{67CA7650-96E6-4FDD-BB43-A8E774F73A57}
+Homegroup	shell:::{B4FB3F98-C1EA-428d-A78A-D1F5659CBA93}
+Installed Updates	shell:::{d450a8a1-9568-45c7-9c0e-b4f9fb4537bd}
+Language	shell:::{BF782CC9-5A52-4A17-806C-2A894FFEEAC5}
+Libraries	shell:::{031E4825-7B94-4dc3-B131-E946B44C8DD5}
+Location Settings	shell:::{E9950154-C418-419e-A90A-20C5287AE24B}
+Media Servers	shell:::{289AF617-1CC3-42A6-926C-E6A863F0E3BA}
+My Documents	shell:::{450D8FBA-AD25-11D0-98A8-0800361B1103}
+Network	shell:::{208D2C60-3AEA-1069-A2D7-08002B30309D}
+Network	shell:::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}
+Network and Sharing Center	shell:::{8E908FC9-BECC-40f6-915B-F4CA0E70D03D}
+Network Connections	shell:::{7007ACC7-3202-11D1-AAD2-00805FC1270E}
+Network Connections	shell:::{992CFFA0-F557-101A-88EC-00DD010CCC48}
+Notification Area Icons	shell:::{05d7b0f4-2121-4eff-bf6b-ed3f69b894d9}
+Offline Files Folder	shell:::{AFDB1F70-2A4C-11d2-9039-00C04F8EEB3E}
+Performance Information and Tools	shell:::{78F3955E-3B90-4184-BD14-5397C15F1EFC}
+Personalization	shell:::{ED834ED6-4B5A-4bfe-8F11-A626DCB6A921}
+Portable Devices	shell:::{35786D3C-B075-49b9-88DD-029876E11C01}
+Power Options	shell:::{025A5937-A6BE-4686-A844-36FE4BEC8B6D}
+Previous Versions Results Folder	shell:::{f8c2ab3b-17bc-41da-9758-339d7dbf2d88}
+Printers	shell:::{2227A280-3AEA-1069-A2DE-08002B30309D}
+Printers	shell:::{863aa9fd-42df-457b-8e4d-0de1b8015c60}
+printhood delegate folder	shell:::{ed50fc29-b964-48a9-afb3-15ebb9b97f36}
+Programs and Features	shell:::{7b81be6a-ce2b-4676-a29e-eb907a5126c5}
+Programs Folder	shell:::{7be9d83c-a729-4d97-b5a7-1b7313c39e0a}
+Programs Folder and Fast Items	shell:::{865e5e76-ad83-4dca-a109-50dc2113ce9a}
+Public	shell:::{4336a54d-038b-4685-ab02-99bb52d3fb8b}
+Recent places	shell:::{22877a6d-37a1-461a-91b0-dbda5aaebc99}
+Recovery	shell:::{9FE63AFD-59CF-4419-9775-ABCC3849F861}
+Recycle Bin	shell:::{645FF040-5081-101B-9F08-00AA002F954E}
+RemoteApp and Desktop Connections	shell:::{241D7C96-F8BF-4F85-B01F-E2B043341A4B}
+Removable Storage Devices	shell:::{a6482830-08eb-41e2-84c1-73920c2badb9}
+Results Folder	shell:::{2965e715-eb66-4719-b53f-1672673bbefa}
+Run...	shell:::{2559a1f3-21d7-11d4-bdaf-00c04f60b9f0}
+Search	shell:::{04731B67-D933-450a-90E6-4ACD2E9408FE}
+Search	shell:::{2559a1f0-21d7-11d4-bdaf-00c04f60b9f0}
+Set Program Access and Computer Defaults	shell:::{2559a1f7-21d7-11d4-bdaf-00c04f60b9f0}
+Show desktop	shell:::{3080F90D-D7AD-11D9-BD98-0000947B0257}
+Speech Recognition	shell:::{58E3C745-D971-4081-9034-86E34B30836A}
+Storage Spaces	shell:::{F942C606-0914-47AB-BE56-1321B8035096}
+Switch between windows	shell:::{3080F90E-D7AD-11D9-BD98-0000947B0257}
+Sync Center	shell:::{9C73F5E5-7AE7-4E32-A8E8-8D23B85255BF}
+Sync Setup Folder	shell:::{2E9E59C0-B437-4981-A647-9C34B9B90891}
+System	shell:::{BB06C0E4-D293-4f75-8A90-CB05B6477EEE}
+Taskbar	shell:::{0DF44EAA-FF21-4412-828E-260A8728E7F1}
+The Internet	shell:::{871C5380-42A0-1069-A2EA-08002B30309D}
+Troubleshooting	shell:::{C58C4893-3BE0-4B45-ABB5-A63E4B8C8651}
+User Accounts	shell:::{60632754-c523-4b62-b45c-4172da012619}
+User Accounts	shell:::{7A9D77BD-5403-11d2-8785-2E0420524153}
+User Pinned	shell:::{1f3427c8-5c10-4210-aa03-2ee45287d668}
+UsersFiles	shell:::{59031a47-3f72-44a7-89c5-5595fe6b30ee}
+Windows 7 File Recovery	shell:::{B98A2BEA-7D42-4558-8BD1-832F41BAC6FD}
+Windows Defender	shell:::{D8559EB9-20C0-410E-BEDA-7ED416AECC2A}
+Windows Features	shell:::{67718415-c450-4f3c-bf8a-b487642dc39b}
+Windows Firewall	shell:::{4026492F-2F69-46B8-B9BF-5654FC07E423}
+Windows Mobility Center	shell:::{5ea4f148-308c-46d7-98a9-49041b1dd468}
+Windows SideShow	shell:::{E95A4861-D57A-4be1-AD0F-35267E261739}
+Windows Update	shell:::{36eef7db-88ad-4e81-ad49-0e313f0c35f8}
+WWan Shell Folder	shell:::{87630419-6216-4ff8-a1f0-143562d16d5c}

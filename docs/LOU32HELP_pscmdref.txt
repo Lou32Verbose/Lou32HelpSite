@@ -1,0 +1,48 @@
+===========================================
+# LOU32 HELP DOCUMENT
+# BASIC POWERSHELL COMMANDS
+# lou32help_pscmdref
+===========================================
+## Basic File Copy Example
+Copy-Item -Path "C:\Destination One\SpreadsheetOne.xlsx" -Destination "c:\Destination Two"
+
+## Copying Multiple Files
+Copy-Item -Path "C:\source\file1.txt","C:\Source\file2.txt" -Destination "D:\Destination Two"
+
+## Copying Files with Renaming
+Copy-Item -Path "C:\Source\file1.txt" -Destination "C:\Destination Two\NewName1.txt"
+
+## Copying Folders with PowerShell
+Copy-Item -Path "C:\source\folder" -Destination "D:\destination"
+
+## Copying Folders with Subfolders
+Copy-Item -Path "C:\source\folder" -Destination "D:\destination" -Recurse
+
+## Copying and Merging Multiple Folders
+Copy-Item -Path "C:\source1\*","C:\source2\*" -Destination "D:\destination"
+
+=============================================
+# Advanced File and Folder Copy Techniques
+# lou32help_pscmdref_adv
+
+## Using Wildcards in File Paths
+Copy-Item -Path "C:\source\*.txt" -Destination "C:\Destination Two"
+
+## Filtering Files with Include and Exclude Parameters
+Copy-Item -Path "C:\source\*" -Destination "D:\destination" -Include "*.log" -Exclude "*.tmp"
+
+## Using the Force Parameter to Overwrite Files
+Copy-Item -Path "C:\source\file.txt" -Destination "D:\destination" -Force
+
+## Error Handling and Verification
+## Using WhatIf and Confirm Parameters
+
+# WhatIf
+Copy-Item -Path "C:\Source\File1.txt" -Destination "C:\Destination Two" -WhatIf
+
+# Confirm
+Remove-Item -Path C:\file.txt -Confirm
+#You can add the -Confirm parameter to any Copy-Item command.
+
+
+

@@ -1,0 +1,133 @@
+============================================================
+::               LOU32 HELP MODULE DOCUMENT               ::
+============================================================
+:: USEFUL DISM POWERSHELL ONE-LINER FOR ISO RELATED TASKS ::
+============================================================
+:: COMMON QUICK FUNCTIONS
+
+# Quick app removal
+Get-AppxProvisionedPackage -Path "C:\mount" | Where-Object {$_.DisplayName -like "*Xbox*"} | Remove-AppxProvisionedPackage -Path "C:\mount"
+
+# Add multiple updates
+Get-ChildItem "C:\updates\*.msu" | ForEach-Object {Add-WindowsPackage -Path "C:\mount" -PackagePath $_.FullName}
+
+# Export modified image
+Export-WindowsImage -SourceImagePath "C:\temp\install.wim" -SourceIndex 1 -DestinationImagePath "C:\temp\install_modified.wim" -CompressionType Maximum
+
+-----------
+:: IMAGE INFO AND ANALYSIS 
+
+# Get detailed info about all images in WIM
+Get-WindowsImage -ImagePath "install.wim" | Format-Table ImageIndex,ImageName,ImageSize,Architecture
+
+# Check WIM file health and get compression info
+Get-WindowsImage -ImagePath "install.wim" -Index 1 | Select-Object ImageName,ImageSize,Architecture,InstallationType,Version
+
+# List all mounted images
+Get-WindowsImage -Mounted
+
+# Get Windows edition info
+DISM /Online /Get-CurrentEdition
+
+# Check if image needs reboot after servicing
+Get-WindowsImage -Path "C:\mount" | Select-Object ImageName,RestartRequired
+
+----------
+:: FEATURE MANAGEMENT 
+
+# Enable multiple Windows features at once
+"IIS-WebServerRole","IIS-HttpCompressionStatic","IIS-HttpCompressionDynamic" | ForEach-Object {Enable-WindowsOptionalFeature -Path "C:\mount" -FeatureName $_ -All}
+
+# Disable Windows features
+"WindowsMediaPlayer","Internet-Explorer-Optional-amd64" | ForEach-Object {Disable-WindowsOptionalFeature -Path "C:\mount" -FeatureName $_}
+
+# List all available optional features
+Get-WindowsOptionalFeature -Path "C:\mount" | Where-Object {$_.State -eq "Disabled"} | Select-Object FeatureName
+
+# Enable .NET Framework 3.5 with source
+Enable-WindowsOptionalFeature -Path "C:\mount" -FeatureName "NetFx3" -Source "D:\sources\sxs" -All
+
+----------
+:: PACKAGE UPDATE AND MANAGEMENT 
+
+# Remove all Xbox-related apps in one go
+Get-AppxProvisionedPackage -Path "C:\mount" | Where-Object {$_.DisplayName -match "Xbox|Gaming"} | Remove-AppxProvisionedPackage -Path "C:\mount"
+
+# Remove common bloatware apps
+"Microsoft.BingWeather","Microsoft.GetHelp","Microsoft.Getstarted","Microsoft.ZuneMusic","Microsoft.ZuneVideo" | ForEach-Object {Remove-AppxProvisionedPackage -Path "C:\mount" -PackageName (Get-AppxProvisionedPackage -Path "C:\mount" | Where-Object {$_.DisplayName -eq $_}).PackageName}
+
+# Add all MSU files from a directory
+Get-ChildItem "C:\updates" -Filter "*.msu" | ForEach-Object {Add-WindowsPackage -Path "C:\mount" -PackagePath $_.FullName -NoRestart}
+
+# Remove specific KB updates
+Get-WindowsPackage -Path "C:\mount" | Where-Object {$_.PackageName -like "*KB5012345*"} | Remove-WindowsPackage -Path "C:\mount" -NoRestart
+
+# List superseded packages that can be cleaned up
+Get-WindowsPackage -Path "C:\mount" | Where-Object {$_.PackageState -eq "Superseded"}
+
+----------
+:: REGISTRY 
+
+# Set multiple registry values for offline image (requires mounting registry first)
+@{"BypassNRO"=1;"BypassTPMCheck"=1;"BypassSecureBootCheck"=1} | ForEach-Object {$_.GetEnumerator() | ForEach-Object {reg add "HKLM\OFFLINE\Setup\LabConfig" /v $_.Key /t REG_DWORD /d $_.Value /f}}
+
+# Disable Windows Defender (offline registry)
+reg add "HKLM\OFFLINE\SOFTWARE\Policies\Microsoft\Windows Defender" /v DisableAntiSpyware /t REG_DWORD /d 1 /f
+
+# Set default user profile settings
+reg load HKU\Default "C:\mount\Users\Default\NTUSER.DAT" && reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f && reg unload HKU\Default
+
+----------
+:: FILE OPERATIONS 
+
+# Copy files to mounted image
+Copy-Item "C:\custom\*" -Destination "C:\mount\Windows\System32" -Recurse -Force
+
+# Remove Windows.old folder from image
+Remove-Item "C:\mount\Windows.old" -Recurse -Force -ErrorAction SilentlyContinue
+
+# Set file permissions on mounted image
+icacls "C:\mount\Windows\System32\cmd.exe" /grant "Everyone:(F)" /t
+
+# Replace system files
+takeown /f "C:\mount\Windows\System32\utilman.exe" && icacls "C:\mount\Windows\System32\utilman.exe" /grant administrators:F && copy "C:\temp\cmd.exe" "C:\mount\Windows\System32\utilman.exe" /y
+
+----------
+:: DRIVERS AND HARDWARE 
+
+# Add all drivers from folder recursively
+Add-WindowsDriver -Path "C:\mount" -Driver "C:\drivers" -Recurse -ForceUnsigned
+
+# Export drivers from running system
+Export-WindowsDriver -Online -Destination "C:\exported_drivers"
+
+# Remove specific driver
+Get-WindowsDriver -Path "C:\mount" | Where-Object {$_.ProviderName -eq "VendorName"} | Remove-WindowsDriver -Path "C:\mount"
+
+----------
+:: VALIDATION AND REPAIR
+
+# Check image health
+DISM /Image:"C:\mount" /Cleanup-Image /CheckHealth
+
+# Scan and repair image
+DISM /Image:"C:\mount" /Cleanup-Image /ScanHealth && DISM /Image:"C:\mount" /Cleanup-Image /RestoreHealth
+
+# Verify WIM integrity
+DISM /Get-WimInfo /WimFile:"install.wim" /CheckIntegrity
+
+----------
+:: BOOT CONFIGURATION
+
+# Set default boot entry (for mounted image)
+bcdedit /store "C:\mount\Boot\BCD" /default {current}
+
+# Add boot menu timeout
+bcdedit /store "C:\mount\Boot\BCD" /timeout 10
+
+# Export boot configuration
+bcdedit /store "C:\mount\Boot\BCD" /export "C:\temp\bcd_backup"
+
+
+=================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

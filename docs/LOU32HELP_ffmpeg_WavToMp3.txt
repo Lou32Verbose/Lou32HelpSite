@@ -1,0 +1,1 @@
+ffmpeg -i input.wav -c:v libx264 -c:a copy -rematrix_maxval 1.0 -ac 2 -report -loglevel verbose output.wav

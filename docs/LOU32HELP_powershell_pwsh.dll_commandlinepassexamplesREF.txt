@@ -1,0 +1,11 @@
+=======================================================
+:: LOU32HELPMODULE DOCUMENT
+======================================================
+:: POWERSHELL PWSH.DLL COMMAND LINE PASS EXAMPLES
+======================================================
+
+:: EXAMPLE OF PASSING EXECUTION POLICY VALUE TO pwsh.dll [Ex. "Bypass"]
+
+C:\Program Files\PowerShell\7-preview\pwsh.dll -ExecutionPolicy Bypass -NoProfile
+
+:: EXAMPLE

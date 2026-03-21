@@ -1,0 +1,14 @@
+==================================================
+::          LOU32 HELP MODULE DOCUMENT          ::
+==================================================
+:: POWERSHELL COMMAND TO DELETE FILES FROM LIST ::
+==================================================
+
+:: Example Command To Delete Files In Current Directory From A List Of Files:
+
+Get-Content .\filesToDelete.txt | ForEach-Object {Remove-Item $_}
+
+:: NOTE: "($_" in the above command stands for the current variable of the for loop).
+
+==================================================
+END OF LOU32 HELP MODULE DOCUMENT.

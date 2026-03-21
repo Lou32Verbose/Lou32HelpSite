@@ -1,0 +1,91 @@
+On a rare occasion it may be necessary to remove fonts from the system reserved partition.
+
+For the Windows upgrade failure codes 0xc1900104 and 0x800f0922 "we couldn't update the system reserved partition" Microsoft provided command line methods to remove fonts from the system reserved partition:
+
+For Windows 10 (GPT):
+
+Administrative command prompt:
+
+mountvol y:/s
+Y:
+cd EFI\Microsoft\Boot\Fonts
+del*.*
+Y
+
+https://support.microsoft.com/en-us/topic/-we-couldn-t-update-system-reserved-partition-error-installing-windows-10-46865f3f-37bb-4c51-c69f-07271b6672ac
+
+=================================================================================================================
+FOR WINDOWS 10 WITH GPT PARTITION
+
+Search for cmd. Press-and-hold or right-click on Command Prompt in the results, and select Run as administrator.
+
+At the command prompt, type mountvol y: /s and then hit Enter. This will add the Y: drive letter to access the System Partition.
+
+Switch to the Y drive by typing Y: and press Enter. Then, navigate to the Fonts folder by typing cd EFI\Microsoft\Boot\Fonts. Once there, type del *.* to delete font files. The system may ask you if you are sure to continue, press Y and then Enter to continue.
+=================================================================================================================
+FOR WINDOWS 10 WITH MBR PARTITION (MUST DO PART 2 BELOW AFTERWARDS)
+
+Press the Windows key + R. In the Run window that comes up, type diskmgmt.msc and press Enter.
+
+Select the partition marked System Reserve. Press-and-hold or right-click on it.
+
+Select Change Drive Letter and Paths.
+
+Choose Add.
+
+Enter Y for the drive letter.
+
+Tap or click OK.
+
+From the Start menu, search for cmd. Right-click Command Prompt from the search results, and select Run as administrator.
+
+In the command prompt, type Y: and hit enter to switch to that drive. Then, navigate to the Fonts folder by typing cd Boot\Fonts.
+
+Type the following and press Enter:
+takeown /d y /r /f .
+
+Note: You must include the space and the period after the “f”, or the command will not work properly.
+
+Back up the permission to the drive by typing the following and press Enter:
+
+icacls Y:\* /save %systemdrive%\NTFSp.txt /c /t
+
+Note: Make sure that all files are showed as successful and none as failed.
+
+Type whoami and press Enter, and then record the user name. Type the following command and press Enter:
+icacls . /grant <username you got from whoami>:F /t
+
+Note: Do not put a space between the username and ":F", or the command won't work.
+
+Make sure you are still located in Fonts location (Y:\Boot\Fonts) as described in step 8. Then, Type del *.* to delete font files. The system may ask you if you are sure to continue, press Y and then enter to continue.
+
+****************************** Part 2: Restore Permissions ******************************
+
+Type the following command and press Enter:
+
+icacls Y:\ /restore %systemdrive%\NTFSp.txt /c /t
+
+A message may display indicating some files failed while processing – this is normal as these files have been deleted subsequent to backing them up.
+
+If the amount of successful files is none, then the command was executed incorrectly; you must have some files successfully processed before continuing.
+
+Adjust the ACL back to System by typing the following and press Enter:
+
+icacls . /grant system:f /t
+
+Set the owner of the drive back to System by typing the following command and pressing Enter:
+
+icacls Y: /setowner “SYSTEM” /t /c
+
+Go back to Disk Management and Refresh the data to confirm if the SRP now has a greater percentage of free space. If so, the drive letter can be removed at this point.
+
+Right-click the System Reserved Partition.
+
+Select Change Drive Letter and Paths.
+
+Choose the Y: drive.
+
+Select Remove.
+
+Click OK.
+=================================================================================================================

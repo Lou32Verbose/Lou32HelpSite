@@ -1,0 +1,559 @@
+# 10 GIMP Batch Processing Scripts 
+# GIMP Scripting w/ Script-Fu
+
+These scripts demonstrate core batch processing concepts in GIMP using Script-Fu (Scheme). Each example builds complexity while solving real-world problems.
+
+## 1. Smart Resize with Aspect Ratio Preservation
+
+**Problem Solved**: Resizing hundreds of product photos for e-commerce while maintaining quality.
+
+```scheme
+(define (batch-smart-resize input-dir output-dir max-width max-height quality)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png,tiff}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image)))
+             (width (car (gimp-drawable-width drawable)))
+             (height (car (gimp-drawable-height drawable)))
+             (ratio (min (/ max-width width) (/ max-height height)))
+             (new-width (* width ratio))
+             (new-height (* height ratio))
+             (output-file (string-append output-dir "/" 
+                          (substring filename (string-rindex filename #\/) 
+                                   (string-length filename)))))
+        
+        (gimp-image-scale image new-width new-height)
+        (gimp-file-save RUN-NONINTERACTIVE image drawable 
+                       output-file output-file)
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-smart-resize "/input/path" "/output/path" 800 600 85)
+```
+
+**Key Learning**: Shows file iteration, aspect ratio math, and memory management.
+
+---
+
+## 2. Watermark Applier with Position Control
+
+**Problem Solved**: Adding copyright watermarks to photo galleries with consistent positioning.
+
+```scheme
+(define (batch-watermark input-dir output-dir watermark-file opacity position)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}"))))
+         (watermark-img (car (gimp-file-load RUN-NONINTERACTIVE watermark-file watermark-file)))
+         (watermark-layer (car (gimp-image-get-active-layer watermark-img))))
+    
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (base-layer (car (gimp-image-get-active-layer image)))
+             (img-width (car (gimp-image-width image)))
+             (img-height (car (gimp-image-height image)))
+             (wm-width (car (gimp-drawable-width watermark-layer)))
+             (wm-height (car (gimp-drawable-height watermark-layer)))
+             (new-layer (car (gimp-layer-new-from-drawable watermark-layer image)))
+             (x-pos (cond ((string=? position "bottom-right") (- img-width wm-width 20))
+                         ((string=? position "bottom-left") 20)
+                         ((string=? position "center") (/ (- img-width wm-width) 2))
+                         (else 20)))
+             (y-pos (cond ((string-ci=? position "bottom-right") (- img-height wm-height 20))
+                         ((string-ci=? position "bottom-left") (- img-height wm-height 20))
+                         ((string=? position "center") (/ (- img-height wm-height) 2))
+                         (else 20))))
+        
+        (gimp-image-insert-layer image new-layer 0 0)
+        (gimp-layer-set-offsets new-layer x-pos y-pos)
+        (gimp-layer-set-opacity new-layer opacity)
+        (gimp-image-merge-down image new-layer EXPAND-AS-NECESSARY)
+        
+        (let ((output-file (string-append output-dir "/" 
+                           (car (reverse (string-split filename #\/))))))
+          (gimp-file-save RUN-NONINTERACTIVE image 
+                         (car (gimp-image-get-active-layer image))
+                         output-file output-file))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))
+    
+    (gimp-image-delete watermark-img)))
+
+; Usage: (batch-watermark "/photos" "/watermarked" "/logo.png" 50 "bottom-right")
+```
+
+**Key Learning**: Layer manipulation, positioning calculations, and conditional logic.
+
+---
+
+## 3. Auto Color Correction Pipeline
+
+**Problem Solved**: Fixing exposure and color issues in scanned documents or photos.
+
+```scheme
+(define (batch-auto-correct input-dir output-dir enhance-contrast normalize-colors)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png,tiff}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image))))
+        
+        ; Auto levels for exposure correction
+        (gimp-levels-stretch drawable)
+        
+        ; Optional contrast enhancement
+        (if enhance-contrast
+            (gimp-brightness-contrast drawable 0 15))
+        
+        ; Optional color normalization
+        (if normalize-colors
+            (begin
+              (gimp-color-balance drawable TRANSFER-MIDTONES TRUE 0 0 0)
+              (gimp-hue-saturation drawable HUE-RANGE-ALL 0 0 10)))
+        
+        ; Sharpen slightly for digital display
+        (plug-in-unsharp-mask RUN-NONINTERACTIVE image drawable 1.0 1.0 0)
+        
+        (let ((output-file (string-append output-dir "/corrected_" 
+                           (car (reverse (string-split filename #\/))))))
+          (gimp-file-save RUN-NONINTERACTIVE image drawable 
+                         output-file output-file))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-auto-correct "/scanned" "/corrected" TRUE TRUE)
+```
+
+**Key Learning**: Multiple filter application and boolean parameters for flexibility.
+
+---
+
+## 4. Format Converter with Quality Control
+
+**Problem Solved**: Converting between formats while optimizing file sizes for web use.
+
+```scheme
+(define (batch-convert input-dir output-dir target-format quality progressive)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.*")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image)))
+             (base-name (substring filename 0 (string-rindex filename #\.)))
+             (output-file (string-append output-dir "/" 
+                          (car (reverse (string-split base-name #\/))) 
+                          "." target-format)))
+        
+        ; Convert to RGB if not already (for JPEG compatibility)
+        (if (not (= (car (gimp-image-base-type image)) RGB))
+            (gimp-image-convert-rgb image))
+        
+        ; Flatten image for formats that don't support layers
+        (if (or (string=? target-format "jpg") 
+                (string=? target-format "jpeg"))
+            (set! drawable (car (gimp-image-flatten image))))
+        
+        ; Save with format-specific options
+        (cond
+          ((or (string=? target-format "jpg") (string=? target-format "jpeg"))
+           (file-jpeg-save RUN-NONINTERACTIVE image drawable 
+                          output-file output-file 
+                          quality 0 TRUE progressive "" 0 TRUE 0 0))
+          ((string=? target-format "png")
+           (file-png-save RUN-NONINTERACTIVE image drawable 
+                         output-file output-file 
+                         FALSE 9 FALSE FALSE FALSE FALSE FALSE))
+          ((string=? target-format "webp")
+           (file-webp-save RUN-NONINTERACTIVE image drawable
+                          output-file output-file
+                          0 quality 0 0 0 0 0 0 0 0 0 0 0)))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-convert "/raw" "/web" "jpg" 85 TRUE)
+```
+
+**Key Learning**: Format-specific save parameters and conditional execution.
+
+---
+
+## 5. Border and Frame Generator
+
+**Problem Solved**: Adding consistent borders to artwork or photos for gallery display.
+
+```scheme
+(define (batch-add-border input-dir output-dir border-width border-color shadow)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image)))
+             (width (car (gimp-image-width image)))
+             (height (car (gimp-image-height image)))
+             (new-width (+ width (* border-width 2)))
+             (new-height (+ height (* border-width 2))))
+        
+        ; Resize canvas
+        (gimp-image-resize image new-width new-height border-width border-width)
+        
+        ; Set background color and add border
+        (gimp-context-set-background border-color)
+        (gimp-drawable-fill (car (gimp-image-get-active-layer image)) BACKGROUND-FILL)
+        
+        ; Position original image
+        (gimp-layer-resize drawable new-width new-height border-width border-width)
+        
+        ; Optional drop shadow
+        (if shadow
+            (begin
+              (script-fu-drop-shadow image drawable 5 5 15 
+                                   '(0 0 0) 80 FALSE)
+              (set! drawable (car (gimp-image-flatten image)))))
+        
+        (let ((output-file (string-append output-dir "/framed_" 
+                           (car (reverse (string-split filename #\/))))))
+          (gimp-file-save RUN-NONINTERACTIVE image drawable 
+                         output-file output-file))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-add-border "/art" "/framed" 50 '(255 255 255) TRUE)
+```
+
+**Key Learning**: Canvas manipulation and built-in script integration.
+
+---
+
+## 6. Text Overlay System
+
+**Problem Solved**: Adding captions, dates, or metadata to photos automatically.
+
+```scheme
+(define (batch-text-overlay input-dir output-dir text font-size font-name color position)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image)))
+             (width (car (gimp-image-width image)))
+             (height (car (gimp-image-height image)))
+             ; Extract filename for dynamic text
+             (base-name (car (reverse (string-split filename #\/))))
+             (display-text (if (string=? text "FILENAME") 
+                              (substring base-name 0 (string-rindex base-name #\.))
+                              text))
+             (text-layer (car (gimp-text-fontname image -1 0 0 display-text 
+                                                 0 TRUE font-size PIXELS font-name))))
+        
+        ; Position text based on parameter
+        (let* ((text-width (car (gimp-drawable-width text-layer)))
+               (text-height (car (gimp-drawable-height text-layer)))
+               (x-pos (cond ((string=? position "bottom-center") 
+                            (/ (- width text-width) 2))
+                           ((string=? position "top-right") 
+                            (- width text-width 20))
+                           ((string=? position "bottom-left") 20)
+                           (else 20)))
+               (y-pos (cond ((string-ci=? position "bottom-center") 
+                            (- height text-height 20))
+                           ((string=? position "top-right") 20)
+                           ((string-ci=? position "bottom-left") 
+                            (- height text-height 20))
+                           (else 20))))
+          
+          (gimp-layer-set-offsets text-layer x-pos y-pos)
+          (gimp-text-layer-set-color text-layer color)
+          
+          ; Add subtle outline for readability
+          (gimp-layer-resize text-layer 
+                           (+ text-width 4) (+ text-height 4) 2 2)
+          
+          (let ((flattened (car (gimp-image-flatten image)))
+                (output-file (string-append output-dir "/captioned_" base-name)))
+            (gimp-file-save RUN-NONINTERACTIVE image flattened 
+                           output-file output-file)))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-text-overlay "/photos" "/captioned" "FILENAME" 24 "Arial Bold" '(255 255 255) "bottom-center")
+```
+
+**Key Learning**: Text manipulation, dynamic content generation, and string operations.
+
+---
+
+## 7. Multi-Filter Artistic Effects Pipeline
+
+**Problem Solved**: Applying consistent artistic treatments to create cohesive photo series.
+
+```scheme
+(define (batch-artistic-effect input-dir output-dir effect-type intensity)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image))))
+        
+        ; Apply different artistic effects based on parameter
+        (cond
+          ((string=? effect-type "vintage")
+           (begin
+             ; Sepia tone
+             (gimp-desaturate drawable 1)
+             (gimp-color-balance drawable TRANSFER-SHADOWS FALSE 20 -10 -20)
+             (gimp-color-balance drawable TRANSFER-HIGHLIGHTS FALSE 10 0 -15)
+             ; Vignette effect
+             (let ((vignette-layer (car (gimp-layer-copy drawable FALSE))))
+               (gimp-image-insert-layer image vignette-layer 0 0)
+               (plug-in-vignette RUN-NONINTERACTIVE image vignette-layer 
+                               TRUE 1.5 1.0 0.7 0.0))))
+          
+          ((string=? effect-type "oil-painting")
+           (plug-in-oilify RUN-NONINTERACTIVE image drawable 
+                          (* intensity 2) (* intensity 1)))
+          
+          ((string=? effect-type "pencil-sketch")
+           (begin
+             (gimp-desaturate drawable 1)
+             (let ((sketch-layer (car (gimp-layer-copy drawable FALSE))))
+               (gimp-image-insert-layer image sketch-layer 0 0)
+               (gimp-invert sketch-layer)
+               (plug-in-gauss RUN-NONINTERACTIVE image sketch-layer 
+                             intensity intensity TRUE)
+               (gimp-layer-set-mode sketch-layer DODGE-MODE))))
+          
+          ((string=? effect-type "pop-art")
+           (begin
+             (gimp-posterize drawable 6)
+             (gimp-hue-saturation drawable HUE-RANGE-ALL 0 0 30)
+             (plug-in-edge RUN-NONINTERACTIVE image drawable 
+                          2.0 1 0))))
+        
+        (let ((final-layer (car (gimp-image-flatten image)))
+              (output-file (string-append output-dir "/" effect-type "_" 
+                           (car (reverse (string-split filename #\/))))))
+          (gimp-file-save RUN-NONINTERACTIVE image final-layer 
+                         output-file output-file))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-artistic-effect "/photos" "/artistic" "vintage" 5)
+```
+
+**Key Learning**: Complex filter chains and parameter-driven effects.
+
+---
+
+## 8. Contact Sheet Generator
+
+**Problem Solved**: Creating photo galleries or proof sheets for client review.
+
+```scheme
+(define (batch-contact-sheet input-dir output-file cols rows spacing thumb-size)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}"))))
+         (sheet-width (+ (* cols thumb-size) (* (+ cols 1) spacing)))
+         (sheet-height (+ (* rows thumb-size) (* (+ rows 1) spacing)))
+         (contact-sheet (car (gimp-image-new sheet-width sheet-height RGB)))
+         (bg-layer (car (gimp-layer-new contact-sheet sheet-width sheet-height 
+                                       RGB-IMAGE "Background" 100 NORMAL-MODE)))
+         (current-col 0)
+         (current-row 0))
+    
+    (gimp-image-insert-layer contact-sheet bg-layer 0 0)
+    (gimp-context-set-background '(255 255 255))
+    (gimp-drawable-fill bg-layer BACKGROUND-FILL)
+    
+    (while (and (not (null? filelist)) (< current-row rows))
+      (let* ((filename (car filelist))
+             (thumb-img (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (thumb-layer (car (gimp-image-get-active-layer thumb-img)))
+             (thumb-width (car (gimp-drawable-width thumb-layer)))
+             (thumb-height (car (gimp-drawable-height thumb-layer)))
+             ; Calculate scaling to fit thumb-size
+             (scale-factor (min (/ thumb-size thumb-width) (/ thumb-size thumb-height)))
+             (new-width (* thumb-width scale-factor))
+             (new-height (* thumb-height scale-factor))
+             (x-pos (+ spacing (* current-col (+ thumb-size spacing)) 
+                      (/ (- thumb-size new-width) 2)))
+             (y-pos (+ spacing (* current-row (+ thumb-size spacing)) 
+                      (/ (- thumb-size new-height) 2))))
+        
+        ; Scale thumbnail
+        (gimp-image-scale thumb-img new-width new-height)
+        
+        ; Copy to contact sheet
+        (let ((copied-layer (car (gimp-layer-new-from-drawable 
+                                 (car (gimp-image-get-active-layer thumb-img)) 
+                                 contact-sheet))))
+          (gimp-image-insert-layer contact-sheet copied-layer 0 0)
+          (gimp-layer-set-offsets copied-layer x-pos y-pos))
+        
+        (gimp-image-delete thumb-img)
+        (set! current-col (+ current-col 1))
+        
+        ; Move to next row
+        (if (>= current-col cols)
+            (begin
+              (set! current-col 0)
+              (set! current-row (+ current-row 1))))
+        
+        (set! filelist (cdr filelist))))
+    
+    ; Flatten and save
+    (let ((final-layer (car (gimp-image-flatten contact-sheet))))
+      (gimp-file-save RUN-NONINTERACTIVE contact-sheet final-layer 
+                     output-file output-file))
+    
+    (gimp-image-delete contact-sheet)))
+
+; Usage: (batch-contact-sheet "/photos" "/contact_sheet.jpg" 4 3 10 200)
+```
+
+**Key Learning**: Complex layout algorithms and multi-image composition.
+
+---
+
+## 9. Metadata Embedder and Renamer
+
+**Problem Solved**: Organizing photo libraries with consistent naming and metadata.
+
+```scheme
+(define (batch-organize-photos input-dir output-dir prefix add-date add-size)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg}"))))
+         (counter 1))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (drawable (car (gimp-image-get-active-layer image)))
+             (width (car (gimp-image-width image)))
+             (height (car (gimp-image-height image)))
+             ; Build new filename
+             (new-name (string-append prefix "_"
+                       (if add-date 
+                           (string-append (strftime "%Y%m%d" (localtime (current-time))) "_")
+                           "")
+                       (if add-size
+                           (string-append (number->string width) "x" 
+                                        (number->string height) "_")
+                           "")
+                       (format #f "~3,'0d" counter) ".jpg")))
+        
+        ; Add metadata as EXIF data
+        (gimp-image-set-metadata image "Xmp.dc.creator" "Batch Processed")
+        (gimp-image-set-metadata image "Xmp.dc.rights" "Processed with GIMP")
+        (gimp-image-set-metadata image "Xmp.dc.description" 
+                               (string-append "Original: " 
+                                            (car (reverse (string-split filename #\/)))))
+        
+        (let ((output-file (string-append output-dir "/" new-name)))
+          (file-jpeg-save RUN-NONINTERACTIVE image drawable 
+                         output-file output-file 90 0 TRUE FALSE "" 0 TRUE 0 0))
+        
+        (gimp-image-delete image)
+        (set! counter (+ counter 1))
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-organize-photos "/unsorted" "/organized" "vacation" TRUE TRUE)
+```
+
+**Key Learning**: File operations, metadata handling, and systematic naming.
+
+---
+
+## 10. Advanced Layer Blending Processor
+
+**Problem Solved**: Creating complex composite effects by blending multiple processing layers.
+
+```scheme
+(define (batch-advanced-blend input-dir output-dir blend-mode strength unsharp)
+  (let* ((filelist (cadr (file-glob (string-append input-dir "/*.{jpg,jpeg,png}")))))
+    (while (not (null? filelist))
+      (let* ((filename (car filelist))
+             (image (car (gimp-file-load RUN-NONINTERACTIVE filename filename)))
+             (base-layer (car (gimp-image-get-active-layer image))))
+        
+        ; Create multiple processing layers
+        (let* ((contrast-layer (car (gimp-layer-copy base-layer FALSE)))
+               (color-layer (car (gimp-layer-copy base-layer FALSE)))
+               (detail-layer (car (gimp-layer-copy base-layer FALSE))))
+          
+          ; Insert layers
+          (gimp-image-insert-layer image contrast-layer 0 0)
+          (gimp-image-insert-layer image color-layer 0 0)
+          (gimp-image-insert-layer image detail-layer 0 0)
+          
+          ; Process contrast layer
+          (gimp-curves-spline contrast-layer HISTOGRAM-VALUE 8 
+                            #(0 0 64 70 192 185 255 255))
+          (gimp-layer-set-mode contrast-layer OVERLAY-MODE)
+          (gimp-layer-set-opacity contrast-layer (/ strength 2))
+          
+          ; Process color layer
+          (gimp-hue-saturation color-layer HUE-RANGE-ALL 0 0 15)
+          (gimp-color-balance color-layer TRANSFER-MIDTONES TRUE 0 -5 5)
+          (gimp-layer-set-mode color-layer 
+                              (cond ((string=? blend-mode "vivid") VIVID-LIGHT-MODE)
+                                   ((string=? blend-mode "soft") SOFT-LIGHT-MODE)
+                                   ((string=? blend-mode "overlay") OVERLAY-MODE)
+                                   (else NORMAL-MODE)))
+          (gimp-layer-set-opacity color-layer strength)
+          
+          ; Process detail layer for sharpening
+          (if unsharp
+              (begin
+                (plug-in-unsharp-mask RUN-NONINTERACTIVE image detail-layer 
+                                     1.5 1.0 0)
+                (gimp-layer-set-mode detail-layer OVERLAY-MODE)
+                (gimp-layer-set-opacity detail-layer 30)))
+          
+          ; Create layer mask for edge protection
+          (let ((mask (car (gimp-layer-create-mask detail-layer ADD-WHITE-MASK))))
+            (gimp-layer-add-mask detail-layer mask)
+            (plug-in-gauss RUN-NONINTERACTIVE image mask 2.0 2.0 TRUE))
+          
+          ; Flatten and save
+          (let ((final-layer (car (gimp-image-flatten image)))
+                (output-file (string-append output-dir "/enhanced_" 
+                             (car (reverse (string-split filename #\/))))))
+            (gimp-file-save RUN-NONINTERACTIVE image final-layer 
+                           output-file output-file)))
+        
+        (gimp-image-delete image)
+        (set! filelist (cdr filelist))))))
+
+; Usage: (batch-advanced-blend "/photos" "/enhanced" "vivid" 40 TRUE)
+```
+
+**Key Learning**: Advanced layer management, blend modes, and masking techniques.
+
+---
+
+## Implementation Guide
+
+### Setting Up Scripts
+
+1. **Save Location**: Place scripts in `~/.gimp-2.10/scripts/` (Linux/Mac) or `%APPDATA%\GIMP\2.10\scripts\` (Windows)
+
+2. **Refresh Scripts**: Use Filters ? Script-Fu ? Refresh Scripts or restart GIMP
+
+3. **Run Scripts**: Access via Filters ? Script-Fu ? Console, then call function with parameters
+
+### Common Patterns Explained
+
+- **File Iteration**: Using `file-glob` for pattern matching and `while` loops for processing
+- **Memory Management**: Always call `gimp-image-delete` to prevent memory leaks
+- **Error Handling**: Wrap file operations in condition checks
+- **Parameter Flexibility**: Use conditional logic for optional features
+
+### Performance Tips
+
+- Process images in order of complexity (simple operations first)
+- Use `RUN-NONINTERACTIVE` mode to suppress dialogs
+- Consider image dimensions when setting buffer sizes
+- Test on small batches before running on thousands of files\

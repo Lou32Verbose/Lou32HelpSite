@@ -1,0 +1,39 @@
+==============================================
+	  LOU32 HELP MODULE DOCUMENT
+	  <><><><><><><><><><><><><>
+==============================================
+  MODULE= ChangeProductKey_Console_Win11
+==============================================
+1. METHOD TO CHANGE PRODUCT KEY VIA ADMIN COMMAND PROMPT
+
+# Open Command Prompt as Administrator
+# Enter and run this command:
+
+slmgr /ipk <your-product-key-here>
+
+# If Windows 11 doesn't active itself instantly, enter the following to force the activation process:
+
+slmgr.vbs -ato
+
+==============================================
+2. METHOD TO CHANGE PRODUCT KEY VIA SETTINGS APP
+
+# If all else fails, you can alternatively use the Settings app to change the product key via GUI 
+
+# Instructions For Changing Product Key In Settings: 
+
+1. Win+I to open settings
+2. Choose System
+3. Under System, click Activation
+4. On this page, click Change under "Change Product Key"
+5. Enter your product key in the pop-up dialog that will open
+
+That's it.
+
+==============================================
+End Of Lou32 Help Module Document. 
+
+
+
+
+

@@ -1,0 +1,10 @@
+===============================================================
+::               LOU32 HELP MODULE DOCUMENT                  ::
+===============================================================
+:: YT-DLP YOUTUBE MUSIC PLAYLIST DOWNLOAD ONE-LINER TEMPLATE ::
+===============================================================
+
+yt-dlp --ignore-errors --yes-playlist --format bestaudio --extract-audio --audio-format mp3 --audio-quality 0 --output "%(playlist_index)02d - %(title)s.%(ext)s" "<insert-url>"
+
+===============================================================
+END OF LOU32 HELP MODULE DOCUMENT.

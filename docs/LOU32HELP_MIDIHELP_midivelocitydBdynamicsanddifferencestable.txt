@@ -1,0 +1,61 @@
+=======================================================
+:: LOU32 HELP MODULE DOCUMENT
+=======================================================
+:: MIDI VELOCITY, DB, DYNAMICS AND DIFFERENCES TABLE ::
+=======================================================
+
+MIDI Velocity, dB, Dynamics, dB% and Differences Table
+   
+In this table: Velocity, dB, Dynamics and diff. values are in cross-comparison.
+
+              v············ top2botm ············v 
+             +---------------------+------------------------+
+             |    real decibels    | SF2 attenuations (144) |
+  +----+-----+------+-----+--------+------------------------|
+  | *1 |     |      |     |        |cumula-|differ-|reverse |
+  |vel.| dyn.|  dB  |dB(%)|diff(dB)| -tive | -ence |  diff. |
+  |----+-----+------+-----+--------+-------+-------+--------|
+  | 127| fff |   0.0| 100 |     0  |     0 |     0 |   -5.5 |
+f | 112| ff  |  -2.2|  86 |  -2.2  |   5.5 |   5.5 |   -6.8 |
+  |  96| f   |  -4.9|  71 |  -2.7  |  12.3 |   6.8 |   -7.7 |
+  |  80| mf  |  -8.0|  57 |  -3.1  |  20.0 |   7.7 |   -9.8 |
+m |....|.....|......|.....|........|.......|.......|........| mezzo(*2)
+  |  64| mp  | -11.9|  44 |  -3.9  |  29.8 |   9.8 |  -12.5 |
+  |  48| p   | -16.9|  31 |  -5.0  |  42.3 |  12.5 |  -17.5 |
+p |  32| pp  | -23.9|  19 |  -7.0  |  59.8 |  17.5 |  -30.2 |
+  |  16| ppp | -36.0|   8 | -12.1  |  90.0 |  30.2 |  -54.0 |
+  |   0|-off-| -57.6|   0 | -21.6  | 144.0 |  54.0 |      0 |
+  +----+-----+------+-----+--------+-------+-------+--------+
+     *3                                            ^\ botm /^      
+                                                     \2top/ 
+
+* diff. shows the difference between two successive values;
+  ordered by top to bottom.
+
+
+Please note:
+MIDI velocity (V) values are linear. // n+16
+dB calculations are logarithmic. // dB = 40 log (V/127)
+Musical dynamics are average values.
+
+
+ 1 : Because of the "Velocity:0" means "Note-Off" at the same time, there is a difficulty in calculating the dynamic range from 1 to 127.
+
+If this range was 128, the calculation could be very easy. But the maximum value of the 7bit is 127.
+We also do not have a chance to reach 128 because we exclude the zero value from the calculation.
+
+So I made a correction on the very top point ("fff" area)
+
+
+*2 (mid. point): Between the values "mp" and "mf" there is should have (theoretically) an imaginary a "m" (mezzo) value (but not used anywhere). The velocity value of this dynamic is 72 = -10dB =  50% // Notice: The Band-in-a-box software uses 72 as the default velocity value.
+
+
+*3 (maximums) : 0=off, 1-16 = "ppp", 17-32 = "pp", ... ,  64-79 = "mf", ... , 112-127 = "fff"
+
+to get real "zero" decibel:
+
+in MIDI:  master volume: 127, expression: 127
+in Audio: the master volume of your mixer must be set (tuned) accordingly.
+
+======================================================
+END OF LOU32 HELP MODULE DOCUMENT.

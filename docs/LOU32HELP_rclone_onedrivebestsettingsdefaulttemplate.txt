@@ -1,0 +1,11 @@
+=====================================
+:: LOU32 HELP MODULE DOCUMENT ::
+=====================================
+:: rclone OneDrive Best Settings ::
+=====================================
+:: When using "rclone copy" with OneDrive, the following are default best settings:
+
+--transfers=4 --checkers=4 --tpslimit=8 --tpslimit-burst=8 --retries=8 --low-level-retries=20 --timeout=5m --contimeout=30s --fast-list --use-server-modtime --buffer-size=32M --multi-thread-streams=8 --multi-thread-cutoff=16M --no-traverse --progress --update 
+
+======================================
+END OF LOU32 HELP MODULE DOCUMENT.

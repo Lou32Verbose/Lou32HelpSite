@@ -1,0 +1,10 @@
+==========================================
+::REPAIR WINDOWS STORE APPS VIA POWERSHELL
+==========================================
+
+::Run the following command in an elevated Powershell console:
+
+Get-AppXPackage | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"} 
+
+==========================================
+End of Lou32 Help Module Document.

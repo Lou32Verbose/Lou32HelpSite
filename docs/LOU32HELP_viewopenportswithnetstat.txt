@@ -1,0 +1,34 @@
+================================
+:: LOU32 HELP MODULE DOCUMENT ::
+================================
+:: VIEW OPEN PORTS W/ NETSTAT ::
+================================
+
+1. Open Command Prompt or PowerShell:
+
+Can be run in either, Administrator privileges not necessary.
+
+2. Run netstat commands:
+
+	netstat -a: Lists all active connections and listening ports.
+	
+	netstat -ano: Lists all active connections and listening ports, including the PID. 
+	
+	netstat -ab: Lists all active connections and listening ports, including the executable involved. 
+
+3. Interpret the output:
+
+	Local Address: Shows the local IP address and port number. The port number is the number after the colon (e.g., 	192.168.1.100:80 means port 80). 
+	
+	State: Indicates the state of the connection, with LISTENING being the most relevant for identifying open ports. 
+	
+	PID: The Process ID (appears when using -ano). This allows you to identify which application is using the port. 
+
+4. Identify the application:
+
+To find the application using a specific port, use the command tasklist /FI "PID eq <PID_number>" after identifying the PID in the netstat -ano output. 
+
+For example, if you found a PID of 1234, you would use tasklist /FI "PID eq 1234". 
+
+=========================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,25 @@
+
+#Open the Group Policy Management Console (gpmc.msc) and switch to editing an existing policy or creating a new one.
+
+#Navigate to <Computer/Computer Configuration>\Administrative Templates\Classic Administrative Templates (ADM)\Microsoft Edge\Default search provider.
+
+# Default Search Provider Name: 
+Google
+
+# Default Search Provider Search URL:
+{google:baseURL}search?q={searchTerms}&{google:RLZ}{google:originalQueryForSuggestion}{google:assistedQueryStats}{google:searchFieldtrialParameter}{google:searchClient}{google:sourceId}ie={inputEncoding}
+
+# Default Search Provider URL for Suggestions:
+{google:baseURL}complete/search?output=chrome&q={searchTerms}
+
+# Enable the default search provider: 
+Enabled
+
+# Parameters for an image URL that uses POST: 
+encoded_image={google:imageThumbnail},image_url={google:imageURL},sbisrc={google:imageSearchSource},original_width={google:imageOriginalWidth},original_height={google:imageOriginalHeight}
+
+# Specifies the search-by-image feature for the default search provider: 
+{google:baseURL}searchbyimage/upload
+
+# Configure the new tab page search box experience:
+Address bar

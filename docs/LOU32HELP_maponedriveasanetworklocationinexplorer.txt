@@ -1,0 +1,30 @@
+===============================================
+::        LOU32 HELP MODULE DOCUMENT         ::
+===============================================
+:: MAP ONEDRIVE AS NETWORK DRIVE IN EXPLORER ::
+===============================================
+:: 1. Get your OneDrive CID: 
+	
+	Log into OneDrive.com and copy the CID from the address bar (it's the long string after https://d.docs.live.net/). 
+
+:: 2. Open File Explorer: 
+	
+	Navigate to This PC or My Computer in File Explorer. 
+
+:: 3. Map network drive: 
+	
+	Click on the "Computer" tab, then "Map network drive". 
+
+:: 4. Enter the OneDrive URL: 
+	
+	In the folder field, enter https://d.docs.live.net/<LONG_CID_NUMBER> (replacing <LONG_CID_NUMBER> with your actual CID). 
+
+:: 5. Connect with credentials: 
+	
+	Check the "Connect using different credentials" box. 
+
+:: 6. Finish: 
+	
+	Click "Finish" and enter your OneDrive credentials when prompted.
+===========================================================================
+END OF LOU32 HELP MODULE DOCUMENT. 

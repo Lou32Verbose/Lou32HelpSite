@@ -1,0 +1,15 @@
+GOOGLE SEARCH OPERATIONS == EXAMPLES & REFERENCE
+
+EX. LOOKING FOR VIDEOS OF CHERNOBYL
+intext:"chernobyl" intitle:"index.of"  (wmv|mpg|avi|mp4|mkv|mov) -inurl:(jsp|pl|php|html|aspx|htm|cf|shtml)
+
+
+
+
+
+
+
+
+
+
+

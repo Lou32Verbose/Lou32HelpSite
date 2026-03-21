@@ -1,0 +1,12 @@
+=====================================================
+::           LOU32 HELP MODULE DOCUMENT            ::
+=====================================================
+:: POWERSHELL COMMAND TO GRAB ALL URLS FROM A PAGE ::
+=====================================================
+:: Example PowerShell command to grab all urls from a given page [by URL]:
+
+$URI = 'www.insert.yoururl.com'
+(Invoke-WebRequest -URI $URI).links.href | Select-Object -Unique | ForEach-Object {if ($_ -match '(^/|^#)') {$URI + $_} else {$_}}
+
+=====================================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,21 @@
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+<><><><><><><><><>	GET-ITEM PROPERTY == FILE PROPERTIES == LOU32HELP	<><><><><><><><><><><><><><>
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+#    The Get-ItemProperty cmdlet can be used to get the properties of all the items at a specified path:
+
+Get-ItemProperty -Path C:\Users\louis\www.fontsupply.com\fonts\arvigo.ttf | Get-Member -MemberType property
+
+#    After this, we can access the specific file properties 
+
+	$file = get-childItem C:\Users\HP\OneDrive\Desktop\pro1.txt
+	$file.name
+	pro1.txt
+	$file.extension
+	.txt
+	$file.length
+	389
+	$file.basename
+	pro1
+
+============================================================================================================

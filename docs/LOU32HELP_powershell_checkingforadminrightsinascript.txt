@@ -1,0 +1,15 @@
+=============================================================
+:: LOU32 HELP MODULE DOCUMENT ::
+=============================================================
+:: POWERSHELL - HOW TO INSERT A CHECK FOR ADMIN PRIVILIGES ::
+=============================================================
+:: EXAMPLE OF CHECKING FOR ADMIN PRIVILIGES IN A SCRIPT:
+
+    # Check if running as admin
+    if (-not ([bool](New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) {
+        Write-Error "This script must be run as an administrator."
+        exit 1
+    }
+	
+=============================================================
+END OF LOU32 HELP MODULE DOCUMENT.

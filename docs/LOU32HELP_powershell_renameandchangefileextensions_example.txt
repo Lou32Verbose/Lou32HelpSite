@@ -1,0 +1,12 @@
+================================================
+:: 	  LOU32 HELP MODULE DOCUMENT          ::
+================================================
+:: POWERSHELL - RENAME/CHANGE FILE EXTENSIONS ::
+================================================
+
+:: The following pipeline changes files with a .jpg extension to a file with a .jpeg extension in the current directory:
+
+foreach ($file in gci *.jpg) { mv $file "$($file.basename).jpeg" }
+
+=================================================
+END OF LOU32 HELP MODULE DOCUMENT.

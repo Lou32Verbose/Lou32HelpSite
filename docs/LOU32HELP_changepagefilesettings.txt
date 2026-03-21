@@ -1,0 +1,9 @@
+POWERSHELL SCRIPT: 
+unchecks the Automatically manage paging file size for all drives checkbox at the top, removes the paging file for drive D: and sets the paging file for drive C: to system managed.
+
+#untick the checkbox at the top
+gwmi Win32_ComputerSystem -EnableAllPrivileges |%{$_.AutomaticManagedPagefile=$False;$_.Put()} |Out-Null
+#remove pagefile for drive D:
+(gwmi win32_pagefilesetting |?{$_.name="D:\pagefile.sys"}).Delete()
+#set pagefile for drive C: to system managed
+swmi -Class Win32_PageFileSetting -Arguments @{name="C:\pagefile.sys";InitialSize=0;MaximumSize=0} -EnableAllPrivileges |Out-Null

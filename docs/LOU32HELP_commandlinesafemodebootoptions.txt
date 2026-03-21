@@ -1,0 +1,19 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+::  Command Line Safe Mode Boot Options     ::
+==============================================
+:: 
+
+    bcdedit /set {current} safeboot minimal
+
+    bcdedit /set {current} safeboot network
+
+    bcdedit /set {current} safeboot minimal
+    bcdedit /set {current} safebootalternateshell yes
+
+:: To boot back to normal mode, run the following command after you've finished in Safe Mode:
+
+    bcdedit /deletevalue {current} safeboot
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

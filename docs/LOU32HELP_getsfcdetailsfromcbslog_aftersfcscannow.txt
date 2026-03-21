@@ -1,0 +1,10 @@
+==========================================
+        LOU32 HELP MODULE DOCUMENT
+==========================================
+
+#Run this in an elevated Command Prompt after you've run SFC to view sfcdetails.txt (from the cbs.log file):
+
+findstr /c:"[SR]" %windir%\Logs\CBS\CBS.log >"%userprofile%\Desktop\sfcdetails.txt" 
+
+==========================================
+END OF LOU32 HELP MODULE DOCUMENT.

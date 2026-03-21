@@ -1,0 +1,14 @@
+==============================================
+::       LOU32 HELP MODULE DOCUMENT         ::
+==============================================
+::  POWERSHELL - EXPORT START MENU LAYOUT   ::
+==============================================
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+:: POWERSHELL COMMAND TO EXPORT YOUR START MENU LAYOUT TO JSON FILE 
+:: NOTE: JSON File Is Only For Windows 11. For Windows 10, an XML File Is Used For Start Menu Configuration.
+
+Export-StartLayout -Path "C:\LouTemp32\layoutmodification.json"
+
+:: For the "-Path" variable, add whatever folder you like, but make sure to name the file "layoutmodification.json".
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

@@ -1,0 +1,1 @@
+((gp "HKCU:\Software\Classes\Local Settings\Software\Microsoft\Windows\Shell\BagMRU").Nodeslots).count

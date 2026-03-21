@@ -1,0 +1,3 @@
+EMERGENCY COMMAND TO ERADICATE ADOBE FROM YOUR COMPUTER
+
+msiexec /x AcroRead.msi /qn /norestart

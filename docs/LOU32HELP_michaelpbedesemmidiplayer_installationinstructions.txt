@@ -1,0 +1,22 @@
+=============================================================
+ Lou32 Help Module Document -- Michael P. Bedesem MidiPlayer
+=============================================================
+ INSTALLATION INSTRUCTIONS FOR MICHAEL P. BEDESEM MIDIPLAYER
+=============================================================
+First:
+
+    Use Start/Control Panel/Uninstall and remove all exiting versions.
+    Download the midiplayer full package (version 7.1.6).
+    Unzip to an empty folder.
+    Right click on Setup.exe and select Run as Administrator. When prompted, please accept the default file location, and do not allow replacing newer files with older ones.
+
+=====================================
+
+Then, update to the latest version:
+
+    Download the midiplayer_update package version 8.3.1.
+    Unzip to an empty folder.
+    Copy the files to the C:\Program Files\MidiPlayer folder. When prompted, please allow the operating system to replace older files.
+
+=====================================
+End-Lou32HelpModuleDocument

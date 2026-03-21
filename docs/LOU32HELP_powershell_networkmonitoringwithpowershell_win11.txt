@@ -1,0 +1,103 @@
+﻿================================================================================================================================
+:: LOU32 HELP MODULE DOCUMENT 
+================================================================================================================================
+:: MONITORING NETWORK TRAFFIC WITH POWERSHELL [WINDOWS 11]
+================================================================================================================================
+
+# Why Monitor Network Traffic with PowerShell?
+
+# Network traffic monitoring is critical for understanding the performance and behavior of your network. This includes observing bandwidth usage, detecting traffic anomalies, and identifying potential security threats. While traditional GUI tools can provide insights, PowerShell offers a level of flexibility and automation that is perfect for advanced monitoring tasks.
+
+# Key reasons to use PowerShell for network traffic monitoring include:
+
+# Real-Time Data: Instantly view live traffic data for better decision-making.
+# Automation: Schedule monitoring tasks to run at regular intervals.
+# Customization: Filter and format traffic data to meet specific network management needs.
+# Detailed Insights: Gather information that might not be available through standard GUI monitoring tools.
+================================================================================================================================
+
+## 1. Monitoring Network Adapter Traffic
+# One of the simplest yet most effective ways to monitor network traffic is to gather statistics from a network adapter. PowerShell provides the Get-NetAdapterStatistics command to easily retrieve this information.
+
+Get-NetAdapterStatistics -Name "Ethernet"
+This command displays statistics for the Ethernet adapter, including details such as the number of bytes sent and received, discarded packets, and errors.
+
+# You can modify this command to monitor different adapters by changing the -Name parameter to match the adapter you're interested in.
+================================================================================================================================
+
+## 2. Real-Time Network Traffic Monitoring
+
+# In some situations, you'll want to monitor traffic continuously to detect ongoing issues or performance drops. PowerShell allows you to easily loop traffic statistics to observe changes in real time.
+
+
+while ($true) {
+    Get-NetAdapterStatistics -Name "Ethernet"
+    Start-Sleep -Seconds 2
+}
+
+# This command updates the traffic statistics every 2 seconds, giving you a live view of the data being sent and received by the Ethernet adapter. You can adjust the Start-Sleep interval to fit your needs, whether you want more frequent updates or a slower refresh rate.
+================================================================================================================================
+
+## 3. Tracking Active TCP Connections
+#Understanding the active connections on your machine is vital for monitoring what kind of traffic is moving through your network. PowerShell's Get-NetTCPConnection command allows you to view all active TCP connections.
+
+Get-NetTCPConnection | Sort-Object State | Format-Table
+
+# This command lists all TCP connections on your system, providing details such as local and remote addresses, connection state, and port numbers. Sorting by the connection state gives you a clearer overview of active and established connections, as well as any connections in the closing or time-wait state.
+# To filter for specific connections, you can modify the command like this:
+
+Get-NetTCPConnection -State Established | Format-Table
+
+# This filters the results to show only established connections, which are critical for understanding active data flows.
+================================================================================================================================
+
+## 4. Monitoring Bandwidth Usage
+# If you're concerned about bandwidth usage, PowerShell offers a way to track the number of bytes sent and received by your network adapters.
+
+$before = Get-NetAdapterStatistics -Name "Ethernet"
+Start-Sleep -Seconds 10
+$after = Get-NetAdapterStatistics -Name "Ethernet"
+$bytesReceived = $after.ReceivedBytes - $before.ReceivedBytes
+$bytesSent = $after.SentBytes - $before.SentBytes
+Write-Output "Bytes received: $bytesReceived"
+Write-Output "Bytes sent: $bytesSent"
+
+# This script captures the number of bytes sent and received over a 10-second period and then outputs the results. 
+# You can adjust the Start-Sleep command to measure bandwidth over a longer or shorter timeframe. 
+# This is useful for identifying bandwidth bottlenecks or monitoring usage during heavy network activity.
+================================================================================================================================
+
+## 5. Analyzing Network Performance Issues
+# Network performance problems, such as high latency or packet loss, can be diagnosed by using PowerShell to test the performance of your network interfaces.
+# To test the speed of your network adapter:
+
+Get-NetAdapter | Select-Object Name, LinkSpeed
+
+This command shows the name and link speed of each network adapter, helping you verify whether your adapter is running at the correct speed for optimal performance. If you're noticing slow network speeds, this is a quick way to rule out link speed as the issue.
+================================================================================================================================
+
+## 6. Monitoring Open Ports for Traffic
+# Open ports can serve as an entry point for unwanted traffic. By monitoring which ports are open and the amount of traffic moving through them, you can enhance network security and performance.
+
+Get-NetTCPConnection | Where-Object { $_.State -eq 'Listen' } | Format-Table LocalPort, LocalAddress
+
+# This command lists all ports currently in the Listen state, giving you a snapshot of the services or applications that are actively waiting for incoming connections. 
+# Monitoring open ports helps you detect unauthorized services or vulnerabilities in your network.
+================================================================================================================================
+
+## 7. Automating Network Traffic Reports
+#For ongoing monitoring, automating the collection and reporting of network traffic data is essential. PowerShell allows you to set up scheduled tasks that can run these monitoring scripts and save or send the results.
+
+$trigger = New-ScheduledTaskTrigger -Daily -At 6:00AM
+$action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument 'Get-NetAdapterStatistics -Name "Ethernet" | Out-File -FilePath C:\NetworkLogs\DailyTraffic.txt'
+Register-ScheduledTask -Action $action -Trigger $trigger -TaskName "Daily Network Traffic Monitoring"
+
+# This script schedules a daily task that runs at 6:00 AM, logs the network adapter statistics, and saves the output to a text file. Automating tasks like this allows you to maintain a historical record of network performance and activity.
+================================================================================================================================
+
+## Conclusion
+# Network traffic monitoring is critical for maintaining optimal performance, detecting security threats, and troubleshooting issues in real time. PowerShell in Windows 11 provides the tools to go beyond basic monitoring, giving you powerful and customizable options for managing your network traffic efficiently.
+# By mastering these PowerShell commands, you'll be able to gain a deeper understanding of your network's performance, detect issues early, and automate the monitoring process for ongoing insights. This level of control is invaluable for network administrators and power users alike, ensuring your network runs smoothly and securely.
+
+================================================================================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

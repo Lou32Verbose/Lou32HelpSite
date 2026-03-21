@@ -1,0 +1,35 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+::    INSTALLING FONTS VIA COMMAND LINE     ::
+==============================================
+
+:: Copying alone won't install the font: you also need to register the font, e.g.
+
+copy "FontName.ttf" "%WINDIR%\Fonts"
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts" /v "FontName (TrueType)" /t REG_SZ /d FontName.ttf /f
+
+:: Alternatively you can the following lines of code to suit your needs; save it as a .vbs file and then execute it.
+
+Set objShell = CreateObject("Shell.Application")
+Set objFolder = objShell.Namespace("<Folder or Share Location>")
+Set objFolderItem = objFolder.ParseName("<TTF File Name>")
+objFolderItem.InvokeVerb("Install")
+
+:: Example:
+
+Set objShell = CreateObject("Shell.Application")
+Set objFolder = objShell.Namespace("C:\Windows\Font")
+Set objFolderItem = objFolder.ParseName("Myriad Pro.ttf")
+objFolderItem.InvokeVerb("Install")
+
+:: Yet another alternative is to install fonts "temporary", just for current user session. The idea is to run fontview.exe for each font, which makes it available for other Windows applications:
+
+for /F "delims=;" %%a in ('dir C:\ExtraFonts /B /A-D-H-S /S') do fontview %%a
+
+:: FURTHER DISCUSSION FOUND AT THE FOLLOWING LINK:
+
+http://www.msfn.org/board/topic/28300-installing-fonts-temporarly/page__view__findpost__p__194037
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

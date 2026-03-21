@@ -1,0 +1,12 @@
+DISABLE TABLET MODE LENOVO ERROR 
+
+# IN ELEVATED COMMAND PROMPT:
+
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\PriorityControl“ /v ConvertibleSlateMode /t REG_DWORD /d 1
+
+# THIS SEEMS TO BE AN OUTDATED KEY BUT COULD BE HELPFUL TO HAVE IN THE FUTURE IF NEEDED, AS IT IS ALSO A RELATED SETTING: 
+
+reg add “HKLM\System\CurrentControlSet\Control\PriorityControl” /v ConvertibilityEnabled /t REG_DWORD /d 0
+
+
+

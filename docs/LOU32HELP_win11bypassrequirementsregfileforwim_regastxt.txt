@@ -1,0 +1,22 @@
+Windows Registry Editor Version 5.00
+
+; Enable Insider 'BETA' Channel Requirements
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\Applicability]
+"BranchName"="Beta"
+"Ring"="External"
+"ContentType"="Mainline"
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\UI\Selection]
+"UIBranch"="Beta"
+"UIRing"="External"
+"UIContentType"="Mainline"
+
+; Bypass CPU Ram SecureBoot TPM 2.0 ^& Storage Checks
+[HKEY_LOCAL_MACHINE\SYSTEM\Setup\LabConfig]
+"BypassTPMCheck"=dword:00000001
+"BypassSecureBootCheck"=dword:00000001
+"BypassRAMCheck"=dword:00000001
+"BypassStorageCheck"=dword:00000001
+
+[HKEY_LOCAL_MACHINE\SYSTEM\Setup\MoSetup]
+"AllowUpgradesWithUnsupportedTPMOrCPU"=dword:00000001

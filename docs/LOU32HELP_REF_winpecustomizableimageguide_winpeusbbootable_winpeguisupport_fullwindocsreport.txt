@@ -1,0 +1,255 @@
+===============================
+:: LOU32HELP MODULE DOCUMENT ::
+===============================
+
+=======================================
+
+:: LOU32HELP MODULE REFERENCE DOCUMENT 
+---------------------------------------
+
+:: $DWinPE Bootable ISO - Custom WinPE Boot USB Creation Reference Doc ::
+:: #Help_TOPIC_PARENT = <WinPE>
+:: $Enum-ParentTopic_ChildItem :: [$ParentTopic]_.Child-Items} = <WINADK ADD-ON PACKS INSTALL>;<WINPE IMAGE EDITING W/ DISM>;<ADDING GUI SUPPORT TO WINPE>
+=======================================================================
+:: TARGETOS= "Windows 11 [Home, Pro, Enterprise, Education]"
+:: l32help_docID= L32KB_REF_WinDeploy_Winver=Win11_.[H,P,En,Ed]_.{BroadChannel,LTSC,IoT-LTSC}_.{$CurrVer= "Win11_24H2_Lou32Help-FullOSHelpSupportVersioning_EnhancedUserExperienceSuboptimalityMitigationEngine_5YEAR+1-ENTERPRISE-ExtEoL_Lou32Help_WinOS-OptimalEndUserMigrationProvide_.[Lou32HelpModule_ProHelp_EnterpriseModularArchitectureDocumentLibrary_HelpModule_TransitionalSuppYearGaurantee-FullServiceChannel:
+# Creating a GUI-Enabled WinPE Bootable USB for Windows 11 Rescue and Deployment
+## Introduc offers only a lla CLI interlackingis a , as the OS is intended only for system adminstratice purposes lightweight Windows OS used for system deployment, troubleshooting, and recovery. By default, WinPE offers only a CLI interface, lacking any GUI support, as the OS is intended only for system adminstratice purposes .
+:: However, you can customize a WinPE bootable USB with additional GUI tools and all official Microsoft WinPE optional components to better support **Windows 11 Home** emergency recovery 
+:: (e.g. preventing data loss, rescuing files from corrupt drives) and operating system deployment. This guide walks through using the latest Windows Assessment and Deployment Kit (ADK) and WinPE Add-on (as of May 2025) to build a WinPE USB that includes a basic GUI file explorer and **all relevant WinPE optional packages** for a full-featured recovery and installation environment. We will focus on officially supported components and methods provided by Microsoft for Windows 11.
+
+---
+
+## Prerequisites and Tools
+
+- **Windows ADK for Windows 11** (latest version). Download and install the Windows ADK tools. *As of December 2024, the current ADK version is 10.1.26100.2454*, which supports Windows 11 version 24H2 and earlier. This ADK version requires a separate WinPE add-on package for WinPE files.
+- **Windows PE Add-on for ADK**. After installing the ADK core tools, download and install the matching WinPE add-on (for ADK 10.1.26100.2454) to obtain the WinPE image and optional components. *Note:* Starting with Windows 11 ADK for version 22H2, 32-bit (x86) WinPE is no longer provided. You must use 64-bit (AMD64) WinPE for Windows 11 (or ARM64 for ARM devices).
+- **Development PC** running Windows (Windows 10 or 11) with administrator privileges to build the WinPE image, wit
+- **USB flash drive** (at least 1 GB) for the bootable media. *Warning:* The drive will be formatted during creation.
+- **Internet connection** (to download ADK installers and any tools like a portable file manager for GUI).
+
+Make sure to install **Windows ADK (Deployment Tools)** first, then the **WinPE Add-on**. The ADK Deployment Tools include utilities (like DISM, `copype`, and `MakeWinPEMedia`) used to create and customize WinPE. During ADK setup, you can choose to install just the *Deployment Tools* feature if you only need WinPE building tools (you don’t need the assessment or testing tools for our purposes). After ADK installation, install the WinPE add-on to get the WinPE base image and optional components.
+
+---
+
+## Creating the WinPE Working Image
+
+Once the ADK and WinPE add-on are installed, you can generate a WinPE working set of files:
+
+1. **Open the ADK Deployment Tools command prompt:** Launch the **Deployment and Imaging Tools Environment** as an administrator. This is a special command prompt (or run `DandISetEnv.bat`) that sets up the proper environment variables.
+
+2. **Run CopyPE to create WinPE files:** Use the `copype` command to create a WinPE working directory. For example, to create a 64-bit (amd64) WinPE image, run: 
+
+   ```
+   copype.cmd amd64 C:\WinPE_amd64
+   ``` 
+
+   This copies the WinPE base image and supporting files into `C:\WinPE_amd64`. (You can choose a different path if desired; ensure the target directory does **not** already exist.) After this, the directory `C:\WinPE_amd64` will contain a **WinPE image (boot.wim)** under `Media\Sources\boot.wim`, a `Mount` folder for editing, and other files.
+
+3. **(Optional) Create an ARM64 WinPE:** If you need an ARM64 WinPE (for ARM-based PCs), specify `arm64` in the `copype` command. For Windows 11 on typical PCs, `amd64` is used. If using ARM64 WinPE and you want to run 64-bit applications under it, note there is an optional package **WinPE-x64-Support** that enables x64 emulation on ARM64 WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+At this point, you have a bare-bones WinPE image that can boot, but it includes only a basic command shell with no extra features or GUI. By default it has only the base OS files, a single language (en-US if using the default), and minimal drivers. Next, we will add optional components to provide GUI support and additional tools.
+
+---
+
+## WinPE Optional Components Overview (Windows 11 ADK)
+
+Microsoft provides numerous **WinPE Optional Components (OC)** in the ADK WinPE add-on, which can be added to the WinPE image to enhance its capabilities](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). These come as `.cab` packages (located under `C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\<arch>\WinPE_OCs\` after installing the WinPE add-on](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11)). All optional components must match the WinPE image architecture (amd64 or arm64) and same ADK version](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). Below is a breakdown of the official WinPE optional packs (as of the latest ADK) and what functionality they add:
+
+- **WinPE-MDAC (Database support):** Adds Microsoft Open Database Connectivity (ODBC), OLE DB, and ActiveX Data Objects for database access. Useful if you need WinPE to interface with SQL or other databases](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11) (more relevant for advanced deployment scripts than typical recovery scenarios).
+
+- **WinPE-FMAPI (File Management APIs):** Provides the Windows PE File Management API, which allows discovery and **restoration of deleted files** on NTFS volumes](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This is particularly useful for data recovery – it even supports using BitLocker recovery keys or passwords to find deleted files on BitLocker-encrypted drives](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+- **WinPE-Fonts** (Legacy and Font Support packages): Includes additional fonts for various languages or legacy script support](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). If you will use WinPE in multiple languages or need non-English UI text, add the relevant font packs (e.g., *WinPE-Fonts-Legacy*, *WinPE-FontSupport-JA-JP* for Japanese, *...-KO-KR* for Korean, *...-ZH-CN* for Simplified Chinese, etc.). These ensure UI elements display correctly in those languages.
+
+- **WinPE-HTA (HTML Application Support):** Enables the hosting of HTML Applications (HTA) in WinPE using the Internet Explorer engine](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This allows you to create simple graphical interfaces using HTML/CSS/JavaScript. An HTA can serve as a rudimentary GUI menu or tool in WinPE, since it displays a window with custom HTML content (with no browser chrome). *Dependency:* Requires WinPE-Scripting to be added first](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+- **WinPE-GamingPeripherals (Input device support):** Adds support for certain gaming input devices (e.g. Xbox wireless controllers) in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This is rarely needed for a recovery or deployment disk, but it’s available.
+
+- **WinPE-NetFX (Microsoft .NET 4.5 Support):** Adds a subset of the .NET Framework 4.5 runtime to WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This is required if you plan to run any .NET-based applications or PowerShell in WinPE. Note that not all .NET features work in WinPE’s limited environment (for example, WPF is *not* supported in WinPE)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). *Dependency:* Add WinPE-WMI first, before adding .NET](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+- **WinPE-WMI (Windows Management Instrumentation):** Provides a minimal set of WMI providers in WinPE. Many other components (PowerShell, .NET, Secure Boot tools, etc.) require WMI support. This allows WMI queries and scripts to run in WinPE for querying hardware info, etc.
+
+- **WinPE-Scripting (Windows Script Host):** Provides the Windows Script Host (WSH) environment for running VBScript or JScript scripts, and other COM-based scripting capabilities. This is useful for automation via batch or VBScript. It’s also recommended to include if you are adding HTA or .NET, as it ensures those environments have full scripting support. (Order relative to HTA or NetFX is not critical, but include it to avoid missing functionality.)
+
+- **Networking Optional Components:** These add network protocol support beyond the default. In WinPE, basic networking (TCP/IP via wired Ethernet) is available by default if drivers are present. Additional packages include:
+  - **WinPE-Dot3Svc:** Adds support for IEEE 802.1X wired authentication (e.g. for enterprise networks requiring dot3/EAP authentication)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+  - **WinPE-PPPoE:** Adds Point-to-Point Protocol over Ethernet support, allowing dial-up style broadband connections over Ethernet (PPP over DSL, etc.)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+  - **WinPE-RNDIS:** Adds Remote Network Driver Interface Specification support, enabling networking over USB-attached devices (commonly used for USB tethering to smartphones)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+  - **WinPE-WDS-Tools:** Adds Windows Deployment Services support tools, including APIs for image capture and multicast deployment via WDS](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). If you plan to use this WinPE with WDS or to capture/apply images over network, include this.
+  - **WinPE-WiFi-Package:** *Note:* This package for wireless networking is included by default in Windows RE but **not available** as a separate add-on in ADK WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). WinPE/WinRE have limited Wi-Fi support and do not support general wireless networking aside from pre-configured scenarios](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). In short, you cannot fully enable Wi-Fi in custom WinPE via an optional pack (this is an intentional limitation).
+
+- **PowerShell and Advanced Administration:**
+  - **WinPE-PowerShell:** Adds Windows PowerShell support in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This allows you to run PowerShell cmdlets and scripts for advanced automation, diagnostics, and recovery. With PowerShell, you can leverage .NET and WMI in scripts to query hardware or fix issues. *Dependencies:* You must add WinPE-WMI, then WinPE-NetFX, then WinPE-Scripting **in that order before** adding WinPE-PowerShell](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+    - *Limitations:* WinPE’s PowerShell has no remoting and no ISE GUI, and only supports PowerShell 5.x (PowerShell 2.0 and earlier are not supported in WinPE)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+  - **WinPE-PlatformID:** Adds a PowerShell cmdlet to retrieve the device’s Platform Identifier (used in manufacturing scenarios)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). It requires WMI and WinPE-SecureStartup to be present before installation](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11), and you’ll also need the main PowerShell package to actually use the cmdlet.
+  - **WinPE-DismCmdlets:** Adds the DISM PowerShell module, allowing you to manage and service Windows images (WIM files, etc.) via PowerShell cmdlets](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). For example, instead of using `dism.exe` commands, you could use PowerShell to mount or modify images. *Dependencies:* WMI, NetFX, Scripting, and PowerShell must be added first.
+  - **WinPE-SecureBootCmdlets:** Adds PowerShell cmdlets for managing UEFI Secure Boot variables. Useful if you need to manipulate Secure Boot configurations from WinPE. *Dependencies:* WMI, NetFX, Scripting, PowerShell first.
+  - **WinPE-StorageWMI:** Adds PowerShell cmdlets for storage management (managing disks, partitions, volumes, including iSCSI connectivity) in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This leverages the Windows Storage Management API and is useful for automating disk configuration during deployment. *Dependencies:* WMI, NetFX, Scripting, PowerShell first.
+
+- **Security and Recovery:**
+  - **WinPE-SecureStartup (BitLocker/TPM support):** **Highly relevant for Windows 11 recovery.** This package enables BitLocker and TPM management in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). It includes the BitLocker command-line tool (`manage-bde`), BitLocker **Unlock Wizard (GUI)** and associated UI libraries, TPM drivers and WMI classes, and general BitLocker support in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). In practical terms, adding this allows you to unlock BitLocker-encrypted drives from WinPE using either the command line or a GUI prompt. (*Prerequisite:* Add WinPE-WMI before this, as required for the BitLocker WMI providers](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).)
+  - **WinPE-EnhancedStorage:** Adds support for specialized storage devices like encrypted hard drives (hardware encryption using TCG Opal) and IEEE 1667 compliant USB drives](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This is often paired with BitLocker support – it allows WinPE to natively manage self-encrypting drives via BitLocker hardware encryption](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). If you need to work with eDrive capabilities or certain USB security features during recovery, include this.
+  - **WinPE-Rejuv & WinPE-SRT:** These are **Recovery** components used by the Windows Recovery Environment (WinRE). *Rejuv* (rejuvenation) and *SRT* (System Recovery Tool) provide the WinRE recovery GUI and troubleshooting tools. However, **these are not available as separate packages in the ADK**; they are already included in the stock `winre.wim` that comes with Windows](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). For a custom WinPE built from ADK, you cannot add WinPE-Rejuv or WinPE-SRT manually (they are only in WinRE). Keep this in mind – your custom WinPE won’t automatically have the full WinRE recovery menu, but you can achieve similar functionality by adding other components and tools as we are doing.
+  - **WinPE-SRT (System Recovery):** Included in WinRE for recovery tools (not separately addable)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+  - **WinPE-WiFi-Package:** (As noted in Networking, Wi-Fi package is WinRE-only)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+- **Setup and Installation:**
+  - **WinPE-Setup:** This is a parent package for including Windows Setup files in WinPE. It contains the core setup files common to both client and server Windows installation.
+  - **WinPE-Setup-Client:** Adds the Windows Setup binaries and resources for installing client OS (Windows 11/10) – essentially the “Setup” environment with the GUI for selecting language, partition, etc., branded for client OS. If you plan to use this WinPE to launch the standard Windows 11 installer (Setup.exe), you should include WinPE-Setup and WinPE-Setup-Client. Together, these allow the WinPE to act like the official installation media PE, automatically running the Windows Setup UI.
+  - **WinPE-Setup-Server:** Similar to above, but for Windows Server setup (server OS branding and files)](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). Include this only if you need to deploy Windows Server from the same PE; it’s not needed for Windows 11 Home/Pro installation. (If you add it, add WinPE-Setup first, then WinPE-Setup-Server](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).)
+
+- **Hardware Support:**
+  - **WinPE-HSP-Driver:** Adds support for the Microsoft Pluton security processor (HSP) in WinPE](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This component was introduced with Windows 11 version 22H2 and is available for amd64 WinPE. If your PCs have the Pluton TPM, adding this ensures WinPE can interact with it properly. It’s not required for older TPM 2.0 (those work with SecureStartup) – it’s specifically for the new Pluton hardware.
+  - **WinPE-x64-Support:** *(ARM64 only)*. Enables x64 application emulation in an ARM64 WinPE environment](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). Only relevant if building an ARM64 WinPE – it lets you run native x64 binaries on ARM (Arm64EC). Not needed on standard x64 WinPE.
+
+As shown above, WinPE’s functionality can be greatly expanded by these packages. For a **Windows 11 Home emergency rescue and deployment** scenario, the most crucial components typically include: **WinPE-WMI, WinPE-NetFX, WinPE-Scripting, WinPE-PowerShell** (for scripting and automation), **WinPE-FMAPI** (file recovery), **WinPE-SecureStartup** and **WinPE-EnhancedStorage** (to handle BitLocker encrypted drives), **WinPE-Setup/WinPE-Setup-Client** (if using the Windows installer GUI), and possibly **WinPE-DismCmdlets or WDS Tools** if you need advanced image deployment or network capture. In the next section, we will add the needed packages to our image.
+
+---
+
+## Mounting and Customizing the WinPE Image
+
+With the list of desired optional components in mind, you will now mount the WinPE image and add those packages:
+
+1. **Mount the WinPE boot.wim:** Use Deployment Image Servicing and Management (**DISM**) to mount the WinPE image file for editing. The boot image is located at `C:\WinPE_amd64\Media\Sources\boot.wim` (if you followed the `copype` steps above). Use a mount directory (the `Mount` folder was created by copype). For example, in the Deployment Tools Command Prompt: 
+
+   ```
+   Dism /Mount-Image /ImageFile:"C:\WinPE_amd64\Media\Sources\boot.wim" /Index:1 /MountDir:"C:\WinPE_amd64\Mount"
+   ``` 
+
+   This attaches the WinPE WIM to the filesystem at `C:\WinPE_amd64\Mount` so you can add files and packages.
+
+2. **Add WinPE Optional Component packages:** For each optional component you need, use `DISM /Add-Package` pointing to the `.cab` file. The cab files are in the ADK WinPE addons directory (e.g., `C:\Program Files (x86)\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment\amd64\WinPE_OCs\`). Some components also have language-specific companion cabs in subfolders (e.g., en-us) – if your WinPE needs multi-language support, add the neutral package first, then the corresponding language pack. Always install any prerequisite packages before their dependents (as noted above). 
+
+   For example, to add **BitLocker and file recovery support** for a *US English* WinPE, you would add these packages in order:
+
+   - **WinPE-WMI** (prerequisite for many others)  
+   - **WinPE-Scripting** (enables full scripting/COM support)  
+   - **WinPE-NetFX** (requires WMI first; adds .NET 4.5)  
+   - **WinPE-SecureStartup** (BitLocker/TPM support)  
+   - **WinPE-EnhancedStorage** (encrypted storage support)  
+   - **WinPE-FMAPI** (File Management API for recovering deleted files)  
+
+   Each of the above also has an **en-US language pack** cab (named with `_en-us.cab` for English) that should be added right after the neutral cab to provide localized resources. For instance, after adding `WinPE-WMI.cab`, add `WinPE-WMI_en-us.cab` from the `amd64\WinPE_OCs\en-us\` subfolder. Likewise for each component (Scripting, NetFX, SecureStartup, etc., add their en-us counterpart). This ensures any UI elements or messages are in the correct language. If you only plan to use English, adding the en-us packs for each is sufficient (the base WinPE image itself also has a base language pack `lp.cab` for en-us which is already present by default for English WinPE).
+
+   In practice, the commands might look like below (shortened for clarity):
+   ```shell
+   Dism /Image:C:\WinPE_amd64\Mount /Add-Package /PackagePath:"...WinPE-WMI.cab"
+   Dism /Image:C:\WinPE_amd64\Mount /Add-Package /PackagePath:"...WinPE-WMI_en-us.cab"
+   Dism /Image:C:\WinPE_amd64\Mount /Add-Package /PackagePath:"...WinPE-Scripting.cab"
+   Dism /Image:C:\WinPE_amd64\Mount /Add-Package /PackagePath:"...WinPE-Scripting_en-us.cab"
+   Dism /Image:C:\WinPE_amd64\Mount /Add-Package /PackagePath:"...WinPE-NetFx.cab"
+   ... (and so on for each package) ...
+   ``` 
+   Each `/Add-Package` line integrates one optional component into the offline WinPE image. DISM should report a success message for each. Be sure to include any dependencies in the correct order (for example, **WMI -> Scripting -> NetFx -> PowerShell** if adding PowerShell support](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11)).
+
+   **Tip:** You can use `DISM /Get-Packages /Image:"C:\WinPE_amd64\Mount"` at any time to list the packages that are installed in the image](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This is useful to verify that all intended packages (and their language packs) are present. The Microsoft documentation suggests using this to then ensure you’ve added corresponding language packs for each component](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11).
+
+3. **(Optional) Add Drivers or Custom Tools:** If your target systems require additional drivers (e.g., storage controller, network adapter drivers not included by default), you can add those to WinPE as well using `DISM /Add-Driver`. For example, if you have an INF file for a RAID controller, add it so WinPE can see the disk. Also, you can add **custom utilities** or scripts at this stage by copying files into the mounted image. For instance, you might copy a hardware diagnostic utility, or a specific recovery script, into `C:\WinPE_amd64\Mount\Program Files\MyTools\` (you can create any directory). These files will be available when you boot WinPE later.
+
+4. **Configure WinPE startup (optional):** By default, WinPE will launch a command prompt (Windows command shell) when it boots. You can modify this behavior if you want to start a GUI application directly on boot. Two mechanisms exist:
+   - **startnet.cmd:** This is a batch script in WinPE (located at `Windows\System32\startnet.cmd`) that runs on startup. By default it calls `wpeinit` (to initialize networking) and then exits, leaving you at `X:\Windows\System32\cmd.exe`. You can edit this script to launch additional commands or background actions (for example, start a network connection, or launch a specific tool). 
+   - **winpeshl.ini:** This is a special configuration file to **replace the default shell**. By creating a `Winpeshl.ini` in `System32`, you can specify a different shell application to run instead of `cmd.exe`. For example, you might set it to launch a custom menu app or a file explorer interface for a more GUI-driven experience. The `winpeshl.ini` [LaunchApp] section can point to an EXE you’ve added to the image as the main shell. You can also use a [LaunchApps] list to start multiple apps or scripts sequentially.
+   
+   For instance, to launch a custom shell, your `Winpeshl.ini` could contain:
+   ```ini
+   [LaunchApp]
+   AppPath = %SYSTEMDRIVE%\Tools\MyShell.exe
+   ``` 
+   This would start **MyShell.exe** (which you must have copied into `X:\Tools\MyShell.exe` in the image) instead of the command prompt. This technique is useful if you created a WinPE GUI application (perhaps using HTA or a WinForms app) and want that to be the interface on boot. Otherwise, you can simply stick with the default shell and launch tools manually.
+
+5. **Finalize and unmount the image:** Once you have added all desired packages, drivers, and made configuration changes, commit the changes and unmount the WIM. Run:
+   ```
+   Dism /Unmount-Image /MountDir:"C:\WinPE_amd64\Mount" /Commit
+   ``` 
+   This applies all additions to the `boot.wim` and unmounts it. Your WinPE image is now customized and ready to be made bootable.
+
+---
+
+## Adding a GUI File Explorer to WinPE
+
+One of the primary goals is to have a GUI environment to easily browse files (especially for recovery tasks) instead of being limited to command-line tools. By default, WinPE does **not** include the standard Windows desktop or Explorer shell. However, you can include third-party **portable applications** to provide GUI functionality. Many technicians add a **graphical file manager** utility to WinPE, which gives a familiar interface for copying files, browsing directories, etc. This is fully supported, as WinPE can run normal Windows executables (as long as they are compiled for the same architecture).
+
+**Choosing a File Manager:** A popular choice is **Explorer++**, a lightweight, standalone file manager that works well in WinPE. Another option is **FreeCommander** (portable version), or **Double Commander**. The key is to use a 64-bit version for a 64-bit WinPE (since WinPE has no WOW64, a 64-bit WinPE cannot run 32-bit programs). These tools are free and can be run without installation.
+
+**Steps to add a GUI file explorer:**
+
+- Download a portable version of the file manager (e.g., the **portable ZIP of Explorer++** or FreeCommander). Ensure it’s the x64 edition to match WinPE’s architecture.
+- While the WinPE image is mounted (in the customization step above, or you can re-mount it if you already committed), copy the program’s files into the image. For example, create a directory in the mounted image such as `C:\WinPE_amd64\Mount\Util\ExplorerPlusPlus\` and copy the EXE and supporting files there.
+- You may also copy any other useful GUI tools, like **Notepad++** (text editor), which runs fine in WinPE, or system tools like **Sysinternals Process Monitor**, etc., into the image at this time.
+- If you want the file manager to launch automatically on boot, use `Winpeshl.ini` as described earlier to set it as the shell. Otherwise, you can launch it manually from the WinPE command prompt when needed.
+
+For example, an easy approach is documented where a portable FreeCommander was added to WinPE: simply copy the FreeCommander folder into the mounted WinPE image, unmount and commit, then boot WinPE and launch the FreeCommander.exe from the command line. This gives a functional two-pane file explorer interface within WinPE, making file copy operations much easier than with `XCOPY` or `Robocopy`. Similarly, copying Explorer++ into the image allows you to double-click that tool in WinPE for a familiar Explorer-like experience. 
+
+> **Tip:** If you did not set the explorer app as the startup shell, you can launch it by simply typing its path in the WinPE console. For instance, if you copied Explorer++.exe to `X:\Util\ExplorerPlusPlus\Explorer++.exe`, you can run that from the command prompt. Once launched, it provides a GUI to browse files and drives. You can even open multiple instances or utilize its search function to locate files on the disk.
+
+With a GUI file manager available, you can perform drag-and-drop file copies from a failing Windows installation disk to an external USB drive, etc., with ease. This greatly aids **data recovery and backup** tasks in an emergency.
+
+**Note:** The optional component **WinPE-SecureStartup** that we added earlier includes a **BitLocker Unlock Wizard** (a graphical prompt) for unlocking encrypted drives](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). This means if you attempt to open a BitLocker-encrypted volume (for example, by using a file explorer on WinPE or by running a command that accesses the drive), the system can present a GUI dialog to enter the BitLocker recovery key or password. Make sure you have added WinPE-SecureStartup and its prerequisites to enable this functionality. Alternatively, you can use the command-line `manage-bde` tool (provided by the same component) to unlock BitLocker volumes via command line if the GUI does not auto-trigger. In practice, many WinPE recovery media will prompt for the BitLocker key upon boot or when you try to access the locked drive, thanks to including these BitLocker UI components.
+
+---
+
+## Creating the Bootable USB Media
+
+After customizing the WinPE image with all the optional packs and tools you need, the final step is to make a bootable USB drive:
+
+1. **Format the USB drive (if needed):** The `MakeWinPEMedia` utility (below) can format the drive for you. Ensure you have backed up any data on the USB stick. The drive will be formatted to FAT32 (which is compatible with UEFI boot for Windows). FAT32 has a file size limit of 4GB, but our WinPE image and files should be well below this. If for some reason your WinPE media needs to include a very large file (>4GB), you would have to split or use NTFS and alternate boot method; but typically not necessary for WinPE scenarios.
+
+2. **Use MakeWinPEMedia to copy files to USB:** The ADK provides **MakeWinPEMedia.cmd** to automate making bootable media from the WinPE working folder. We already have our files in `C:\WinPE_amd64\Media` (populated by `copype` and our edits). Now run the command to create a USB (UFD) drive. For example, if the USB drive is `G:`, use:
+
+   ```
+   MakeWinPEMedia.cmd /UFD C:\WinPE_amd64 G:
+   ``` 
+
+   The first parameter `/UFD` tells it to create a USB Flash Drive (it will format the drive), the second is the path to the WinPE media folder, and the third is the target volume (drive letter). You can add `/F` to suppress the format confirmation prompt (it will format without asking). This command will copy all files from `C:\WinPE_amd64\Media` onto the USB and make it bootable.
+
+   If you wanted an ISO instead of a USB, you could use the `/ISO` switch with an output ISO filename, but our focus is USB for direct booting.
+
+3. **(Alternate) Manual creation:** If MakeWinPEMedia fails or you prefer manual steps, you can format the USB as FAT32 with an active partition, then copy the content of `Media` to it and run `bootsect` to make it bootable. However, using the provided tool is simpler and less error-prone.
+
+4. **Verify the USB content:** After the process, your USB drive should have a directory structure like:
+   - **Boot** (boot files),
+   - **EFI** (for UEFI boot),
+   - **Sources** (with **boot.wim** inside),
+   - etc. (similar to a Windows install media structure).
+   This indicates the drive is ready. For UEFI systems, the presence of `EFI\Boot\bootx64.efi` is key, and for BIOS, the `bootmgr` at root is key.
+
+5. **Boot from the USB:** Insert the USB into the target PC and boot from it (you may need to tap a boot menu key or change BIOS settings to boot from USB). For modern systems with UEFI and Secure Boot, the WinPE built from the official ADK is signed and should boot without issues. (If your platform implements the 2023 UEFI certificate revocations, ensure you used the updated boot files from the ADK servicing updates – the ADK documentation notes special steps to copy updated boot manager files for systems enforcing the new UEFI CA, but if you kept ADK updated, your MakeWinPEMedia should handle it.)
+
+---
+
+## Using the WinPE Environment for Recovery and Deployment
+
+Once booted into your custom WinPE USB, you should see either the default command prompt or your custom shell if you configured one. From here you can:
+
+- **Launch the GUI File Manager:** If you included Explorer++ or another file explorer, run it now (or it may have auto-started). You can browse the hard drive of the PC, copy files to an external disk, etc., using a familiar GUI. This is extremely helpful for **data rescue** from an unbootable system. For example, copy user documents from the Windows 11 Home OS drive to a backup USB, using drag-and-drop rather than command-line copy. The GUI will also show progress bars for file operations, which is useful for large transfers (some third-party file managers like *Double Commander* even have their own copy dialogs to ensure progress is shown).
+
+- **Unlock BitLocker Encrypted Drives:** If the Windows 11 volume is BitLocker-protected (common on many modern devices, even Home edition devices with “Device Encryption”), use the built-in BitLocker support to unlock the drive. You can do this via command line:
+  ```
+  manage-bde -unlock C: -RecoveryKey "<path to .bek file>" 
+  ``` 
+  or with `-RecoveryPassword <48-digit key>` as appropriate. Because we added *WinPE-WMI*, *WinPE-SecureStartup*, *WinPE-EnhancedStorage*, and *WinPE-Scripting*, the necessary BitLocker commands are available. The **manage-bde** tool should now be present, and the BitLocker **unlock wizard GUI** is available as well](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/winpe-add-packages--optional-components-reference?view=windows-11). In practice, if you try to open the drive in Explorer++, Windows might prompt for the BitLocker key using the wizard (since we included the UI components). Enter the recovery key to unlock the drive and then you can access files normally.
+
+- **Run Recovery Commands:** With *PowerShell* support added, you can start PowerShell (`powershell.exe`) and use cmdlets or scripts to diagnose problems. For instance, you could use `Get-EventLog` (if event logs are accessible) or WMI queries to check hardware. You could use disk management cmdlets (from *WinPE-StorageWMI*) to list or fix disks. Standard command-line tools are also available: **diskpart** for partitioning, **bootrec** and **bcdedit** for fixing bootloaders, **chkdsk** to check disk integrity, **dism** for imaging tasks, etc.
+
+- **Deploy a Windows Image:** If your goal is OS deployment, you have two main approaches:
+  - *Manual deployment:* Use DISM or PowerShell to apply a Windows image. For example, you can apply a Windows 11 install WIM to a drive using `dism /Apply-Image`. Because we added *WinPE-DismCmdlets*, you could also do this in PowerShell. You might have placed install image files on the WinPE USB or on another external drive. All the needed deployment tools (DISM, etc.) are available by default in WinPE or through the added components.
+  - *Windows Setup:* If you included *WinPE-Setup* and *WinPE-Setup-Client*, you can launch the full Windows Setup GUI. Typically, WinPE will automatically run the setup if those packs are present and the sources for installation are available. You could copy the Windows 11 installation files onto the USB (for example, the `install.wim` and other files from a Windows ISO placed in a directory on the USB). Running `setup.exe` from those files should start the typical Windows installer. The inclusion of the setup optional components ensures that the WinPE environment can host the installer. This method gives the familiar installation wizard for Windows 11, allowing you to partition disks and install the OS interactively. 
+
+- **Network Support:** If you added network drivers and configured networking, you can also connect to network shares to copy data or grab installation files. For example, use `wpeinit` (already called by default) to initialize networking, then `net use` to map a network drive with deployment files. With the included WinPE optional networking components (if any were added for specialized needs like 802.1X or RNDIS), your WinPE should handle the necessary network scenarios.
+
+Throughout these processes, the additional packages we added provide enhanced functionality:
+- The **FMAPI** allows specialized recovery tools (or scripts using its API) to restore deleted files that are not easily accessible through normal file copy.
+- The **PowerShell environment** allows complex scripts to run, which can automate recovery or deployment steps that would be cumbersome manually.
+- The **GUI file explorer** and other portable tools (like Notepad++ for editing configuration files, or Process Monitor if troubleshooting running processes) make the environment much more user-friendly for techs and power users.
+- The **BitLocker support** ensures you are not locked out of encrypted data when you need it most, and provides Microsoft-supported means to unlock drives.
+- The **Setup and imaging tools** mean this same USB can be used to **reinstall or repair Windows 11** after you’ve rescued the data, fulfilling the deployment aspect.
+
+---
+
+## Conclusion
+
+By following this guide, you have built a comprehensive WinPE bootable USB tailored for Windows 11 Home systems, with a mix of official Microsoft optional components for full support and some added GUI tools for ease of use. The process involved installing the latest ADK and WinPE add-on, using `copype` to generate a WinPE image, and then adding a variety of WinPE optional packs to enrich the environment (from PowerShell and .NET, to BitLocker, to deployment and setup features). We also integrated a third-party file manager utility to provide a familiar GUI **desktop-like experience** for file operations within WinPE, addressing the “Windows GUI desktop support” need in a supported way. All components used are officially provided or supported in the Windows ADK for Windows 11, ensuring maximum compatibility and stability.
+
+With this custom WinPE USB, you can confidently perform emergency maintenance on Windows 11 PCs – whether it’s backing up files from a broken system, scanning and repairing disks, unlocking BitLocker-encrypted volumes, or deploying a fresh Windows image. This user guide has drawn from Microsoft’s official documentation and community best practices to ensure accuracy and completeness in setting up your WinPE. Now, when faced with data loss scenarios or the need to reinstall Windows, your WinPE USB will serve as a powerful all-in-one recovery and installation toolkit. Happy troubleshooting!
+

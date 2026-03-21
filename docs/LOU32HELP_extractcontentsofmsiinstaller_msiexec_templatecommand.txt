@@ -1,0 +1,13 @@
+=======================================
+::    LOU32 HELP MODULE DOCUMENT     ::
+=======================================
+:: Extracting Contents From MSI File ::
+=======================================
+:: Use the following template to extract the contents of an MSI Installer File
+
+msiexec.exe /a <path/to/installer.msi> /qb TARGETDIR=<path/to/target>
+
+:: Note that no space goes between the = and the target path
+
+===========================================
+END OF LOU32 HELP MODULE DOCUMENT.

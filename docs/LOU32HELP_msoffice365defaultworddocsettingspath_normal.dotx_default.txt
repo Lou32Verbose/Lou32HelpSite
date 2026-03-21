@@ -1,0 +1,11 @@
+==================================================================
+::                  LOU32 HELP MODULE DOCUMENT                  ::
+==================================================================
+:: LOCATION OF MICROSOFT OFFICE DEFAULT WORD TEMPLATE DOTX FILE ::
+==================================================================
+:: MICROSOFT OFFICE 365 STORES THE "NORMAL.DOTX" FILE HERE:
+
+C:\users\<your-name>\appdata\roaming\microsoft\templates
+
+==================================================================
+END OF LOU32 HELP MODULE DOCUMENT.

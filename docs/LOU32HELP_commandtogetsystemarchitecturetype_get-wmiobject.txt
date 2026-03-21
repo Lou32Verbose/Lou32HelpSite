@@ -1,0 +1,18 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: Module= Get Windows Version Architecture  ::
+==============================================
+:: You can use the [Get-WmiObject] cmdlet to grab the architecture of your machine.
+:: Enter the following command into an elevated terminal and press enter:
+
+Get-WmiObject -Class Win32_OperatingSystem | Format-List OSArchitecture
+
+:: NOTE: Updated (and recommended) version for PowerShell Core:
+
+Get-CimInstance -Class Win32_OperatingSystem | Format-List OSArchitecture
+
+:: Get-CimInstance does the same thing as the original (now deprecated) Get-WmiObject cmdlet
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

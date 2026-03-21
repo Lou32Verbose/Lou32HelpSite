@@ -1,0 +1,9 @@
+================================================
+========== LOU32 HELP MODULE DOCUMENT ==========   
+================================================
+
+
+Get-AppXPackage -AllUsers -Name windows.immersivecontrolpanel | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register “$($_.InstallLocation)\AppXManifest.xml” -Verbose}
+
+Get-AppXPackage | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
+

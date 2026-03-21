@@ -1,0 +1,20 @@
+==============================================
+::        LOU32 HELP MODULE DOCUMENT        ::
+==============================================
+:: Fix Tablet Mode Issue For Lenovo Flex 5  ::
+==============================================
+:: If sensors are malfunctioning, Windows 11 may stay in tablet mode and it can't be turned off.
+:: Explorer will malfunction and cause checkboxes to always be enabled, and compact mode will not enable, even if the options are set in Explorer options.
+:: The following registry edit succesfully fixed this issue on Lenovo Flex 5:
+
+:: In Regedit, navigate to this registry key:
+
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\PriorityControl
+
+:: Enter this value for the DWORD called "ConvertibleSlateMode"
+
+1
+
+:: You may have to unset and set the explorer options for compact mode or checboxes mode to get them to be recognized and begin working again.
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

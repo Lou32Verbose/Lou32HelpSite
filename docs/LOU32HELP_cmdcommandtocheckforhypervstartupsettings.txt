@@ -1,0 +1,12 @@
+=============================================
+:: LOU32 HELP MODULE DOCUMENT
+=============================================
+:: CMD COMMAND TO CHECK HYPER-V ENABLEMENT ::
+=============================================
+
+:: Run the following command in an elevated COMMAND PROMPT (Does Not Work In PowerShell!):
+
+bcdedit.exe /enum {current} | find "hypervisorlaunchtype"
+
+==============================================
+END OF LOU32 HELP MODULE DOCUMENT.

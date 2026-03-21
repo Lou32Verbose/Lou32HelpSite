@@ -1,0 +1,37 @@
+================
+COLOR REFERENCE
+================
+
+Red
+#FF0000
+
+Green
+#00FF00
+
+White
+#FFFFFF
+
+Black
+#000000
+
+Purple
+#FF00FF
+
+Cyan
+#00FFFF
+
+Yellow
+#FFFF00
+
+Blue
+#0000FF
+
+Noble Blue
+#012354
+
+GreenAsBlack
+#4DB54D
+
+Light Blue
+#4A90FF
+

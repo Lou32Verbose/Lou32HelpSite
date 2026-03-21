@@ -1,0 +1,7 @@
+# Lou32HelpModuleDocumentSnippet
+======================================
+# PS command-line to run an elevated PS script, w/o modifying the current Execution Policy:
+
+powershell "Start-Process powershell -Verb Runas -ArgumentList '-NoProfile -ExecutionPolicy Bypass -file C:\path\script.ps1'"
+======================================
+END OF LOU32HELPMODULEDOCUMENTSNIPPET.

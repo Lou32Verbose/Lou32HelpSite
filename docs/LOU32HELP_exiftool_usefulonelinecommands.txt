@@ -1,0 +1,117 @@
+----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<----8<-
+USEFUL ONE-LINE EXIFTOOL'S COMMANDS                               Oct. 06, 2013
+Compiled by Evanghelos Papaioannu - ebah80[at]gmail[dot]com         version 0.2
+
+As of Wikipedia: ExifTool is a free software program for reading, writing, and 
+  manipulating image, audio, and video metadata
+
+ExifTool home page:
+   http://www.sno.phy.queensu.ca/~phil/exiftool/
+
+Latest version of this file (in English) is usually at:
+   https://sourceforge.net/projects/exiftool1line/
+   http://goo.gl/Xu8vS3
+
+CAVEAT: The following commands were tested in a linux environment
+  (Kubuntu 13.04).
+
+BASIC COMMAND:
+
+ # show exiftool version
+ exiftool -ver
+
+ # shows all the EXIF metadata of image
+ exiftool photo.jpg
+
+ # shows only selected EXIF metadata
+ # Here is a complete list of metadata TAGS (depending on file format):
+ # http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/index.html
+ exiftool -Model -ImageSize photo.jpg
+
+ # process all files of specified file type (case insensitive extension)
+ exiftool -Model -ImageSize -ext jpg /home/ebah/photo/
+ 
+ # recursively process all jpg files under specified directory and
+ # sub-directory
+ exiftool -r -Model -ImageSize -ext jpg /home/ebah/photo/
+ 
+DEBUGGING:
+
+ # When a command is not working you can launch it in verbose mode, there
+ # are 5 different levels of verbosity, level 0 means no verbosity
+ # For more: http://www.sno.phy.queensu.ca/~phil/exiftool/Shift.html
+ exiftool -v0 {cmd}
+ exiftool -v1 {cmd}
+ [...]
+ exiftool -v5 {cmd}
+
+METADATA EXPORT:
+
+ # Export all metadata of specified file into a csv file (headers are
+ # included)
+ exiftool -csv photo.jpg
+
+ # Export all metadata of all jpg file into a csv file (headers are
+ # included)
+ exiftool -csv -ext jpg /home/ebah/photo/
+
+ # Export selected metadata of all jpg file into a csv file (headers are
+ # included)
+ exiftool -Make -Model -DateTimeOriginal -csv -ext jpg /home/ebah/photo/
+
+FILE RENAMING:
+
+ # Rename using fixed string and same file extension as original
+ exiftool "-FileName<HELLOWORLD.%e" photo.JPG
+ >  HELLOWORLD.JPG
+
+ # Rename using fixed string and same *lowercase* file extension as
+ # original
+ exiftool "-FileName<HELLOWORLD.%le" photo.jpg
+ >  HELLOWORLD.jpg
+
+ # Rename based on date (for the format see: )
+ exiftool "-FileName<DateTimeOriginal" -d "%Y%m%dT%H%M%S.%%le" photo.jpg
+ > 20130914T170119.jpg
+
+ # Prevent illegal characters to be written in filename (unpredictable
+ # results)
+ exiftool '-filename<${make;}.%le' -d "%Y%m%dT%H%M%S" photo.jpg
+
+ # Replace spaces in tag string
+ exiftool -Make photo.jpg
+ > Make                            : NIKON CORPORATION
+ exiftool '-filename<${make;tr/ /_/;s/__+/_/g}.%le' photo.jpg
+ > NIKON_CORPORATION.jpg
+
+ # Composite rename: DateTimeOriginal + Make tags
+ exiftool '-filename<${DateTimeOriginal}_${make;tr/ /_/;s/__+/_/g}.%le' -d "%Y%m%dT%H%M%S" photo.jpg
+ > 20130914T210246_Canon.jpg
+
+ # Add a counter for duplicate images
+ exiftool '-FileName<${DateTimeOriginal}_${Model;tr/ /_/;s/__+/_/g}.%e' -d "%Y%m%dT%H%M%S%%-.c" 20130914T074335_Canon.jpg
+ > 20130914T171112-0_NIKON_D40.jpg
+ > 20130914T171112-1_NIKON_D40.jpg
+
+CONDITIONAL EXPRESSION
+
+ # If condition matches then the file is processed otherwise skipped
+ exiftool -shutterspeed -if '$make eq "Canon"'
+
+ # Rename files only from Canon Camera
+ exiftool '-filename<CANON.%le' -if '$make eq "Canon"' photo.jpg
+
+TIME SHIFT
+
+ # Time shift is very handy when camera's clock is misaligned from
+ # real time (say because you are abroad on holiday and forgot to adjust
+ # camera's clock)
+ # For more: http://www.sno.phy.queensu.ca/~phil/exiftool/Shift.html
+
+ # Add 1 hour to the DateTimeOriginal's value
+ exiftool "-DateTimeOriginal+=0:0:0 1:0:0" photo.jpg
+
+
+If you have any additional command to contribute or if you find errors
+in this document, please send e-mail to the compiler. Indicate the
+version of exiftool you used, the operating system it was compiled for, and the nature of the problem.

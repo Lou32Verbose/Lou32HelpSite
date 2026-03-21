@@ -1,0 +1,24 @@
+LOU32HELP - WGET
+## WGET COMMAND EXAMPLES TO DOWNLOAD SITES RECURSIVELY INCLUDING ASSETS
+===========================================================================
+
+wget -r --no-parent http://www.mysite.com/dict
+
+============================================================================
+
+wget -p -k http://somewebsite.com
+
+=============================================================================
+
+wget -mpEk "url"
+
+## If you get kicked from the site's IP, or the download stops, you can then try running the same command, but with 
+	--wait="duration"
+This adds a duration between requests so as not to trigger any DDoS flags on their end.
+
+## Resulting directory looks better than simply using the [-r "url"] arg, and provides better insight into how the site was put together, especially if you're reverse-engineering for educational purposes.
+
+## Note that if you're downloading a web-app or a site with lots of JavaScript that was compiled from TypeScript, you won't be able to get the TypeScript that was used initially, only what is compiled and sent to the browser. Take this into consideration if the site is very script heavy.
+
+=================================================================================
+

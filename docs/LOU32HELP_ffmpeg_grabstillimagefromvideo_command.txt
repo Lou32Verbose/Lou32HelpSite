@@ -1,0 +1,22 @@
+# IN CONSOLE WINDOW:
+
+ffmpeg -ss 01:23:45 -i input -frames:v 1 -q:v 2 output.jpg
+
+========================
+For JPEG output use -q:v to control output quality. Full range is a linear scale of 1-31 where a lower value results in a higher quality. 2-5 is a good range to try.
+
+The select filter provides an alternative method for more complex needs such as selecting only certain frame types, or 1 per 100, etc.
+
+Placing -ss before the input will be faster. See FFmpeg Wiki: Seeking and this excerpt from the ffmpeg cli tool documentation:
+
+-ss position (input/output)
+
+When used as an input option (before -i), seeks in this input file to position. Note the in most formats it is not possible to seek exactly, so ffmpeg will seek to the closest seek point before position. When transcoding and -accurate_seek is enabled (the default), this extra segment between the seek point and position will be decoded and discarded. When doing stream copy or when -noaccurate_seek is used, it will be preserved.
+
+When used as an output option (before an output filename), decodes but discards input until the timestamps reach position.
+
+position may be either in seconds or in hh:mm:ss[.xxx] form.
+=================================
+# TO OUTPUT A PNG IMAGE SPECIFICALLY:
+
+ffmpeg -ss 01:23:45 -i video.mp4 -c:v png -frames:v 1 image.jpg

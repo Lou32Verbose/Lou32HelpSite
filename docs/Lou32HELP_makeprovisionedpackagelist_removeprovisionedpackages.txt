@@ -1,0 +1,7 @@
+Get a list of provisioned apps with this command:
+
+Get-AppXProvisionedPackage -Online | Select PackageName
+
+Build your list of apps you want to remove within this command and run it.
+
+$appname = @( "Microsoft.3DBuilder" "Microsoft.BingNews" "Microsoft.BingWeather" ) ForEach($app in $appname){ Get-AppxProvisionedPackage -Online | where {$_.PackageName -like $app} | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue }

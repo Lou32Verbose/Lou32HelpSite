@@ -1,0 +1,4 @@
+## Recursively convert all .FLAC files in the current directory and subdirectories to 320k .MP3:
+
+find . -iname '*.wav' -exec bash -c 'D=$(dirname "{}"); B=$(basename "{}"); mkdir "$D/mp3/"; ffmpeg -i "{}" -ab 320k -map_metadata 0 -id3v2_version 3 -acodec libmp3lame "$D/mp3/${B%.*}.mp3"' \;
+

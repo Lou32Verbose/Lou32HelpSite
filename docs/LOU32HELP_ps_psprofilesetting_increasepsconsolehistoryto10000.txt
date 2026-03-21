@@ -1,0 +1,1 @@
+Set-PSReadlineOption -MaximumHistoryCount 10000

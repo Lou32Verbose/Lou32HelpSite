@@ -1,0 +1,29 @@
+===========================================================
+:: LOU32 HELP MODULE DOCUMENT ::
+===========================================================
+:: DOWNLOAD LINKS FOR VISUAL STUDIO 2015 ::
+===========================================================
+
+# VISUAL STUDIO 2015 COMMUNITY
+https://go.microsoft.com/fwlink/?LinkId=615448
+
+# VISUAL STUDIO 2015 PROFESSIONAL
+https://go.microsoft.com/fwlink/?LinkId=615434
+
+# VISUAL STUDIO 2015 ENTERPRISE
+https://go.microsoft.com/fwlink/?LinkId=615436
+
+
+===========================================================
+:: DIRECT DOWNLOAD LINKS ::
+===========================================================
+
+# VISUAL STUDIO 2015 COMMUNITY
+https://download.microsoft.com/download/b/e/d/bedddfc4-55f4-4748-90a8-ffe38a40e89f/vs2015.3.com_enu.iso
+
+# WAYBACK MACHINE URL (ARCHIVED)
+https://web.archive.org/web/20250210121955/https://download.microsoft.com/download/b/e/d/bedddfc4-55f4-4748-90a8-ffe38a40e89f/vs2015.3.com_enu.iso
+
+===========================================================
+END OF LOU32 HELP MODULE DOCUMENT.
+

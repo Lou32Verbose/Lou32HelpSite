@@ -1,0 +1,40 @@
+====================================================
+::           LOU32 HELP MODULE DOCUMENT           ::
+====================================================
+:: TIPS FOR EXAMINING/EDITING MSI FILES WITH ORCA ::
+====================================================
+:: OVERVIEW 
+
+:: Step through the installer to look at required properties, then match that to writable properties found in Orca.
+:: ALSO, try R&D testing with cmd installs: 
+
+msiexec /i <installer.msi> /q /qn PROPERTY_NAME=VAULE 
+
+:: The above output with verbose logging will help you identify what you need.
+
+---
+
+:: EXPERT ADVICE FOR A BEGINNER 
+
+:: When you open an MSI in Orca for the first time, ignore everything but the Property section in the left menu. 
+:: Inside of the Property section, all properties that can be configured from cmdline will be in all capitals (publicly available).
+
+:: You'll see things like ALLUSERS set to 2, so to change this value to 1 during install the command would be: 
+
+msiexec.exe /I <installer.msi> ALLUSERS=1 /qn
+
+:: An easy way to play with these settings: 
+::  Find an MSI with multiple tick boxes or text boxes you can configure when installing through GUI mode. 
+:: Open it with ORCA and try to figure out which property relates to each tickbox etc. 
+:: Then, run the install command with the new properties from cmdline without the quiet switch /qn. 
+:: You should see the tickbox options set based on the properties you used in the cmdline.
+
+:: NOTE: If you have the MSI open in Orca during the install, then it will fail (with a less than helpful error).
+
+:: Once you you have the hang of things, start making transform files using Orca for more complex installers with lots of options. 
+:: The install command is then:
+
+msiexex.exe /I <installer.msi> TRANSFORMS=transform.mst /qn.
+
+===================================================
+END OF LOU32 HELP MODULE DOCUMENT.

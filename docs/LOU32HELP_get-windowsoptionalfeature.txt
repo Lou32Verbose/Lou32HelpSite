@@ -1,0 +1,7 @@
+﻿# Lists optional features in the running operating system
+
+PS C:\> Get-WindowsOptionalFeature -Online
+
+# Enable optional feature by name from online repository (ex. TelnetClient)
+
+PS C:\> Enable-WindowsOptionalFeature -Online -FeatureName TelnetClient

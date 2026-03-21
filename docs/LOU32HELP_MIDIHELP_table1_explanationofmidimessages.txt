@@ -1,0 +1,87 @@
+=========================================================================
+:: LOU32 HELP MODULE DOCUMENT - MIDI Reference Series
+=========================================================================
+:: Table 1: Explanation Of MIDI Messages
+=========================================================================
+
+Table 1: MIDI 1.0 Specification Message Summary
+Updated 1995 by the MIDI Manufacturers Association
+
+
+Status       Data Byte(s)     Description
+D7----D0     D7----D0
+-------------------------------------------------------------------------
+Channel Voice Messages
+-------------------------------------------------------------------------
+1000cccc     0kkkkkkk         Note Off event.
+             0vvvvvvv         This message is sent when a
+                              note is released (ended).
+                              (kkkkkkk) is the key (note) number.
+                              (vvvvvvv) is the velocity.
+
+1001cccc     0kkkkkkk         Note On event.
+             0vvvvvvv         This message is sent when a
+                              note is depressed (start).
+                              (kkkkkkk) is the key (note) number.
+                              (vvvvvvv) is the velocity.
+
+1010cccc     0kkkkkkk         Polyphonic Key Pressure (Aftertouch).
+             0vvvvvvv         This message is most often sent by
+			      pressing down on the key after it
+			      "bottoms out". 
+                              (kkkkkkk) is the key (note) number.
+                              (vvvvvvv) is the pressure value.
+
+1011cccc     0ccccccc         Control Change.
+             0vvvvvvv         This message is sent when a controller
+                              value changes.  Controllers include devices
+                              such as pedals and levers.
+                              Certain controller numbers are reserved
+                              for specific purposes. See Channel Mode Messages.
+                              (ccccccc) is the controller number.
+                              (vvvvvvv) is the new value.
+
+1100cccc     0ppppppp         Program Change.
+                              This message sent when the patch number changes.
+                              (ppppppp) is the new program number.
+
+1101nnnn     0vvvvvvv         Channel Pressure (After-touch).
+                              This message is most often sent by pressing down
+			      on the key after it "bottoms out". This message
+			      is different from polyphonic after-touch. Use
+			      this message to send the single greatest
+                              pressure value (of all the current depressed keys).
+                              (vvvvvvv) is the pressure value.
+
+1110nnnn     0lllllll         Pitch Wheel Change.
+             0mmmmmmm         This message is sent to indicate a change in the
+                              pitch wheel.  The pitch wheel is measured by a
+                              fourteen bit value. Center (no pitch change) is
+                              2000H.  Sensitivity is a function of the 
+                              transmitter.
+                              (llllll) are the least significant 7 bits.
+                              (mmmmmm) are the most significant 7 bits.
+
+-------------------------------------------------------------------------
+Channel Mode Messages  (See also Control Change, above)
+-------------------------------------------------------------------------
+1011nnnn     0ccccccc         Channel Mode Messages.
+             0vvvvvvv         This the same code as the Control
+                              Change (above), but implements Mode
+                              control by using reserved controller
+                              numbers.  The numbers are:
+
+                              Local Control.
+                              When Local Control is Off, all devices
+                              on a given channel will respond only to
+                              data received over MIDI.  Played data, etc.
+                              will be ignored.  Local Control On
+                              restores the functions of the normal
+                              controllers.
+                              c = 122, v =   0: Local Control Off
+                              c = 122, v = 127: Local Control On
+
+                              All Notes Off.
+                              When an All Notes Off is received,
+                              all oscillators will turn off.
+                              c = 123, v =   0: All Notes Off

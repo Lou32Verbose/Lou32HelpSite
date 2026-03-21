@@ -1,0 +1,22 @@
+======================================================
+|	LOU32HELP - LOU32 HELP MODULE DOCUMENT       |
+======================================================
+|	SET UP A SIMPLE HTTP SERVER WITH PYTHON	     |
+======================================================
+
+If you don't need search and custom CSS, this will suffice:
+
+Run this python command (for Python 3):
+
+python -m http.server 80
+
+from the same folder where you store your files, and go to http://<your server ip>.
+
+For remote access, run a reverse-proxy to handle HTTPS.
+It is strongly advised you put some authentication such as basic auth (google .htpasswd files), and you're done.
+
+NOTE: for Python 2, the command is different. Use this if running Python 2:
+
+python -m SimpleHTTPServer 80
+
+=================================================================================

@@ -1,0 +1,24 @@
+==============================================================
+:: 				LOU32 HELP MODULE DOCUMENT                  ::
+==============================================================
+:: AUTOUNATTEND.XML FILE FOR WINDOWS 11 LOCAL USER CREATION ::
+==============================================================
+
+<?xml version="1.0" encoding="utf-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend">
+<settings pass="specialize">
+<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" language="neutral" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" publicKeyToken="31bf3856ad364e35" versionScope="nonSxS">
+<RunSynchronous>
+<RunSynchronousCommand wcm:action="add">
+<Order>1</Order>
+<Path>reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OOBE /v BypassNRO /t REG_DWORD /d 1 /f</Path>
+</RunSynchronousCommand>
+</RunSynchronous>
+</component>
+</settings>
+</unattend>
+
+:: With the above text, create a new file called "autounattend.xml" and copy it to the root of your Windows 11 installation media.
+:: This will automatically bypass the Microsoft Account forced login prompts and create a new local user.
+================================================================
+END OF LOU32 HELP MODULE DOCUMENT.
