@@ -3,12 +3,16 @@ use crate::pages::{
     render_topic_page, render_topics_page,
 };
 use anyhow::{Context, Result};
-use lou32help_core::{Workspace, WorkspaceView, slug_to_output_path};
+use lou32help_core::{
+    Workspace, WorkspaceView, build_browser_search_index, slug_to_output_path,
+    validate_output_relative_path,
+};
 use std::fs;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use tracing::debug;
 
 /// Summary statistics from a site build.
+#[derive(Debug)]
 pub struct BuildReport {
     /// Total number of HTML pages written.
     pub page_count: usize,
@@ -56,40 +60,40 @@ pub fn build_site_from_view(
         ),
     )?;
     debug!("wrote search.js");
-    fs::write(
-        assets_dir.join("search-index.json"),
-        serde_json::to_vec_pretty(view.search_index())?,
-    )?;
+    let browser_index = build_browser_search_index(view.documents().iter().copied());
+    let search_index_bytes = serde_json::to_vec_pretty(&browser_index)?;
+    fs::write(assets_dir.join("search-index.json"), &search_index_bytes)?;
     debug!(
-        entries = view.search_index().entries.len(),
+        entries = browser_index.entries.len(),
+        bytes = search_index_bytes.len(),
         "wrote search-index.json"
     );
 
     let mut page_count = 0usize;
 
     write_page(
-        &out_dir.join("index.html"),
+        &safe_output_path(out_dir, Path::new("index.html"))?,
         "/",
         render_home_page(view).into_string(),
     )?;
     page_count += 1;
 
     write_page(
-        &out_dir.join("search").join("index.html"),
+        &safe_output_path(out_dir, Path::new("search/index.html"))?,
         "/search/",
         render_search_page(view).into_string(),
     )?;
     page_count += 1;
 
     write_page(
-        &out_dir.join("topics").join("index.html"),
+        &safe_output_path(out_dir, Path::new("topics/index.html"))?,
         "/topics/",
         render_topics_page(view).into_string(),
     )?;
     page_count += 1;
 
     write_page(
-        &out_dir.join("tags").join("index.html"),
+        &safe_output_path(out_dir, Path::new("tags/index.html"))?,
         "/tags/",
         render_tags_page(view).into_string(),
     )?;
@@ -97,7 +101,10 @@ pub fn build_site_from_view(
 
     for topic in view.topic_nodes().values() {
         let page_path = format!("/topics/{}/", topic.path);
-        let path = out_dir.join("topics").join(&topic.path).join("index.html");
+        let path = safe_output_path(
+            out_dir,
+            &PathBuf::from("topics").join(&topic.path).join("index.html"),
+        )?;
         write_page(
             &path,
             &page_path,
@@ -109,14 +116,14 @@ pub fn build_site_from_view(
 
     for tag in view.tag_index().keys() {
         let page_path = format!("/tags/{tag}/");
-        let path = out_dir.join("tags").join(tag).join("index.html");
+        let path = safe_output_path(out_dir, &PathBuf::from("tags").join(tag).join("index.html"))?;
         write_page(&path, &page_path, render_tag_page(view, tag).into_string())?;
         debug!(tag = %tag, "wrote tag page");
         page_count += 1;
     }
 
     for doc in view.documents() {
-        let path = out_dir.join(slug_to_output_path(&doc.metadata.slug));
+        let path = safe_output_path(out_dir, &slug_to_output_path(&doc.metadata.slug))?;
         write_page(
             &path,
             &doc.metadata.slug,
@@ -143,6 +150,13 @@ fn write_html(path: &Path, contents: String) -> Result<()> {
             .with_context(|| format!("failed to create {}", parent.display()))?;
     }
     fs::write(path, contents).with_context(|| format!("failed to write {}", path.display()))
+}
+
+fn safe_output_path(out_dir: &Path, relative: &Path) -> Result<PathBuf> {
+    validate_output_relative_path(relative)
+        .map_err(|issue| anyhow::anyhow!(issue.message))
+        .with_context(|| format!("unsafe site output path '{}'", relative.display()))?;
+    Ok(out_dir.join(relative))
 }
 
 pub(crate) fn finalize_html(page_path: &str, contents: String) -> String {
@@ -271,5 +285,4 @@ fn search_app_js(module_name: &str, min_query_length: usize, max_results: usize)
         .replace("__WASM_MODULE__", module_name)
         .replace("__MIN_QUERY_LENGTH__", &min_query_length.to_string())
         .replace("__MAX_RESULTS__", &max_results.to_string())
-        .replace("__WASM_INTEGRITY__", "")
 }

@@ -1,9 +1,9 @@
 [site]
 title = "LOU32HELP"
 tagline = "Lou32 Help Module Document Library"
-description = "Dense, searchable reference pages for repeatable computing tasks, tools, and troubleshooting."
+description = "Lou32 Help Module Document Library (L32HMDL)"
 base_url = "https://lou32help.example.com"
-copyright = "Copyright 2026 Louis"
+copyright = "Help Module Document Library maintained by Lou32."
 
 [paths]
 content_dir = "content"

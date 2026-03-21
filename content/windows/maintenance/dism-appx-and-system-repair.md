@@ -5,7 +5,7 @@ summary: Practical repair workflow for DISM cleanup, AppX resets, SFC log review
 topic: windows/maintenance
 type: recipe
 tags: [windows, dism, sfc, appx, repair]
-aliases: [repair windows store apps, dism component cleanup, get sfc details]
+aliases: [repair windows store apps, dism component cleanup, get sfc details, win10 update error 0x80070005, eradicate adobe from system, remove provisioned appx packages dism]
 platforms: [windows]
 related:
   - /windows/policy/local-group-policy-editor-on-home/
@@ -487,6 +487,14 @@ copy E:\temp\jscript.dll C:\Windows\System32\jscript.dll
 - Keep exported log snippets (`sfcdetails.txt`) when comparing multiple repair attempts.
 - After AppX re-registration, open the affected app or Settings page to confirm the fix.
 - For offline images, run `DISM /Get-WimInfo /WimFile:"install.wim" /CheckIntegrity` after exporting.
+
+### Remove Adobe Products
+
+Emergency removal of Adobe Reader via msiexec:
+
+```text
+msiexec /x AcroRead.msi /qn /norestart
+```
 
 ## Related
 

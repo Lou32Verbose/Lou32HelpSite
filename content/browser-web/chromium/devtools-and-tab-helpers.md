@@ -5,12 +5,12 @@ summary: Quick Chromium and Edge DevTools helpers for inspecting pages, collecti
 topic: browser-web/chromium
 type: reference
 tags: [browser, chromium, devtools, edge, tabs]
-aliases: [copy urls of all tabs in chrome, devtools secrets]
+aliases: [copy urls of all tabs in chrome, devtools secrets, 7 developer tools secrets]
 platforms: [browser, chromium]
 related:
   - /browser-web/search/search-operator-reference/
 status: published
-updated: 2026-03-20
+updated: 2026-03-21
 ---
 
 ## Synopsis
@@ -40,13 +40,28 @@ Array.from(document.querySelectorAll('#pages-list .row .url'))
   .join('\n');
 ```
 
-Useful DevTools areas to revisit:
+### DevTools Resources
 
-- Console filtering and live expressions
-- Snippets and overrides
-- Edge DevTools integration for VS Code
+**Console:**
+
+- Console filtering — filter by log level, text, or regex
+- Live expressions — pin and auto-evaluate JS expressions in the console
+- Console.log enhancements — styled output, tables, grouping
+- Browser debugging and Console integration in VS Code
+
+**Snippets and Overrides:**
+
+- Snippets — save and run reusable JS scripts from the Sources panel
+- Overrides — persist local changes to network resources across reloads
+
+**Edge DevTools for VS Code:**
+
+- Extension: `ms-edgedevtools.vscode-edge-devtools`
+- Provides embedded browser preview, Elements panel, and Network inspection inside VS Code
+- CSS Mirror Editing — changes in VS Code reflect in DevTools and vice versa
 
 ## Related
 
 - [`Search Operator Reference`](/browser-web/search/search-operator-reference/)
 - [`Bookmarklet Essentials`](/browser-web/bookmarklets/essentials/)
+- [`Edge Keyboard Shortcuts`](/browser-web/chromium/edge-keyboard-shortcuts/)

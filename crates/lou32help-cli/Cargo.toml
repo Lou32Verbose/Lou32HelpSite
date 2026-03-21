@@ -13,6 +13,7 @@ clap.workspace = true
 tiny_http.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+walkdir.workspace = true
 lou32help-core = { path = "../lou32help-core" }
 lou32help-site = { path = "../lou32help-site" }
 

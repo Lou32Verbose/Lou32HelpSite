@@ -29,6 +29,15 @@ pwsh -File scripts/run-audit.ps1
 Set `RUST_LOG=info` to see workspace load timing, validation summaries, build timing,
 and preview-server request logs.
 
+## Browser Bundle Flow
+
+- `cargo run -p lou32help-cli -- build` and `serve` still bundle browser search automatically.
+- The WASM/browser bridge now uses a cache under `target/lou32help/browser-search/`.
+- Warm builds reuse cached browser assets when the bundle inputs have not changed.
+- Cache inputs include the workspace manifests, `lou32help-core`, `lou32help-web-search`, and the browser search template.
+- If the WASM target is missing, install it with `rustup target add wasm32-unknown-unknown`.
+- If `wasm-bindgen` is missing, install it with `cargo install wasm-bindgen-cli`.
+
 ## Layout
 
 - `content/`: canonical Markdown documents with YAML frontmatter
@@ -51,3 +60,10 @@ and preview-server request logs.
 - Markdown is sanitized before being embedded into generated HTML.
 - The preview server only serves files under `dist/site` and only accepts `GET` and `HEAD`.
 - Search result cards in the browser are rendered with DOM APIs instead of `innerHTML`.
+- Path-affecting metadata is validated before build, and the site generator refuses unsafe output paths even if validation is bypassed.
+
+## Engineering Docs
+
+- `CONTRIBUTING.md`: local setup, verification, and content authoring rules
+- `ARCHITECTURE.md`: crate boundaries, validation flow, site generation, and browser search pipeline
+- `OPERATIONS.md`: build prerequisites, bundle cache behavior, and release verification

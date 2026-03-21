@@ -1,15 +1,16 @@
+use crate::browser_bundle::bundle_browser_search;
 use crate::serve::serve_preview;
 use anyhow::{Context, Result, anyhow, bail};
 use chrono::Local;
 use clap::{Parser, Subcommand};
 use lou32help_core::{
-    Lou32HelpConfig, PageType, SearchQuery, Workspace, WorkspaceView, markdown_to_terminal,
-    normalize_slug, normalize_topic, scaffold_sections, title_from_slug_leaf,
+    Lou32HelpConfig, PageType, SearchQuery, Workspace, markdown_to_terminal, normalize_slug,
+    normalize_topic, scaffold_sections, title_from_slug_leaf,
 };
 use lou32help_site::build_site_from_view;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
-use std::process::Command;
 use std::time::Instant;
 use tracing::{error, info};
 use tracing_subscriber::EnvFilter;
@@ -474,10 +475,19 @@ fn validate_workspace(
     let issues = workspace.validate(include_drafts);
     let warning_count = issues.iter().filter(|issue| !issue.is_error()).count();
     let error_count = issues.iter().filter(|issue| issue.is_error()).count();
+    let mut issue_counts = BTreeMap::<&str, usize>::new();
+    for issue in &issues {
+        *issue_counts.entry(issue.code.as_str()).or_default() += 1;
+    }
     info!(
         include_drafts,
         warning_count,
         error_count,
+        issue_codes = %issue_counts
+            .into_iter()
+            .map(|(code, count)| format!("{code}:{count}"))
+            .collect::<Vec<_>>()
+            .join(","),
         elapsed_ms = start.elapsed().as_millis(),
         "validated workspace"
     );
@@ -520,8 +530,15 @@ fn build_and_bundle(
         "built static site"
     );
 
-    match bundle_web_search(root, &view, &staging_dir) {
-        Ok(()) => {}
+    let assets_dir = staging_dir.join(&view.config().paths.assets_dir);
+    match bundle_browser_search(root, &view.config().search.wasm_module, &assets_dir) {
+        Ok(bundle_report) => {
+            info!(
+                cache_hit = bundle_report.cache_hit,
+                asset_bytes = bundle_report.asset_bytes,
+                "browser bundle ready"
+            );
+        }
         Err(err) => {
             let _ = fs::remove_dir_all(&staging_dir);
             return Err(err);
@@ -545,87 +562,4 @@ fn build_and_bundle(
     })?;
 
     Ok(report)
-}
-
-fn bundle_web_search(root: &Path, view: &WorkspaceView<'_>, site_dir: &Path) -> Result<()> {
-    let module_name = &view.config().search.wasm_module;
-    let assets_dir = site_dir.join(&view.config().paths.assets_dir);
-    let start = Instant::now();
-
-    let rustup_status = Command::new("rustup")
-        .args(["target", "add", "wasm32-unknown-unknown"])
-        .status()
-        .context("failed to invoke rustup")?;
-    if !rustup_status.success() {
-        bail!("failed to install or confirm wasm32-unknown-unknown target");
-    }
-
-    let cargo_status = Command::new("cargo")
-        .current_dir(root)
-        .args([
-            "build",
-            "-p",
-            "lou32help-web-search",
-            "--target",
-            "wasm32-unknown-unknown",
-            "--release",
-        ])
-        .status()
-        .context("failed to build lou32help-web-search")?;
-    if !cargo_status.success() {
-        bail!("failed to build lou32help-web-search");
-    }
-
-    let wasm_path = root
-        .join("target")
-        .join("wasm32-unknown-unknown")
-        .join("release")
-        .join("lou32help_web_search.wasm");
-    let bindgen_status = Command::new("wasm-bindgen")
-        .args([
-            "--target",
-            "web",
-            "--no-typescript",
-            "--out-dir",
-            &assets_dir.display().to_string(),
-            "--out-name",
-            module_name,
-            &wasm_path.display().to_string(),
-        ])
-        .status()
-        .context("failed to run wasm-bindgen")?;
-    if !bindgen_status.success() {
-        bail!("wasm-bindgen failed. Install it with `cargo install wasm-bindgen-cli`.");
-    }
-
-    // Compute SRI hash for the WASM file and inject it into search.js
-    let wasm_output = assets_dir.join(format!("{module_name}_bg.wasm"));
-    if wasm_output.exists() {
-        use base64::Engine;
-        use sha2::Digest;
-
-        let wasm_bytes = fs::read(&wasm_output)
-            .with_context(|| format!("failed to read {}", wasm_output.display()))?;
-        let hash = sha2::Sha384::digest(&wasm_bytes);
-        let sri = format!(
-            "sha384-{}",
-            base64::engine::general_purpose::STANDARD.encode(hash)
-        );
-
-        let search_js_path = assets_dir.join("search.js");
-        if search_js_path.exists() {
-            let js_content = fs::read_to_string(&search_js_path)
-                .with_context(|| format!("failed to read {}", search_js_path.display()))?;
-            let updated = js_content.replace("__WASM_INTEGRITY__", &sri);
-            fs::write(&search_js_path, updated)
-                .with_context(|| format!("failed to write {}", search_js_path.display()))?;
-            info!(sri = %sri, "injected WASM SRI hash");
-        }
-    }
-
-    info!(
-        elapsed_ms = start.elapsed().as_millis(),
-        "bundled browser search"
-    );
-    Ok(())
 }

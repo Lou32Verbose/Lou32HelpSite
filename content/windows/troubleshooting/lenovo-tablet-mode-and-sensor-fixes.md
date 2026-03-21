@@ -5,12 +5,12 @@ summary: Troubleshooting notes for Lenovo convertibility, tablet mode, and senso
 topic: windows/troubleshooting
 type: troubleshooting
 tags: [windows, lenovo, tablet-mode, sensors, registry]
-aliases: [lenovo flex tablet mode fix, disable convertibility control]
+aliases: [lenovo flex tablet mode fix, disable convertibility control, lenovo ideapad brightness registry fix, disable sensor monitoring service tablet mode, disable win11 tablet mode convertibility reg cmd]
 platforms: [windows]
 related:
   - /windows/display/display-diagnostics/
 status: published
-updated: 2026-03-20
+updated: 2026-03-21
 ---
 
 ## Symptoms
@@ -36,6 +36,22 @@ Representative registry targets from the legacy notes:
 HKEY_LOCAL_MACHINE\SOFTWARE\Lenovo\ImController\Plugins\LenovoModeService
 HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\AutoRotation
 ```
+
+### Brightness Slider Not Working (Lenovo IdeaPad)
+
+If the brightness slider has no effect, set both power-policy brightness values to `0` in the display driver class key:
+
+```text
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}\0000
+```
+
+| Value | Data |
+|-------|------|
+| `DCUserPreferencePolicy` | `0` |
+| `ACUserPreferencePolicy` | `0` |
+
+- `DC` = on battery, `AC` = plugged in
+- Reboot after making the change
 
 ## Verification
 

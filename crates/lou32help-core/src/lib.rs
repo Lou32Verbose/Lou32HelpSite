@@ -12,6 +12,8 @@ pub mod config;
 pub mod document;
 /// Workspace loading and pre-computed views.
 pub mod library;
+/// Route and output path safety validation.
+pub mod path_safety;
 mod projection;
 /// Markdown rendering to HTML and terminal output.
 pub mod render;
@@ -26,6 +28,12 @@ pub use document::{
     normalize_topic, scaffold_sections, slug_to_output_path, title_from_slug_leaf,
 };
 pub use library::{TopicNode, Workspace, WorkspaceView};
+pub use path_safety::{
+    PathSafetyIssue, RoutePathKind, inspect_route_path, validate_output_relative_path,
+};
 pub use render::{CONTENT_SECURITY_POLICY, markdown_to_html, markdown_to_terminal};
-pub use search::{SearchIndex, SearchQuery, SearchResult, build_search_index, search_index};
+pub use search::{
+    BrowserSearchEntry, BrowserSearchIndex, SearchIndex, SearchQuery, SearchResult,
+    build_browser_search_index, build_search_index, search_browser_index, search_index,
+};
 pub use validation::{Severity, ValidationIssue, ValidationMode, validate_workspace};

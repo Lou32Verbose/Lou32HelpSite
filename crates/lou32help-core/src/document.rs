@@ -1,3 +1,4 @@
+use crate::path_safety::{PathSafetyIssue, RoutePathKind, inspect_route_path};
 use anyhow::{Context, Result, anyhow, bail};
 use chrono::NaiveDate;
 use pulldown_cmark::{Event, Options, Parser};
@@ -114,6 +115,8 @@ pub struct Document {
     pub body: String,
     /// Heading texts extracted from the body.
     pub headings: Vec<String>,
+    /// Route and path issues found in raw metadata before normalization.
+    pub path_issues: Vec<PathSafetyIssue>,
 }
 
 impl Document {
@@ -145,6 +148,7 @@ impl Document {
 
         let mut metadata: DocumentMetadata = serde_norway::from_str(frontmatter_raw)
             .with_context(|| format!("failed to parse frontmatter in {}", path.display()))?;
+        let path_issues = collect_path_issues(&metadata);
         normalize_metadata(&mut metadata);
         let headings = extract_headings(&body);
 
@@ -153,6 +157,7 @@ impl Document {
             metadata,
             body,
             headings,
+            path_issues,
         })
     }
 
@@ -300,6 +305,19 @@ fn normalize_metadata(metadata: &mut DocumentMetadata) {
     metadata.title = metadata.title.trim().to_string();
 }
 
+fn collect_path_issues(metadata: &DocumentMetadata) -> Vec<PathSafetyIssue> {
+    let mut issues = Vec::new();
+    issues.extend(inspect_route_path(&metadata.slug, RoutePathKind::Slug));
+    issues.extend(inspect_route_path(&metadata.topic, RoutePathKind::Topic));
+    for related in &metadata.related {
+        issues.extend(inspect_route_path(related, RoutePathKind::RelatedSlug));
+    }
+    for tag in &metadata.tags {
+        issues.extend(inspect_route_path(tag, RoutePathKind::Tag));
+    }
+    issues
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -367,5 +385,38 @@ mod tests {
         assert_eq!(normalize_slug("foo\\bar"), "/foo/bar/");
         assert_eq!(normalize_slug("/foo/bar/"), "/foo/bar/");
         assert_eq!(normalize_slug("///"), "/");
+    }
+
+    #[test]
+    fn captures_path_issues_before_normalization() {
+        let temp = tempfile::TempDir::new().unwrap();
+        let path = temp.path().join("unsafe.md");
+        fs::write(
+            &path,
+            "---\ntitle: Unsafe\nslug: /powershell/../bits/\nsummary: s\ntopic: powershell\\networking\ntype: recipe\ntags: [con]\naliases: []\nplatforms: []\nrelated: [/../bad/]\nstatus: published\nupdated: 2026-03-20\n---\n\n## Goal\n\nGoal text.\n\n## Prerequisites\n\nNeed PowerShell.\n\n## Steps\n\n1. Do thing.\n\n## Commands\n\n```powershell\nWrite-Host \"ok\"\n```\n\n## Verification\n\nCheck file exists.\n\n## Related\n\n- Nothing\n",
+        )
+        .unwrap();
+        let doc = Document::from_file(&path).unwrap();
+
+        assert!(
+            doc.path_issues
+                .iter()
+                .any(|issue| issue.code == "invalid-slug-path")
+        );
+        assert!(
+            doc.path_issues
+                .iter()
+                .any(|issue| issue.code == "invalid-topic-path")
+        );
+        assert!(
+            doc.path_issues
+                .iter()
+                .any(|issue| issue.code == "invalid-related-path")
+        );
+        assert!(
+            doc.path_issues
+                .iter()
+                .any(|issue| issue.code == "invalid-tag-path")
+        );
     }
 }

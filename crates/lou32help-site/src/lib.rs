@@ -100,4 +100,57 @@ mod tests {
         assert!(compacted.contains("canonical"));
         insta::assert_snapshot!(compacted);
     }
+
+    #[test]
+    fn rejects_unsafe_output_paths_even_without_prior_validation() {
+        let temp = lou32help_test_fixtures::write_workspace(&[(
+            "content/powershell/networking/unsafe.md",
+            r#"---
+title: Unsafe Output
+slug: /powershell/../escape/
+summary: Should not build
+topic: powershell/networking
+type: recipe
+tags: [ok]
+aliases: []
+platforms: [windows]
+related: []
+status: published
+updated: 2026-03-20
+---
+
+## Goal
+
+Goal text.
+
+## Prerequisites
+
+Need PowerShell.
+
+## Steps
+
+1. Do thing.
+
+## Commands
+
+```powershell
+Write-Host "ok"
+```
+
+## Verification
+
+Check file exists.
+
+## Related
+
+- Nothing
+"#,
+        )]);
+        let workspace = Workspace::load(temp.path()).expect("load workspace");
+        let view = workspace.view(false);
+        let out_dir = temp.path().join("dist/site");
+        let err = build_site_from_view(&view, &out_dir).unwrap_err();
+
+        assert!(format!("{err:#}").contains("unsafe site output path"));
+    }
 }

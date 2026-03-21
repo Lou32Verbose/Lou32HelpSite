@@ -3,7 +3,9 @@
 //! Compiled to `wasm32-unknown-unknown` and loaded by `search.js` in the
 //! generated static site.
 
-use lou32help_core::{SearchIndex, SearchQuery, search_index as core_search_index};
+use lou32help_core::{
+    BrowserSearchIndex, SearchQuery, search_browser_index as core_search_browser_index,
+};
 use wasm_bindgen::prelude::*;
 
 /// Run a search query against a JSON search index and return JSON results.
@@ -16,7 +18,7 @@ pub fn search_index(
     platform: &str,
     max_results: usize,
 ) -> String {
-    let index: SearchIndex = match serde_json::from_str(index_json) {
+    let index: BrowserSearchIndex = match serde_json::from_str(index_json) {
         Ok(index) => index,
         Err(error) => {
             return serde_json::json!({
@@ -26,7 +28,7 @@ pub fn search_index(
         }
     };
 
-    let results = core_search_index(
+    let results = core_search_browser_index(
         &index,
         &SearchQuery {
             query: query.to_string(),

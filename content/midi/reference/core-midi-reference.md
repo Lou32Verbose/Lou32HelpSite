@@ -5,7 +5,7 @@ summary: Consolidated MIDI basics, terminology, General MIDI maps, and note-freq
 topic: midi/reference
 type: reference
 tags: [midi, general-midi, notes, percussion, glossary]
-aliases: [midi basics, gm patch map, midi note frequency chart]
+aliases: [midi basics, gm patch map, midi note frequency chart, michael p bedesem midiplayer installation, midi-hits order id template]
 platforms: [windows, macos, linux]
 related:
   - /media/ffmpeg/conversion-and-frame-extraction/
@@ -826,6 +826,20 @@ The MT-32 standard (1987) predates General MIDI and has its own unique instrumen
 | Tweaking | Experimenting with a controller; adjusting parameters. |
 | Wave Form | Describing an electrical signal by showing how amplitude varies over time. |
 | Widget | A knob, slider, meter, etc. |
+
+### Michael P. Bedesem MidiPlayer Installation
+
+1. Uninstall any existing versions via Control Panel
+2. Download the full package (v7.1.6), unzip, and run `Setup.exe` as Administrator — accept defaults and do not replace newer files with older ones
+3. Download the update package (v8.3.1), unzip, and copy files to `C:\Program Files\MidiPlayer` — allow overwriting older files
+
+### MIDI-Hits Download URL Template
+
+```text
+https://www.midi-hits.com/dl.php?OrderId=181368&catNo=<cat-number>
+```
+
+Replace `<cat-number>` with the catalog number from your order.
 
 ## Related
 

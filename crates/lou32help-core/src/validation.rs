@@ -1,5 +1,6 @@
 use crate::config::Lou32HelpConfig;
 use crate::document::{Document, contains_raw_html, normalize_slug, scaffold_sections};
+use crate::path_safety::{RoutePathKind, inspect_route_path};
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
 use std::fmt::{Display, Formatter};
@@ -100,7 +101,28 @@ pub fn validate_workspace(
     let mut slug_index: HashMap<&str, Vec<&Document>> = HashMap::new();
     let mut alias_index: HashMap<&str, Vec<&Document>> = HashMap::new();
 
+    for topic in &config.topics {
+        for issue in inspect_route_path(&topic.key, RoutePathKind::TopicKey) {
+            issues.push(ValidationIssue::error(
+                issue.code,
+                format!(
+                    "configured topic key '{}' is unsafe: {}",
+                    topic.key, issue.message
+                ),
+                None,
+            ));
+        }
+    }
+
     for doc in &visible_docs {
+        for issue in &doc.path_issues {
+            issues.push(ValidationIssue::error(
+                issue.code,
+                issue.message.clone(),
+                Some(doc),
+            ));
+        }
+
         slug_index
             .entry(doc.metadata.slug.as_str())
             .or_default()
@@ -123,7 +145,7 @@ pub fn validate_workspace(
 
         let expected_prefix = format!("/{}/", doc.metadata.topic);
         if !doc.metadata.slug.starts_with(&expected_prefix) {
-            issues.push(ValidationIssue::warning(
+            issues.push(ValidationIssue::error(
                 "slug-topic-mismatch",
                 format!(
                     "slug '{}' does not begin with topic path '{}'",
@@ -227,7 +249,9 @@ pub fn validate_workspace(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use lou32help_test_fixtures::write_workspace;
+    use lou32help_test_fixtures::{
+        default_config_toml, write_workspace, write_workspace_with_config,
+    };
 
     #[test]
     fn raw_html_produces_error() {
@@ -277,5 +301,85 @@ Check file exists.
             .find(|i| i.code == "raw-html")
             .expect("should have raw-html issue");
         assert_eq!(raw_html_issue.severity, Severity::Error);
+    }
+
+    #[test]
+    fn unsafe_metadata_routes_produce_errors() {
+        let doc = r#"---
+title: Unsafe Route
+slug: /powershell/../unsafe/
+summary: Bad route metadata
+topic: powershell\unsafe
+type: recipe
+tags: [con]
+aliases: []
+platforms: [windows]
+related:
+  - /../bad/
+status: published
+updated: 2026-03-20
+---
+
+## Goal
+
+Goal text.
+
+## Prerequisites
+
+Need PowerShell.
+
+## Steps
+
+1. Do thing.
+
+## Commands
+
+```powershell
+Write-Host "bad"
+```
+
+## Verification
+
+Check file exists.
+
+## Related
+
+- Nothing
+"#;
+        let temp = write_workspace(&[("content/powershell/unsafe.md", doc)]);
+        let workspace = crate::library::Workspace::load(temp.path()).expect("load");
+        let issues = workspace.validate(true);
+
+        assert!(issues.iter().any(|issue| issue.code == "invalid-slug-path"));
+        assert!(
+            issues
+                .iter()
+                .any(|issue| issue.code == "invalid-topic-path")
+        );
+        assert!(
+            issues
+                .iter()
+                .any(|issue| issue.code == "invalid-related-path")
+        );
+        assert!(issues.iter().any(|issue| issue.code == "invalid-tag-path"));
+    }
+
+    #[test]
+    fn unsafe_topic_keys_produce_errors() {
+        let config = format!(
+            "{}\n[[topics]]\nkey = \"../bad\"\ntitle = \"Bad\"\ndescription = \"Bad\"\norder = 99\n",
+            default_config_toml()
+        );
+        let temp = write_workspace_with_config(
+            &config,
+            &[(
+                "content/powershell/networking/bits.md",
+                lou32help_test_fixtures::RECIPE_DOC,
+            )],
+        );
+        let workspace = crate::library::Workspace::load(temp.path()).expect("load");
+        let issues = workspace.validate(true);
+
+        assert!(issues.iter().any(|issue| issue.code == "invalid-topic-key"));
     }
 }
