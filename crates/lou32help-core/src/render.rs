@@ -3,7 +3,7 @@ use pulldown_cmark::{Options, Parser, html};
 
 /// Content Security Policy header value used in generated HTML pages.
 pub const CONTENT_SECURITY_POLICY: &str = "default-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; \
-     img-src 'self' data:; object-src 'none'; script-src 'self'; style-src 'self'";
+     img-src 'self' data:; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'";
 
 /// Render Markdown to sanitized HTML.
 pub fn markdown_to_html(body: &str) -> String {
