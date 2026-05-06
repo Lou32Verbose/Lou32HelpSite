@@ -1,9 +1,0 @@
-; For Dev Builds
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\Applicability]
-"BranchName"="Dev"
-"Ring"="External"
-"ContentType"="Mainline"
-[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsSelfHost\UI\Selection]
-"UIContentType"="Mainline"
-"UIBranch"="Dev"
-"UIRing"="External"

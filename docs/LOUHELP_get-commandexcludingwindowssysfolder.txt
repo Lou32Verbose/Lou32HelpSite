@@ -1,7 +1,0 @@
-﻿# Get-Command but exclude everything from C:\Windows\*
-
-```powershell
-Get-Command | Where-Object {
-    $_.Source -notlike 'C:\Windows\*'
-}
-```

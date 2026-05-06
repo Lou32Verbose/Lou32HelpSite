@@ -1,1 +1,0 @@
-rclone copy <source> <destination> --update --transfers=12 --checkers=12 --buffer-size=16M --multi-thread-streams=4 --progress 
