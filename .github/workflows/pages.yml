@@ -3,6 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  repository_dispatch:
+    types: [source-updated]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -22,6 +25,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          repository: Lou32Verbose/Lou32HelpModuleDocumentLibrary
+          ref: master
 
       - uses: dtolnay/rust-toolchain@stable
         with:
